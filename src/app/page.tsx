@@ -54,11 +54,11 @@ const alunos = [
 
 export default function Home() {
 
-  
+
 
   const [alunosFiltrados, setAlunosFiltrados] = useState(alunos);
 
-  /*
+  
   function listaTurma(alunos : any){
     let arrayTurma = alunos.turma.filter(function (v : string, i: number, self: string){
       return i == self.indexOf(v);
@@ -66,7 +66,7 @@ export default function Home() {
 
     console.log(arrayTurma)
     return arrayTurma;
-  }*/
+  }
 
   function handleFilterTurno(filter: string) {
     setAlunosFiltrados(alunos.filter(aluno => aluno.turno === filter))
