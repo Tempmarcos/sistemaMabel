@@ -1,95 +1,126 @@
+"use client"
 import Image from "next/image";
 import styles from "./page.module.css";
+import AlunoCard from "./components/cards/alunoCard/alunoCard";
+import {useState} from "react";
+import DropdownButton from "./components/botoes/dropdownButton";
+
+
+
+const alunos = [ 
+  {nome: "Gabriel", turno: "manha", turma: "Kids"},
+  {nome: "Joaquim", turno: "tarde", turma: "Kids"},
+  {nome: "Giovanni", turno: "tarde", turma: "Teens"},
+  {nome: "Joaquim", turno: "tarde", turma: "Teens"},
+  {nome: "Narciso", turno: "tarde", turma: "Kids"},
+  {nome: "Joaquim", turno: "tarde", turma: "Teens"},
+  {nome: "Gabriel", turno: "manha", turma: "Kids"},
+  {nome: "Joaquim", turno: "tarde", turma: "Teens"},
+  {nome: "Gabriel", turno: "manha", turma: "Kids"},
+  {nome: "Joaquim", turno: "tarde", turma: "Teens"},
+  {nome: "Gabriel", turno: "manha", turma: "Kids"},
+  {nome: "Joaquim", turno: "tarde", turma: "Teens"},
+  {nome: "João", turno: "manha", turma: "Kids"},
+  {nome: "Joaquim", turno: "tarde", turma: "Kids"},
+  {nome: "Gabriel", turno: "manha", turma: "Teens"},
+  {nome: "Ana Clara", turno: "tarde", turma: "Teens"},
+  {nome: "Gabriel", turno: "manha", turma: "Kids"},
+  {nome: "Joaquim", turno: "tarde", turma: "Teens"},
+  {nome: "Marcos", turno: "manha", turma: "Kids"},
+  {nome: "Joaquim", turno: "tarde", turma: "Teens"},
+  {nome: "Gabriel", turno: "manha", turma: "Kids"},
+  {nome: "Joaquim", turno: "tarde", turma: "Teens"},
+  {nome: "Gabriel", turno: "manha", turma: "Kids"},
+  {nome: "Joaquim", turno: "tarde", turma: "Teens"},
+  {nome: "Gabriel", turno: "manha", turma: "Kids"},
+  {nome: "Joaquim", turno: "tarde", turma: "Kids"},
+  {nome: "Luiza", turno: "manha", turma: "Kids"},
+  {nome: "Joaquim", turno: "tarde", turma: "Teens"},
+  {nome: "Gabriel", turno: "manha", turma: "Kids"},
+  {nome: "Joaquim", turno: "tarde", turma: "Teens"},
+  {nome: "Gabriel", turno: "manha", turma: "Kids"},
+  {nome: "Joaquim", turno: "tarde", turma: "Teens"},
+  {nome: "Gabriel", turno: "manha", turma: "Kids"},
+  {nome: "Joaquim", turno: "tarde", turma: "Teens"},
+  {nome: "Gabriel", turno: "manha", turma: "Kids"},
+  {nome: "Joaquim", turno: "tarde", turma: "Teens"},
+  {nome: "Gabriel", turno: "manha", turma: "Kids"},
+  {nome: "Joaquim", turno: "tarde", turma: "Teens"},
+  {nome: "Gabriel", turno: "manha", turma: "Kids"},
+  {nome: "Joaquim", turno: "tarde", turma: "Teens"},
+  {nome: "Joaquim", turno: "tarde", turma: "Teens"},
+  
+]
 
 export default function Home() {
+
+  
+
+  const [alunosFiltrados, setAlunosFiltrados] = useState(alunos);
+
+  /*
+  function listaTurma(alunos : any){
+    let arrayTurma = alunos.turma.filter(function (v : string, i: number, self: string){
+      return i == self.indexOf(v);
+    });
+
+    console.log(arrayTurma)
+    return arrayTurma;
+  }*/
+
+  function handleFilterTurno(filter: string) {
+    setAlunosFiltrados(alunos.filter(aluno => aluno.turno === filter))
+    if(!filter) setAlunosFiltrados(alunos)
+  }
+
+
+ function handleButtonSemFiltro(){
+  setAlunosFiltrados(alunos);
+ }
+
+ function handleButtonKids(){
+  setAlunosFiltrados(alunos.filter(aluno => aluno.turma === "Kids"));
+ }
+
+ function handleButtonTeens(){
+  setAlunosFiltrados(alunos.filter(aluno => aluno.turma === "Teens"));
+ }
+
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.tsx</code>
-        </p>
+    <>
+    <div className="filtro">
+    <h1 className="contagemAlunos">Alunos: {alunos.length}</h1>
+      <DropdownButton name="Turno">
         <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+          <a onClick={() => handleFilterTurno('')}>Turno</a>
+          <a onClick={() => handleFilterTurno('manha')}>Manhã</a>
+          <a onClick={() => handleFilterTurno('tarde')}>Tarde</a>
         </div>
-      </div>
+      </DropdownButton> 
 
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  );
+      <DropdownButton name="Turma">
+        <div>
+          <a onClick={handleButtonSemFiltro}>Turma</a>
+          <a onClick={handleButtonKids}>Kids</a>
+          <a onClick={handleButtonTeens}>Teens</a>
+        </div>
+      </DropdownButton> 
+    
+    </div>
+    <div className="listaAlunos">
+      {
+        alunosFiltrados.map(aluno => {
+         return <AlunoCard nome={aluno.nome} turma={aluno.turma} turno={aluno.turno} />
+        })
+      }
+    </div>
+    <ul>
+    {
+        alunosFiltrados.map(aluno => {
+         return <li>* {aluno.nome}</li>
+        })
+      }
+    </ul>
+    </>
+  )
 }
