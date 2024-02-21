@@ -1,5 +1,5 @@
 export const alunos = [ 
-    {nome: "Gabriel", turno: "manha", turma: "Manha Kids 1", id:'1'},
+    {nome: "Gabriel", turno: "manha", turma: "Manha Kids 1", id:'1', nomePai: "Omar", nomeMae: "Belenice"},
     {nome: "Joaquim", turno: "tarde", turma: "Tarde Kids 1"},
     {nome: "Giovanni", turno: "tarde", turma: "Tarde Teens 1"},
     {nome: "Leonardo", turno: "tarde", turma: "Tarde Teens 1"},

@@ -87,6 +87,24 @@ body {
   font-family: Arial, Helvetica, sans-serif
 }
 
+
+.modal {
+  position: fixed;
+  top: 15%;
+  left: 10%;
+  z-index: 1;
+  width: 80vw;
+  height: 70vh;
+  overflow: auto;
+  background-color: whitesmoke;
+  border: solid 3px orangered;
+}
+
+.modal .content {
+  margin: 15% auto;
+  padding: 20px;
+}
+
 .listaAlunos {
   display: flex;
   flex-flow: row wrap;

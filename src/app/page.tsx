@@ -2,17 +2,22 @@
 import Image from "next/image";
 import styles from "./page.module.css";
 import AlunoCard from "./components/cards/alunoCard/alunoCard";
+import ModalCard from "./components/cards/modalCard/modalCard";
 import {useState} from "react";
-import DropdownButton from "./components/botoes/dropdownButton";
+import DropdownButton from "./components/botoes/dropdownButton/dropdownButton";
 import { alunos } from "@/mocks/alunos";
-
-
 
 
 
 export default function Home() {
 
+  const [displayAtual, setDisplayAtual] = useState("none")
+
   const [alunosFiltrados, setAlunosFiltrados] = useState(alunos);
+
+  function handleSwitchModal() {
+    displayAtual == 'block' ? setDisplayAtual("none") : setDisplayAtual("block");
+  }
 
 
   function handleFiltroTurma(turma : string){
@@ -26,6 +31,8 @@ export default function Home() {
     else setAlunosFiltrados(alunos.filter(aluno => aluno.turno === turno))
 
   }
+
+  
 
   return (
     <>
@@ -54,10 +61,15 @@ export default function Home() {
     <div className="listaAlunos">
       {
         alunosFiltrados.map(aluno => {
-         return <AlunoCard nome={aluno.nome} turma={aluno.turma} turno={aluno.turno} />
+         return <a onClick={handleSwitchModal}><AlunoCard nome={aluno.nome} turma={aluno.turma} turno={aluno.turno} /></a>
         })
       }
     </div>
+      <div className="modal" style={{display: displayAtual}}>
+        <div className="content">
+          <ModalCard />
+        </div>
+      </div>
     <ul>
     {
         alunosFiltrados.map(aluno => {
