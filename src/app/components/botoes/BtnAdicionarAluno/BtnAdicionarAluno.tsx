@@ -1,5 +1,7 @@
+import styles from './adicionarAluno.module.css'
+
 export default function BtnAdicionarAluno(){
     return (
-        <button>+</button>
+        <span className={styles.button} title='Adicionar aluno'>+</span>
     );
 }
