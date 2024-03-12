@@ -19,3 +19,6 @@
     border-radius: 15px;
     text-align: center;
 }
+
+.cardManha:hover {filter: grayscale(60%) ;}
+.cardTarde:hover {filter: grayscale(60%);}

@@ -1,6 +1,7 @@
 import styles from './styles.module.css'
 
 interface AlunoCardProps {
+    id: number;
     nome: string;
     turno: string;
     turma: string;

@@ -1,11 +1,16 @@
-export default function Header(link: string, text: string){
+import { temas } from "@/app/(logged)/temas";
+
+
+
+interface Iheader{
+    children: React.ReactNode
+}
+
+
+export default function Header({ children } : Iheader){
     return(
-        <header className="header">
-           <ol>
-            <li><a href={link}></a></li>
-            <li><a href={link}></a></li>
-            <li><a href={link}></a></li>
-           </ol>
+        <header style={{backgroundColor: temas.corElemento, color: temas.corTexto}}>
+           {children}
         </header>
     );
 }

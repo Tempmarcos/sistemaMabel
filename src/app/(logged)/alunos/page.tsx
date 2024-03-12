@@ -7,7 +7,8 @@ import {useState} from "react";
 import DropdownButton from "../../components/botoes/dropdownButton/dropdownButton";
 import { alunos } from "@/mocks/alunos";
 import { turmas } from "@/mocks/turmas";
-import BtnAdicionarAluno from "../../components/botoes/BtnAdicionarAluno/BtnAdicionarAluno";
+import BtnAdicionar from '../../components/botoes/BtnAdicionar/BtnAdicionar';
+import Header from "@/app/components/header/Header";
 
 
 
@@ -20,6 +21,12 @@ export default function Home() {
   const [textoLegenda, setTextoLegenda] = useState('Legendas ↓');
 
   const [alunosFiltrados, setAlunosFiltrados] = useState(alunos);
+  
+  const corElemento = 'purple';
+  const corTexto = "black";
+  const corFundo = "pink";
+
+  //#04AA6D
 
   //Botão pra abrir o modal dos alunos.
   function handleOpenModal() {
@@ -54,13 +61,21 @@ export default function Home() {
   }
 
   
+  
+//Função para pesquisar o nome dos alunos
+  function SearchFilter(event: { target: { value: any; }; }){
+    setAlunosFiltrados(alunos.filter(aluno => aluno.nome.toLowerCase().includes(event.target.value)))
+  }
+
+  //http://192.168.100.6:4444/teste
+  
 
   return (
-    <>
-      <div className="filtro">
-        <h1 className="contagemAlunos">Alunos: {alunosFiltrados.length}</h1>
+    <main style={{backgroundColor: corFundo, color: corTexto, minHeight: '100vh'}}>
+      <Header>
+        <h2 className="contagemAlunos">Alunos: {alunosFiltrados.length}</h2>
 
-        <DropdownButton name="Turno">
+        <DropdownButton name="Turno" corElemento={corElemento} corTexto={corTexto}>
           <div>
             <a onClick={() => handleFiltroTurno('')}>Turno</a>
             <a onClick={() => handleFiltroTurno('manha')}>Manhã</a>
@@ -68,8 +83,9 @@ export default function Home() {
           </div>
         </DropdownButton> 
 
-        <DropdownButton name="Turma">
+        <DropdownButton name="Turma" corElemento={corElemento} corTexto={corTexto}>
           <div>
+          <input type="text" placeholder="Pesquisar turmas..." onChange={SearchFilter}/>
             <a onClick={() => handleFiltroTurma('')}>Turma</a>
             {
               turmas.map(turma => {
@@ -77,8 +93,8 @@ export default function Home() {
             })}
           </div>
         </DropdownButton> 
-        <input type="text" placeholder="Pesquisar..." id="searchBar"/>
-      </div>
+        <input type="text" placeholder="Pesquisar..." id="searchBar" onChange={SearchFilter} />
+        </Header>
       <div className="legendas">
         <a onClick={handleLegendas} style={{display: 'block', cursor: 'pointer', width: '150px'}}><h2>{textoLegenda}</h2></a>
         <div style={{display: displayLegenda}}>
@@ -90,7 +106,7 @@ export default function Home() {
         {
           alunosFiltrados.map(aluno => {
           return <a className="linkAlunos" onClick={handleOpenModal}>
-                    <AlunoCard nome={aluno.nome} turma={aluno.turma} turno={aluno.turno} />
+                    <AlunoCard id={aluno.id} nome={aluno.nome} turma={aluno.turma} turno={aluno.turno} />
                  </a>
           })
         }
@@ -101,7 +117,7 @@ export default function Home() {
                 <a onClick={handleCloseModal}><h1>✖</h1></a>
            </div>
       </div>
-      <a onClick={handleOpenModal}><BtnAdicionarAluno /></a>
+      <a onClick={handleOpenModal}><BtnAdicionar title='Adicionar aluno' corTexto={corTexto} corElemento={corElemento}/></a>
       <ul>
         {
             alunosFiltrados.map(aluno => {
@@ -109,6 +125,6 @@ export default function Home() {
             })
           }
       </ul>
-    </>
+    </main>
   )
 }

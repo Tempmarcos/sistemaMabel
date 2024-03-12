@@ -5,6 +5,7 @@
     position: fixed;
     right: 0;
     top: 0;
+    pointer-events: none;
 }
 
 .modalSide {
@@ -16,10 +17,11 @@
     flex-flow: column nowrap;
     align-items: center;
     justify-content: space-evenly;
+    pointer-events: all;
 }
 
 .modalSide a:hover {
-    color: rgb(201, 201, 201);
+    filter: invert();
 }
 
 .divModal {
@@ -30,8 +32,9 @@
 }
 
 .botao {
-    z-index: 3;
+    z-index: 6;
     position: absolute;
     bottom: 0;
     right: 0;
+    pointer-events: all;
 }

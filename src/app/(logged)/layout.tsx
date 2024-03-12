@@ -1,6 +1,7 @@
 'use client'
 import SideBar from "../components/sideBar/sideBar";
 import "../globals.css";
+import { temas } from "./temas";
 
 
 
@@ -11,8 +12,8 @@ export default function LoggedLayout({
 }>) {
   return (
     <html lang="pt-BR">
-      <body>{children}</body>
-      <SideBar />
+      <body style={{color: temas.corTexto, backgroundColor: temas.corFundo}}>{children}</body>
+      <SideBar corElemento={temas.corElemento} corTexto={temas.corTexto}/>
     </html>
   );
 }

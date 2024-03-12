@@ -1,0 +1,11 @@
+.button {
+    display:inline-block;
+    padding: 16px;
+    font-size: 16px;
+    border-right: 1px solid;
+    background-color: aqua;
+}
+
+.button:hover {
+    filter: invert();
+}

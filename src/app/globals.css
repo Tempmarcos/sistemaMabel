@@ -31,6 +31,14 @@ body {
   margin: 5px 0px 0px 5px;
 }
 
+#searchBar {
+  margin-inline: 24vw;
+  margin-block: 10px;
+  height: 30px;
+  padding: 5px;
+  border-radius: 50px;
+}
+
 .legendas {
   margin-left: 10px;
 }
@@ -53,6 +61,7 @@ body {
 .contagemAlunos {
   position: absolute;
   right: 10px;
+  top: 8px;
   font-size: 5vh;
 }
 

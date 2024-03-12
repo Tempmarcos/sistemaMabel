@@ -1,16 +1,18 @@
 import styles from './modal.module.css'
+import { useForm, SubmitHandler } from "react-hook-form"
 
 
 
 export default function ModalCard(){
     return (
         <div className={styles.modal}>
-            <span className={styles.input}>
-                <h1>Nome</h1> <input type="text" name="" id="" /> <br />
-                <h1>Idade</h1> <input type="number" /> <br />
-                <h1>Turma</h1> <input type="text" /> <br />
-                <h1>Plano</h1> <input type="number" />
-           </span>
+            <form className={styles.input}>
+                <label htmlFor='nome'>Nome</label> <input id="nome" type="text"  /> <br />
+                <label htmlFor='idade'>Idade</label> <input id='idade' type="number" /> <br />
+                <label htmlFor='turma'>Turma</label> <input id='turma' type="text" /> <br />
+                <label htmlFor='plano'>Plano</label> <input id='plano' type="number" />
+                <label htmlFor="almoco">Almoço:</label> <input id="almoco" type="checkbox"  />
+           </form>
         </div>
     );
 }

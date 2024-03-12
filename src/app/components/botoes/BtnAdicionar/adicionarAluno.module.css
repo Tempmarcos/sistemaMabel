@@ -1,5 +1,5 @@
 .button {
-    color: white;
+    color: black;
     background-color: #04AA6D;
     border-radius: 50%;
     cursor: pointer;
@@ -18,5 +18,6 @@
 }
 
 .button:hover {
-    background-color: #3e8e41;
+    filter: invert();
+    /*background-color: #3e8e41;*/
 }
