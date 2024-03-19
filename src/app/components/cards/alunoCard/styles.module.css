@@ -7,6 +7,7 @@
     align-items: center;
     border-radius: 15px;
     text-align: center;
+    transition: 0.2s ease-in-out;
 }
 
 .cardTarde {
@@ -18,7 +19,8 @@
     align-items: center;
     border-radius: 15px;
     text-align: center;
+    transition: 0.2s ease-in-out;
 }
 
-.cardManha:hover {filter: grayscale(60%) ;}
-.cardTarde:hover {filter: grayscale(60%);}
+.cardManha:hover {transform: scale(1.25);}
+.cardTarde:hover {transform: scale(1.25);}

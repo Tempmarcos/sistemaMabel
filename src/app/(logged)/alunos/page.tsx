@@ -1,42 +1,51 @@
-"use client"
-import Image from "next/image";
-import styles from "./page.module.css";
-import AlunoCard from "../../components/cards/alunoCard/alunoCard";
-import ModalCard from "../../components/cards/modalCard/modalCard";
+'use client'
+import AlunoCard from "../../components/cards/AlunoCard/AlunoCard";
+import CriarAlunoForm from "../../components/forms/CriarAlunoForm/CriarAlunoForm";
 import {useState} from "react";
 import DropdownButton from "../../components/botoes/dropdownButton/dropdownButton";
 import { alunos } from "@/mocks/alunos";
 import { turmas } from "@/mocks/turmas";
 import BtnAdicionar from '../../components/botoes/BtnAdicionar/BtnAdicionar';
 import Header from "@/app/components/header/Header";
+import Modal from "@/app/components/cards/Modal/Modal";
 
 
 
 
 export default function Home() {
-
-  const [displayAtual, setDisplayAtual] = useState("none");
+  const [displayModal, setDisplayModal] = useState("none");
 
   const [displayLegenda, setDisplayLegenda] = useState("none")
   const [textoLegenda, setTextoLegenda] = useState('Legendas ↓');
 
   const [alunosFiltrados, setAlunosFiltrados] = useState(alunos);
   
-  const corElemento = 'purple';
+  const corElemento = 'yellow';
   const corTexto = "black";
-  const corFundo = "pink";
+  const corFundo = "gold";
 
   //#04AA6D
 
-  //Botão pra abrir o modal dos alunos.
+  //Função pra abrir o modal.
   function handleOpenModal() {
-    setDisplayAtual("block");
+    setDisplayModal("block");
+  }
+
+  //Função para pegar as informações de um aluno específico.
+  function handleGetAluno(id : number) {
+    handleOpenModal();
+    alert(JSON.stringify(id, null, 2))
+  }
+
+  //
+  function handleCriarAluno() {
+    handleOpenModal();
   }
 
   //Botão para minimizar o modal dos alunos
-  function handleCloseModal() {
-    setDisplayAtual("none");
-  }
+  function handleXDisplay(){
+    setDisplayModal('none');
+}
 
   //Botão pra fazer as legendas (manhã, tarde, etc) aparecerem/sumirem
   function handleLegendas() {
@@ -50,25 +59,23 @@ export default function Home() {
     }
   }
 
+  /*
   function handleFiltroTurma(turma : string){
     if(turma == '') setAlunosFiltrados(alunos); 
     else setAlunosFiltrados(alunos.filter(aluno => aluno.turma === turma))
+  }*/
+
+  //Função para a filtragem do turno e da turma
+  function handleFiltro(atributo : string){
+    if(atributo == '') setAlunosFiltrados(alunos); 
+    else setAlunosFiltrados(alunos.filter(aluno => aluno.turno === atributo || aluno.turma === atributo))
   }
 
-  function handleFiltroTurno(turno : string){
-    if(turno == '') setAlunosFiltrados(alunos); 
-    else setAlunosFiltrados(alunos.filter(aluno => aluno.turno === turno))
-  }
-
-  
-  
 //Função para pesquisar o nome dos alunos
   function SearchFilter(event: { target: { value: any; }; }){
     setAlunosFiltrados(alunos.filter(aluno => aluno.nome.toLowerCase().includes(event.target.value)))
   }
 
-  //http://192.168.100.6:4444/teste
-  
 
   return (
     <main style={{backgroundColor: corFundo, color: corTexto, minHeight: '100vh'}}>
@@ -77,19 +84,19 @@ export default function Home() {
 
         <DropdownButton name="Turno" corElemento={corElemento} corTexto={corTexto}>
           <div>
-            <a onClick={() => handleFiltroTurno('')}>Turno</a>
-            <a onClick={() => handleFiltroTurno('manha')}>Manhã</a>
-            <a onClick={() => handleFiltroTurno('tarde')}>Tarde</a>
+            <a onClick={() => handleFiltro('')}>Turno</a>
+            <a onClick={() => handleFiltro('manha')}>Manhã</a>
+            <a onClick={() => handleFiltro('tarde')}>Tarde</a>
           </div>
         </DropdownButton> 
 
         <DropdownButton name="Turma" corElemento={corElemento} corTexto={corTexto}>
           <div>
           <input type="text" placeholder="Pesquisar turmas..." onChange={SearchFilter}/>
-            <a onClick={() => handleFiltroTurma('')}>Turma</a>
+            <a onClick={() => handleFiltro('')}>Turma</a>
             {
               turmas.map(turma => {
-              return <a onClick={() => handleFiltroTurma(turma.nome)}> {turma.nome} </a>
+              return <a onClick={() => handleFiltro(turma.nome)}> {turma.nome} </a>
             })}
           </div>
         </DropdownButton> 
@@ -105,19 +112,16 @@ export default function Home() {
       <div className="listaAlunos">
         {
           alunosFiltrados.map(aluno => {
-          return <a className="linkAlunos" onClick={handleOpenModal}>
+          return <a key={aluno.id} className="linkAlunos" onClick={() => handleGetAluno(aluno.id)}>
                     <AlunoCard id={aluno.id} nome={aluno.nome} turma={aluno.turma} turno={aluno.turno} />
                  </a>
           })
         }
      </div>
-      <div className="modal" style={{display: displayAtual}}>
-          <ModalCard/>
-          <div className='exit'>
-                <a onClick={handleCloseModal}><h1>✖</h1></a>
-           </div>
-      </div>
-      <a onClick={handleOpenModal}><BtnAdicionar title='Adicionar aluno' corTexto={corTexto} corElemento={corElemento}/></a>
+      <Modal onClick={handleXDisplay} display={displayModal}> <CriarAlunoForm/> </Modal>
+          
+          
+      <a onClick={handleCriarAluno}><BtnAdicionar title='Adicionar aluno' corTexto={corTexto} corElemento={corElemento}/></a>
       <ul>
         {
             alunosFiltrados.map(aluno => {

@@ -1,0 +1,19 @@
+.modal {
+    position: fixed;
+    top: 10%;
+    left: 5%;
+    z-index: 1;
+    width: 90vw;
+    height: 80vh;
+    z-index: 4;
+    justify-content: center;
+    align-items: center;
+    border-radius: 20px;
+}
+
+.modal h1 {
+    position: absolute;
+    right: 8px;
+    top: 0;
+    color: red;
+}

@@ -1,5 +1,5 @@
 export let temas = {
      corElemento: '#800080',
-     corTexto: '#000000',
+     corTexto: 'black',
      corFundo: '#ffffff'
 }

@@ -3,7 +3,7 @@ import { useForm, SubmitHandler } from "react-hook-form"
 
 
 
-export default function ModalCard(){
+export default function CriarAlunoForm(){
     return (
         <div className={styles.modal}>
             <form className={styles.input}>

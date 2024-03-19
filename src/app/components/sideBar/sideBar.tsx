@@ -2,6 +2,7 @@ import { useState } from "react"
 import styles from './sideBar.module.css'
 
 
+
 interface ISideBar{
     corElemento: string;
     corTexto: string;
@@ -21,14 +22,16 @@ export default function SideBar({corElemento, corTexto} : ISideBar){
            style={{display: displaySidebar, backgroundColor: corElemento, color: corTexto}}>
             <a href="/alunos">Alunos</a>
             <a href="/turmas">Turmas</a>
-            <a href="/financeiro">Financeiro</a>
+            <a href="/financeiro/fechamento">Financeiro</a>
             <a href="/admin">Administração</a>
             <div className={styles.divModal}>
             <a href="/config">Configurações</a>
             <a href="../">Sair</a>
             </div>
            </div>
-           <a className={styles.botao} onClick={handleSwitchSidebar}><img src="" alt="botao" /></a>
+           <a className={styles.botao} onClick={handleSwitchSidebar}>
+             <img src="" alt="Botão" />
+          </a>
         </div>
     )
 }

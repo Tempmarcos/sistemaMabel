@@ -1,0 +1,16 @@
+.main {
+    display: flex;
+    flex-flow: column;
+}
+
+.main div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-flow: row wrap;
+}
+
+.title {
+    justify-content: start !important;
+    margin: 20px;
+}

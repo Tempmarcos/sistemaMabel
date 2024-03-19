@@ -9,8 +9,8 @@ export default function Home(){
         <main>
             <Header>
                 <LinkButton texto="Fechamento" link="financeiro/fechamento" />
-                <LinkButton texto="Planos" link="planos" />
-                <LinkButton texto="Atividades" link="atividades" />
+                <LinkButton texto="Planos" link="financeiro/planos" />
+                <LinkButton texto="Atividades" link="financeiro/atividades" />
             </Header>
             <header className={styles.header}> 
                 <h3>Não pagou</h3> <input type="checkbox" name="" id="" />
