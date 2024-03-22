@@ -9,16 +9,19 @@ interface AlunoCardProps {
 
 export default function AlunoCard({nome, turno, turma} : AlunoCardProps){
 
-    let estilo = "";
-    if (turno === "manha") { 
-        estilo = styles.cardManha
-    }else {
-        estilo = styles.cardTarde
+    let background;
+
+    if(turno === "manha") { 
+        background = '#00ffff';
+    } else if(turno === 'tarde') {
+        background = '#ffa500';
+    } else {
+        background = 'gray';
     }
 
 
     return (
-        <div className={estilo}>
+        <div className={styles.card} style={{backgroundColor: background}}>
            {nome}<br />
            {turma}
         </div>

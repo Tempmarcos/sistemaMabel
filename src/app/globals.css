@@ -55,9 +55,28 @@ input {
   margin: 8px;
 }
 
+form button {
+  background-color: red;
+  border: none;
+  padding: 5px;
+  margin: 8px;
+  border-radius: 5px;
+  position: absolute;
+  bottom: 0;
+  cursor: pointer;
+}
+
 select {
   padding: 5px;
   margin: 8px;
+}
+
+select:focus {
+  background-color: rgb(221, 221, 221);
+}
+
+input:focus {
+  background-color: rgb(221, 221, 221);
 }
 
 input[type=submit] {

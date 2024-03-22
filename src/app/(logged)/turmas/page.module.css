@@ -7,3 +7,15 @@
     width: 100vw;
 }
 
+.card {
+    width: 400px;
+    height: 200px;
+    margin: 20px;
+}
+
+@media (max-width: 450px) {
+    .card{
+        height: 130px;
+        width: 260px
+    }
+}

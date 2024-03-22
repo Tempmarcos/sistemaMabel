@@ -1,7 +1,7 @@
 import styles from './usercard.module.css'
 
 interface IUserCard {
-    id : number;
+    id : string;
     nome : string;
     role : string;
 }

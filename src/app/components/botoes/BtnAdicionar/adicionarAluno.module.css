@@ -15,9 +15,12 @@
     bottom: 5px;
     left: 5px;
     z-index: 3;
+    transition: 0.2s ease-in-out;
 }
 
 .button:hover {
-    filter: invert();
-    /*background-color: #3e8e41;*/
+    transform: scale(1.25);
+    bottom: 12px;
+    left: 12px;
+    box-shadow: 6px 6px 6px 6px hsl(0deg 0% 0% / 0.31);
 }

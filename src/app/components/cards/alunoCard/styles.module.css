@@ -1,5 +1,4 @@
-.cardManha {
-    background-color: aqua;
+.card {
     width: 100px;
     height: 100px;
     display: flex;
@@ -10,17 +9,7 @@
     transition: 0.2s ease-in-out;
 }
 
-.cardTarde {
-    background-color: orange;
-    width: 100px;
-    height: 100px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 15px;
-    text-align: center;
-    transition: 0.2s ease-in-out;
+.card:hover {
+    transform: scale(1.25);
+    box-shadow: 6px 6px 6px 6px hsl(0deg 0% 0% / 0.31);
 }
-
-.cardManha:hover {transform: scale(1.25);}
-.cardTarde:hover {transform: scale(1.25);}

@@ -10,6 +10,12 @@
     flex-flow: row wrap;
 }
 
+.card {
+    width: 150px;
+    height: 150px;
+    margin: 20px;
+}
+
 .title {
     justify-content: start !important;
     margin: 20px;

@@ -22,7 +22,7 @@ export default function Home() {
   
   const corElemento = 'yellow';
   const corTexto = "black";
-  const corFundo = "gold";
+  const corFundo = "white";
 
   //#04AA6D
 
@@ -45,6 +45,10 @@ export default function Home() {
   //Botão para minimizar o modal dos alunos
   function handleXDisplay(){
     setDisplayModal('none');
+}
+
+function handleMinimizarModal(){
+  setDisplayModal('none');
 }
 
   //Botão pra fazer as legendas (manhã, tarde, etc) aparecerem/sumirem
@@ -118,7 +122,7 @@ export default function Home() {
           })
         }
      </div>
-      <Modal onClick={handleXDisplay} display={displayModal}> <CriarAlunoForm/> </Modal>
+      <Modal onClickMin={handleMinimizarModal} onClick={handleXDisplay} display={displayModal}> <CriarAlunoForm/> </Modal>
           
           
       <a onClick={handleCriarAluno}><BtnAdicionar title='Adicionar aluno' corTexto={corTexto} corElemento={corElemento}/></a>

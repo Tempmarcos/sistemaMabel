@@ -8,9 +8,17 @@
     align-items: center;
     text-align: center;
     background-color: crimson;
-    margin: 20px;
+    transition: 0.5s ease-in-out;
 }
 
 .card:hover {
-    filter: grayscale(60%);
+    transform: scale(1.1);
+    box-shadow: 6px 6px 6px 6px hsl(0deg 0% 0% / 0.31);
+}
+
+@media (max-width: 450px) {
+    .card{
+        height: 130px;
+        width: 260px
+    }
 }

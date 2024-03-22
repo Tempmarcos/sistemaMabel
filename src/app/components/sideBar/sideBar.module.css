@@ -34,7 +34,12 @@
 .botao {
     z-index: 6;
     position: absolute;
-    bottom: 0;
-    right: 0;
+    top: 10px;
+    right: 8px;
     pointer-events: all;
+    transition: 0.3s ease-in-out;
+}
+
+.botao:hover {
+    transform: scale(1.5);
 }

@@ -4,20 +4,23 @@ import Modal from "@/app/components/cards/Modal/Modal";
 import styles from './page.module.css';
 import UserCard from "@/app/components/cards/UserCard/UserCard";
 import { useCallback, useEffect, useState } from "react";
-import { users } from "@/mocks/users";
 import { useForm, SubmitHandler } from "react-hook-form"
 import { axiosInstance } from "@/http/config/axiosConfig"
+import { AxiosError } from "axios";
+import { errorHandler } from "@/http/errorHandler";
 
 
 type InputData = {
+    id? : string;
     nome : string;
     role : string;
     password : string;
     email : string;
+    created_at? : string;
 }
 
 type APIData = {
-    id : number;
+    id : string;
     nome : string;
     role : string;
     email : string;
@@ -29,12 +32,13 @@ export default function Home() {
 
     const [users, setUsers] = useState<APIData[]>([] as APIData[]);
     const [isLoading, setIsLoading] = useState(false);
+    const [selectedUser, setSelectedUser] = useState('');
+
 
     const fetchData = useCallback(async () => {
         try {
             setIsLoading(true);
             const data = await getUsers();;
-
             setUsers(data);
         } catch (error) {
             console.error(error);
@@ -47,11 +51,28 @@ export default function Home() {
         fetchData();
     }, [fetchData]);
 
+
+
     async function getUsers() {
         const resposta = await axiosInstance.get('/users');
-        console.log(resposta.data);
         return resposta.data;
       }
+
+    async function getUser(id : string) {
+        const resposta = await axiosInstance.get(`/users/${id}`);
+        return resposta.data;
+    }
+
+    //⁝
+
+    async function deleteUser(id : string) {
+        const resposta = await axiosInstance.delete(`/users/${id}`);
+        alert(JSON.stringify(resposta.data, null, 2))
+        handleXDisplay();
+        setSelectedUser('');
+        fetchData();
+        return resposta.data;
+    }
 
     function handleXDisplay(){
         setDisplayModal('none');
@@ -61,10 +82,39 @@ export default function Home() {
             password : '',
             email : '',
         })
+        setSelectedUser('');
+    }
+
+    function handleMinimizarModal(){
+        setDisplayModal('none');
+        reset({
+            nome : '',
+            role : '',
+            password : '',
+            email : '',
+        })
+        setSelectedUser('');
     }
 
     function handleOpenModal() {
         setDisplayModal("flex");
+      }
+
+     async function handleGetUser(id : string) {
+        handleOpenModal();
+        const user = await getUser(id);
+        setSelectedUser(user.id);
+        reset(user);
+      }
+
+      const aparecerBotaoDeletar = () => {
+        if(selectedUser){
+            return <button onClick={() => handleDeleteUser(selectedUser)}>Deletar usuário</button>
+        }
+      }
+
+      async function handleDeleteUser(id : string) {
+        const userDelete = await deleteUser(id);
       }
 
       const {
@@ -76,20 +126,30 @@ export default function Home() {
     } = useForm<InputData>()
 
 
+
     const onSubmit: SubmitHandler<InputData> = async (data) => {
-        alert(JSON.stringify(data, null, 2));
-        try {
-            const resposta = await axiosInstance.post('/users', data);
-            console.log(resposta);
-            fetchData();
-            handleXDisplay();
-        } catch (error) {
-            if(error instanceof Error) {
-            alert(JSON.stringify(error.message, null, 2));
-            handleXDisplay()
+        if(selectedUser) {
+            delete data.created_at;
+            // alert(JSON.stringify(data, null, 2));
+            try {
+                const resposta = await axiosInstance.put(`/users`, data);
+                fetchData();
+            } catch (error) {
+                errorHandler(error);
+            } finally {
+                handleXDisplay();
+                setSelectedUser('');
+            }
+        } else {
+            try {
+                const resposta = await axiosInstance.post('/users', data);
+                fetchData();
+            } catch (error) {
+                errorHandler(error)
+            } finally{
+                handleXDisplay()
+            }
         }
-        }
-        
     } 
 
     return (
@@ -100,35 +160,44 @@ export default function Home() {
             <div>
             {isLoading && users.length === 0 && <p>Carregando...</p>}
                 {
-                    /*
-                    users.map(user => {
-                        return <UserCard nome={user.nome} role={user.role} />
-                    })
-                    */
                     !isLoading && users.map(user => {
-                        return <UserCard id={user.id} nome={user.nome} key={user.id}
-                          role={user.role} />
-                    })
-                    
+                        return <a className={styles.card} key={user.id} onClick={() => handleGetUser(user.id)}>
+                               <UserCard id={user.id} nome={user.nome} key={user.id}
+                               role={user.role} /></a>
+                    }) 
                 }
             </div>
-            <Modal onClick={handleXDisplay} display={displayModal}>
+            <Modal onClickMin={handleMinimizarModal} onClick={handleXDisplay} display={displayModal}>
             <form onSubmit={handleSubmit(onSubmit)}>
-                <input placeholder='Nome' {...register("nome", { required: true })} />
-                <input placeholder="E-mail" type="email" {...register("email", { required: true })} />
-                <label htmlFor="role">Cargo:</label>
-                <select id="role" {...register("role")}>
-                    <option value="DIRETORA">Diretora</option>
-                    <option value="ADMIN">Administrador</option>
-                    <option value="PROF">Professor(a)</option>
-                </select>
-                <input type="password" placeholder="Senha" {...register("password", { required: true })} />
+                {aparecerBotaoDeletar()}
+                <div>
+                    <label htmlFor="nome">Nome:</label>
+                    <input id="nome" {...register("nome", { required: true })} />
+                </div>
+                <div>
+                    <label htmlFor="email">E-mail:</label>
+                    <input id="email" type="email" {...register("email", { required: true })} />
+                </div>
+                <div>
+                    <label htmlFor="role">Cargo:</label>
+                    <select id="role" {...register("role")}>
+                        <option value="PROF">Professor(a)</option>
+                        <option value="ADMIN">Administrador</option>
+                        <option value="DIRETORA">Diretora</option>
+                    </select>
+                </div>
+                <div>
+                    <label htmlFor="senha">Senha:</label>
+                    <input type="password" {...register("password", { required: true })} />
+                </div>
                 {errors.nome && <span>This field is required</span>}
 
                 <input type="submit" />
             </form>
             </Modal>
-            <a onClick={handleOpenModal}><BtnAdicionar title="Adicionar usuário" corElemento="blue" corTexto="white"/></a>
+            <a onClick={handleOpenModal}>
+                <BtnAdicionar title="Adicionar usuário" corElemento="blue" corTexto="white"/>
+            </a>
         </main>
     )
 }

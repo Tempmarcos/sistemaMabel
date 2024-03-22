@@ -30,7 +30,7 @@ export default function SideBar({corElemento, corTexto} : ISideBar){
             </div>
            </div>
            <a className={styles.botao} onClick={handleSwitchSidebar}>
-             <img src="" alt="Botão" />
+             <h1>☰</h1>
           </a>
         </div>
     )
