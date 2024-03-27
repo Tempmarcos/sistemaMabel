@@ -7,6 +7,7 @@ export default function Home() {
             <Header>
                 <LinkButton texto="Fechamento" link="financeiro/fechamento" />
                 <LinkButton texto="Planos" link="financeiro/planos" />
+                <LinkButton texto="Taxas" link="financeiro/taxas" />
                 <LinkButton texto="Atividades" link="financeiro/atividades" />
             </Header>
 

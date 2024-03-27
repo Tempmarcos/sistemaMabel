@@ -7,7 +7,9 @@ import { useCallback, useEffect, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form"
 import { axiosInstance } from "@/http/config/axiosConfig"
 import { AxiosError } from "axios";
+import { getUsers, getUser, deleteUser } from '@/http/services/users/functions';
 import { errorHandler } from "@/http/errorHandler";
+import Alerta from "@/app/components/cards/Alerta/Alerta";
 
 
 type InputData = {
@@ -31,7 +33,7 @@ export default function Home() {
     const [displayModal, setDisplayModal] = useState("none");
 
     const [users, setUsers] = useState<APIData[]>([] as APIData[]);
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const [selectedUser, setSelectedUser] = useState('');
 
 
@@ -50,29 +52,6 @@ export default function Home() {
     useEffect(() => {
         fetchData();
     }, [fetchData]);
-
-
-
-    async function getUsers() {
-        const resposta = await axiosInstance.get('/users');
-        return resposta.data;
-      }
-
-    async function getUser(id : string) {
-        const resposta = await axiosInstance.get(`/users/${id}`);
-        return resposta.data;
-    }
-
-    //⁝
-
-    async function deleteUser(id : string) {
-        const resposta = await axiosInstance.delete(`/users/${id}`);
-        alert(JSON.stringify(resposta.data, null, 2))
-        handleXDisplay();
-        setSelectedUser('');
-        fetchData();
-        return resposta.data;
-    }
 
     function handleXDisplay(){
         setDisplayModal('none');
@@ -113,8 +92,20 @@ export default function Home() {
         }
       }
 
+      const openAlerta = () => {
+        return <Alerta>Deseja excluir esse usuário?</Alerta>
+      }
+
       async function handleDeleteUser(id : string) {
-        const userDelete = await deleteUser(id);
+        openAlerta();
+        try{
+            const userDelete = await deleteUser(id);
+        }catch(error){
+            errorHandler(error);
+        }
+        handleXDisplay();
+        setSelectedUser('');
+        fetchData();
       }
 
       const {
@@ -159,6 +150,8 @@ export default function Home() {
             </div>
             <div>
             {isLoading && users.length === 0 && <p>Carregando...</p>}
+            {!isLoading && users.length === 0 && <p>Para criar um usuário, clique no botão ali embaixo!</p>}
+
                 {
                     !isLoading && users.map(user => {
                         return <a className={styles.card} key={user.id} onClick={() => handleGetUser(user.id)}>

@@ -20,7 +20,7 @@
 
 .button:hover {
     transform: scale(1.25);
-    bottom: 12px;
-    left: 12px;
+    bottom: 11px;
+    left: 11px;
     box-shadow: 6px 6px 6px 6px hsl(0deg 0% 0% / 0.31);
 }
