@@ -7,7 +7,7 @@ export async function getPlanos() {
 
 export async function deletePlano(id : string) {
     const resposta = await axiosInstance.delete(`/planos/${id}`)
-    return resposta.data;
+    return resposta;
 }
 
 export async function createPlano(data : unknown) {

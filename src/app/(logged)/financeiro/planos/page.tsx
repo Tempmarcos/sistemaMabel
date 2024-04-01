@@ -6,25 +6,28 @@ import { useForm, SubmitHandler } from "react-hook-form"
 import { getPlanos, deletePlano, createPlano, editPlano } from '@/http/services/planos/functions'
 import { useCallback, useEffect, useState } from 'react';
 import { errorHandler } from '@/http/errorHandler';
+import { axiosInstance } from '@/http/config/axiosConfig';
 
 
 
 type PlanoData = {
     id : string;
     nome : string;
-    valor : string;
+    valor : number;
 }
 
 type InputData = {
     nome : string;
-    valor : string;
+    valor : string | number;
 }
 
 
 export default function Home() {
     const [planos, setPlanos] = useState<PlanoData[]>([] as PlanoData[]);
     const [isLoading, setIsLoading] = useState(true);
+    const [isDeleting, setIsDeleting] = useState(false);
     const [campoPlano, setCampoPlano] = useState(false);
+    const [isBotaoEditarAtivo, setIsBotaoEditarAtivo] = useState<boolean[]>([]);
 
     const fetchData = useCallback(async () => {
         try {
@@ -41,25 +44,17 @@ export default function Home() {
         fetchData();
     }, [fetchData]);
 
-    function criarCampoPlano() {
-       //função para colocar mais um campo para os planos
-       if(campoPlano === true)
-       return <tr>
-        <th></th>
-        <th><input type="text" /></th>
-        <th><input type="number" name="" id="" /></th>
-        <th><button onSubmit={() => handleCriarPlano}>Criar</button></th>
-       </tr>
-    }
 
-    async function handleCriarPlano(data : unknown) {
-        try{
-            const criarPlano = await createPlano(data);
-        }catch(error) {
-            errorHandler(error);
-        }
-        setCampoPlano(false);
-        fetchData();
+    function criarCampoPlano() {
+       if(campoPlano === true){
+       return (
+        <form style={{marginLeft: '55px'}} onSubmit={handleSubmit(onSubmit)}>
+            <input type="text" {...register('nome')}/>
+            <input type="number" {...register('valor')} />
+            <button type="submit">Enviar</button>
+        </form>
+       )
+       }
     }
 
     const {
@@ -71,18 +66,29 @@ export default function Home() {
     } = useForm<InputData>()
 
     async function handleDeletePlano(id: string) {
+        setIsDeleting(true);
         try{
-            await deletePlano(id);
+            const resposta = await axiosInstance.delete(`/planos/${id}`);
+            // const resposta = await deletePlano(id);
+            //alert(JSON.stringify(resposta,null, 2));
+            fetchData();
         }catch(error) {
             errorHandler(error);
+        }finally {
+            setIsDeleting(false);
         }
-        fetchData();
     }
 
     const onSubmit: SubmitHandler<InputData> = async (data) => {
             try {
-                createPlano(data);
+                data.valor = parseInt(data.valor);
+                // alert(JSON.stringify(data, null, 2));
+                const resposta = await axiosInstance.post(`/planos`, data);
                 fetchData();
+                reset ({
+                    nome : '',
+                    valor : ''
+                   })
                 setCampoPlano(false);
             } catch (error) {
                 errorHandler(error)
@@ -99,27 +105,24 @@ export default function Home() {
             </Header>
 
             <section className={styles.tabela}>
-                
-                <table>
-                    <tr>
-                        <th></th>
-                        <th>Nome</th>
-                        <th>Valor</th>
-                        <th></th>
-                    </tr>
+                <div className={styles.table}>
+                    <div className={styles.header}>
+                        <h1>Nome</h1>
+                        <h1>Valor</h1>
+                    </div>
                     {isLoading && planos.length === 0 && <p>Carregando...</p>} 
                     {!isLoading && planos.length === 0 && <p>Adicione um plano</p>}
                     {planos.map(plano => {return (
-                            <tr>
-                                <th><button onClick={() => handleDeletePlano(plano.id)}>Excluir</button></th>
-                                <th><input type="text" defaultValue={plano.nome} {...register("nome")}/></th>
-                                <th><input type='number' defaultValue={plano.valor} {...register("valor")}/></th>
-                                <th><button disabled>Editar</button></th>
-                            </tr>
+                            <form key={plano.id}>
+                                <button disabled={isDeleting} onClick={() => handleDeletePlano(plano.id)}>Excluir</button>
+                                <input type="text" defaultValue={plano.nome} />
+                                <input type='number' defaultValue={plano.valor} />
+                                <button disabled>Editar</button>
+                            </form>
                     )})}
                     {criarCampoPlano()}
-                    <tr><th></th><th><button onClick={() => setCampoPlano(true)}>Adicionar plano</button></th></tr>
-                </table>
+                    <button onClick={() => setCampoPlano(true)}>Adicionar plano</button>
+                </div>
             </section>
         </main>
     )

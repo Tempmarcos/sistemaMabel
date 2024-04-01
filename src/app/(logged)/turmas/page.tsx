@@ -82,7 +82,7 @@ export default function Home(){
 
     const aparecerBotaoDeletar = () => {
         if(selectedTurma){
-            return <button onClick={() => handleDeleteTurma(selectedTurma)}>Deletar turma</button>
+            return <button className={styles.deletar} onClick={() => handleDeleteTurma(selectedTurma)}>Deletar turma</button>
         }
       }
 

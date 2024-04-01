@@ -13,6 +13,16 @@
     margin: 20px;
 }
 
+.deletar {
+    background-color: red;
+  border: none;
+  padding: 5px;
+  margin: 8px;
+  border-radius: 5px;
+  position: absolute;
+  bottom: 0;
+  cursor: pointer;
+}
 @media (max-width: 450px) {
     .card{
         height: 130px;
