@@ -1,7 +1,7 @@
 import styles from './styles.module.css'
 
 interface AlunoCardProps {
-    id: number;
+    id: string;
     nome: string;
     turno: string;
     turma: string;
@@ -11,9 +11,9 @@ export default function AlunoCard({nome, turno, turma} : AlunoCardProps){
 
     let background;
 
-    if(turno === "manha") { 
+    if(turno === "MANHA") { 
         background = '#00ffff';
-    } else if(turno === 'tarde') {
+    } else if(turno === 'TARDE') {
         background = '#ffa500';
     } else {
         background = 'gray';

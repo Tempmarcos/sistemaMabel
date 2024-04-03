@@ -88,7 +88,7 @@ export default function Home() {
 
       const aparecerBotaoDeletar = () => {
         if(selectedUser){
-            return <button onClick={() => handleDeleteUser(selectedUser)}>Deletar usuário</button>
+            return <button className={styles.deletar} onClick={() => handleDeleteUser(selectedUser)}>Deletar usuário</button>
         }
       }
 

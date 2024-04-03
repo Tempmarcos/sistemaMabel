@@ -5,6 +5,10 @@ const listSchema = z.object({
   nome: z.string(),
   turno: z.enum(['MANHA', 'TARDE', 'NOITE']),
   faixa: z.enum(['KIDS', 'TEENS']),
+  prof: z.object({
+    id: z.string(),
+    nome: z.string(),
+  }).array(),
 }).array()
 
 export type ListTurmaResponseType = z.infer<typeof listSchema>

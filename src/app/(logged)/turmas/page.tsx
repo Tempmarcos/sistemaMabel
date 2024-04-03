@@ -6,7 +6,7 @@ import { useForm, SubmitHandler } from "react-hook-form"
 import { axiosInstance } from "@/http/config/axiosConfig"
 import Modal from "@/app/components/cards/Modal/Modal"
 import { useCallback, useEffect, useState } from "react"
-import { getProfs, deleteTurma, getTurma, getTurmas } from '@/http/services/turmas/functions'
+import { getProfs, deleteTurma, getTurma, getTurmas, ajustaTurmaAPI } from '@/http/services/turmas/functions'
 import { errorHandler } from '@/http/errorHandler'
 
 
@@ -17,13 +17,28 @@ type InputData = {
     faixa : string;
 }
 
-type APIData = {
+export type FormData = {
+    id : string;
+    nome : string;
+    prof : {id : string}[];
+    turno : string;
+    faixa : string;
+}
+
+type APIGetData = {
     id : string;
     nome : string;
     prof : PROFDAta[];
     turno : string;
     faixa : string;
     alunos : PROFDAta[];
+}
+type APIListData = {
+    id : string;
+    nome : string;
+    prof : PROFDAta[];
+    turno : string;
+    faixa : string;
 }
                 
 type PROFDAta = {
@@ -34,7 +49,7 @@ type PROFDAta = {
 export default function Home(){
     const [displayModal, setDisplayModal] = useState("none");
 
-    const [turmas, setTurmas] = useState<APIData[]>([] as APIData[]);
+    const [turmas, setTurmas] = useState<APIListData[]>([] as APIListData[]);
     const [profs, setProfs] = useState<PROFDAta[]>([] as PROFDAta[]);
 
 
@@ -44,7 +59,7 @@ export default function Home(){
     const fetchData = useCallback(async () => {
         try {
             setIsLoading(true);
-            const data : APIData[] = await getTurmas();
+            const data : APIListData[] = await getTurmas();
             setTurmas(data);
         } catch (error) {
             console.error(error);
@@ -71,9 +86,8 @@ export default function Home(){
         fetchProfs();
     }, [fetchProfs]);
 
-    async function handleGetTurma(id : string) {
-        const turma = await getTurma(id);
-        delete turma.alunos;
+    async function handleGetTurma(turma : APIListData) {
+        // alert(JSON.stringify(turma.prof, null, 2));
     
         handleOpenModal();
         setSelectedTurma(turma.id);
@@ -118,16 +132,14 @@ export default function Home(){
         watch,
         reset,
         formState: { errors },
-    } = useForm<InputData>()
+    } = useForm<FormData>()
 
-    const onSubmit: SubmitHandler<InputData> = async (data) => {
+    const onSubmit: SubmitHandler<FormData> = async (data) => {
         if(selectedTurma){
-            let arrayProf = [];
-            arrayProf.push({id: data.prof});
-            data.prof = arrayProf;
-           alert(JSON.stringify(data, null, 2));
+            const dadosAPI = ajustaTurmaAPI(data);
+            alert(JSON.stringify(dadosAPI, null, 2));
             try {
-                const resposta = await axiosInstance.put(`/turmas`, data);
+                const resposta = await axiosInstance.put(`/turmas`, dadosAPI);
                 fetchData();
             } catch (error) {
                 errorHandler(error);
@@ -137,8 +149,11 @@ export default function Home(){
             }
         }else {
             try {
-                const resposta = await axiosInstance.post('/turmas', data);
-                alert(JSON.stringify(data, null, 2));
+                // alert(JSON.stringify(data, null, 2));
+                //CRIAR FUNÇÃO PARA TRANSFORMAR O ARRAY DE PROFS EM ARRAY DE OBJETOS
+                const dadosAPI = ajustaTurmaAPI(data);
+                
+                const resposta = await axiosInstance.post('/turmas', dadosAPI);
                 fetchData();
             } catch (error) {
                 errorHandler(error)
@@ -155,7 +170,7 @@ export default function Home(){
             {isLoading && turmas.length === 0 && <p>Carregando...</p>} 
             {!isLoading && turmas.length === 0 && <p>Para criar uma turma, clique no botão ali embaixo!</p>}
             {!isLoading && turmas.map(turma => {
-                return <a className={styles.card} key={turma.id} onClick={() => handleGetTurma(turma.id)}>
+                return <a className={styles.card} key={turma.id} onClick={() => handleGetTurma(turma)}>
                             <TurmaCard id={turma.id} nome={turma.nome} key={turma.id}
                             faixa={turma.faixa} prof={turma.prof} turno={turma.turno} />
                         </a>
@@ -170,7 +185,7 @@ export default function Home(){
                 </div>
                 <div>
                     <label htmlFor="prof">Professores:</label>
-                    <select id="prof" {...register("prof")}>
+                    <select multiple id="prof" {...register("prof")}>
                         {
                             //função para listar os professores
                             profs.map(prof => {return <option key={prof.id} value={prof.id}>{prof.nome}</option>})

@@ -55,6 +55,12 @@ input {
   margin: 8px;
 }
 
+form div{
+  display: flex;
+  align-items: center;
+  justify-items: center;
+}
+
 select {
   padding: 5px;
   margin: 8px;
@@ -93,13 +99,6 @@ input[type=color] {
   flex-flow: row wrap;
   align-items: center;
   justify-content: center;
-}
-
-.contagemAlunos {
-  position: absolute;
-  right: 10px;
-  top: 8px;
-  font-size: 5vh;
 }
 
 a {

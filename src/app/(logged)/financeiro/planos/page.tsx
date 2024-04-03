@@ -18,8 +18,13 @@ type PlanoData = {
 
 type InputData = {
     nome : string;
-    valor : string | number;
+    valor : string | number | any;
 }
+
+// type ArrayBotaoEditar = {
+//     id : string;
+//     desativado : boolean;
+// }
 
 
 export default function Home() {
@@ -27,7 +32,12 @@ export default function Home() {
     const [isLoading, setIsLoading] = useState(true);
     const [isDeleting, setIsDeleting] = useState(false);
     const [campoPlano, setCampoPlano] = useState(false);
+
+    // const [isBotaoEditarAtivo, setIsBotaoEditarAtivo] = useState<boolean[]>([]);
+    // const [isBotaoEditarAtivo, setIsBotaoEditarAtivo] = useState(true);
     const [isBotaoEditarAtivo, setIsBotaoEditarAtivo] = useState<boolean[]>([]);
+    const [isEditando, setIsEditando] = useState(false);
+
 
     const fetchData = useCallback(async () => {
         try {
@@ -57,6 +67,16 @@ export default function Home() {
        }
     }
 
+
+    
+    function handleFormChange(index : number){
+        alert(JSON.stringify(isBotaoEditarAtivo, null, 2));
+        alert(index);
+        // let array = isBotaoEditarAtivo.splice(index, 1, false);
+        
+        setIsBotaoEditarAtivo(prev => prev.splice(index, 1, false));
+    }
+
     const {
         register,
         handleSubmit,
@@ -80,6 +100,16 @@ export default function Home() {
     }
 
     const onSubmit: SubmitHandler<InputData> = async (data) => {
+        if(isEditando === true){
+            try {
+                const resposta = await axiosInstance.put(`/turmas`, data);
+                fetchData();
+            } catch (error) {
+                errorHandler(error);
+            } finally {
+                setIsEditando(false);
+            }
+        } else {
             try {
                 data.valor = parseInt(data.valor);
                 // alert(JSON.stringify(data, null, 2));
@@ -93,6 +123,7 @@ export default function Home() {
             } catch (error) {
                 errorHandler(error)
             }
+        }
     } 
 
     return (
@@ -112,12 +143,17 @@ export default function Home() {
                     </div>
                     {isLoading && planos.length === 0 && <p>Carregando...</p>} 
                     {!isLoading && planos.length === 0 && <p>Adicione um plano</p>}
-                    {planos.map(plano => {return (
-                            <form key={plano.id}>
+                    {planos.map((plano, index) => {
+                        if(isBotaoEditarAtivo.length <= index){
+                            setIsBotaoEditarAtivo(prev => [...prev, true]);
+                        }
+                        return (
+                            <form onChange={ () => handleFormChange(index)} key={plano.id}>
                                 <button disabled={isDeleting} onClick={() => handleDeletePlano(plano.id)}>Excluir</button>
                                 <input type="text" defaultValue={plano.nome} />
                                 <input type='number' defaultValue={plano.valor} />
-                                <button disabled>Editar</button>
+                                <button onClick={() => setIsEditando(true)} 
+                                disabled={isBotaoEditarAtivo[index]}>Editar</button>
                             </form>
                     )})}
                     {criarCampoPlano()}

@@ -19,3 +19,13 @@ export async function getTurmas() {
     const resposta = await axiosInstance.get('/turmas');
     return resposta.data;
   }
+
+
+  export function ajustaTurmaAPI(data: any) {
+     const arrayArrumado = data.prof.map((item : string) => {
+        return {id : item}
+      })
+      data.prof = arrayArrumado;
+      return data;
+  }
+

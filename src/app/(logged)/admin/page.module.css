@@ -10,6 +10,17 @@
     flex-flow: row wrap;
 }
 
+.deletar {
+    background-color: red;
+  border: none;
+  padding: 5px;
+  margin: 8px;
+  border-radius: 5px;
+  position: absolute;
+  bottom: 0;
+  cursor: pointer;
+}
+
 .card {
     width: 150px;
     height: 150px;

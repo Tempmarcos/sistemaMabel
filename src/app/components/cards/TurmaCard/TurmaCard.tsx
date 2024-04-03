@@ -3,7 +3,7 @@ import styles from './turmacard.module.css'
 interface TurmaCardProps {
     id: string;
     nome: string;
-    prof: PROFDAta[];
+    prof: any[];
     turno: string;
     faixa: string;
 }
@@ -22,7 +22,6 @@ export default function TurmaCard({ id, nome, prof, turno, faixa} : TurmaCardPro
     } else {
         background = 'gray';
     }
-
 
     return (
         <div className={styles.card} style={{backgroundColor: background}}>
