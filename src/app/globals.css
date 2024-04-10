@@ -94,13 +94,6 @@ input[type=color] {
   border: none;
 }
 
-.listaAlunos {
-  display: flex;
-  flex-flow: row wrap;
-  align-items: center;
-  justify-content: center;
-}
-
 a {
   color: inherit;
   text-decoration: none;

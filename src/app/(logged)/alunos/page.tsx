@@ -1,12 +1,10 @@
 'use client'
 import AlunoCard from "../../components/cards/AlunoCard/AlunoCard";
 import styles from './page.module.css'
-import CriarAlunoForm from "../../components/forms/CriarAlunoForm/CriarAlunoForm";
 import {useCallback, useEffect, useState} from "react";
 import DropdownButton from "../../components/botoes/dropdownButton/dropdownButton";
 import BtnAdicionar from '../../components/botoes/BtnAdicionar/BtnAdicionar';
 import Header from "@/app/components/header/Header";
-import Modal from "@/app/components/cards/Modal/Modal";
 import { errorHandler } from "@/http/errorHandler";
 import { getTurmas } from "@/http/services/turmas/functions";
 import { ListAlunoResponseType } from "@/http/parses/aluno";
@@ -19,8 +17,6 @@ type TurmaData = {
 }
 
 export default function Home() {
-  const [displayModal, setDisplayModal] = useState("none");
-
   const [displayLegenda, setDisplayLegenda] = useState("none")
   const [textoLegenda, setTextoLegenda] = useState('Legendas ↓');
   const [isLoading, setIsLoading] = useState(true);
@@ -65,30 +61,10 @@ useEffect(() => {
 }, [fetchTurmas]);
 
 
-  //Função pra abrir o modal.
-  function handleOpenModal() {
-    setDisplayModal("block");
-  }
-
   //Função para pegar as informações de um aluno específico.
   function handleGetAluno(id : string) {
-    handleOpenModal();
     alert(JSON.stringify(id, null, 2))
   }
-
-  //
-  function handleCriarAluno() {
-    handleOpenModal();
-  }
-
-  //Botão para minimizar o modal dos alunos
-  function handleXDisplay(){
-    setDisplayModal('none');
-}
-
-function handleMinimizarModal(){
-  setDisplayModal('none');
-}
 
   //Botão pra fazer as legendas (manhã, tarde, etc) aparecerem/sumirem
   function handleLegendas() {
@@ -144,7 +120,7 @@ function handleMinimizarModal(){
       </div>
       <h2>Alunos: {alunosFiltrados.length}</h2>
       </div>
-      <div className="listaAlunos">
+      <div className={styles.listaAlunos}>
         {isLoading && alunos.length === 0 && <p>Carregando...</p>} 
         {!isLoading && alunos.length === 0 && <p>Para criar um aluno, clique no botão ali embaixo!</p>}
         {!isLoading && alunosFiltrados.length === 0 && alunos.length !== 0 && <p>Nenhum aluno possui esse filtro :(</p>}
@@ -156,8 +132,7 @@ function handleMinimizarModal(){
           })
         }
      </div>
-      <Modal onClickMin={handleMinimizarModal} onClick={handleXDisplay} display={displayModal}> <CriarAlunoForm/> </Modal>    
-      <a onClick={handleCriarAluno}><BtnAdicionar title='Adicionar aluno' corTexto={corTexto} corElemento={corElemento}/></a>
+      <a href='/alunos/criar'><BtnAdicionar title='Adicionar aluno' corTexto={corTexto} corElemento={corElemento}/></a>
       <ul>
         {
             alunosFiltrados.map(aluno => {

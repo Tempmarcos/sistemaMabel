@@ -1,3 +1,11 @@
 .main {
   min-height: 100vh;
 }
+
+.listaAlunos {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  justify-content: center;
+  min-height: 70vh;
+}
