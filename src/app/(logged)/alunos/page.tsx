@@ -15,6 +15,7 @@ import { axiosInstance } from "@/http/config/axiosConfig";
 import { CreateDiariaRequestType, ListDiariaResponseType } from "@/http/parses/diaria";
 import dayjs from "dayjs";
 import DiariaCard from "@/app/components/cards/DiariaCard/DiariaCard";
+import { CreateAtrasoRequestType, ListAtrasoResponseType } from "@/http/parses/atraso";
 
 
 type TurmaData = {
@@ -30,8 +31,10 @@ export default function Home() {
   const [displayModal, setDisplayModal] = useState("none");
   const [nomeAtual, setNomeAtual] = useState('');
   const [displayCriarDiaria, setDisplayCriarDiaria] = useState('none');
+  const [displayCriarAtraso, setDisplayCriarAtraso] = useState('none');
 
 
+  const [atrasosAtuais, setAtrasosAtuais] = useState<ListAtrasoResponseType>([] as ListAtrasoResponseType);
   const [diariasAtuais, setDiariasAtuais] = useState<ListDiariaResponseType>([] as ListDiariaResponseType);
   const [alunos, setAlunos] = useState<ListAlunoResponseType>([] as ListAlunoResponseType);
   const [alunosFiltrados, setAlunosFiltrados] = useState(alunos);
@@ -76,7 +79,11 @@ useEffect(() => {
     // alert(JSON.stringify(id, null, 2))
     setNomeAtual(nome)
     getDiarias(id);
+    getAtrasos(id);
     reset ({
+      alunoId: id
+    })
+    resetAtraso ({
       alunoId: id
     })
   }
@@ -91,8 +98,34 @@ useEffect(() => {
     setDiariasAtuais(diarias);
   }
 
+  async function handleDeleteDiaria(id : string, alunoId : string){
+    const resposta = await axiosInstance.delete(`diarias/${id}`);
+    getDiarias(alunoId);
+    return resposta;
+  }
+
   function handleAdicionarDiaria() {
-    setDisplayCriarDiaria('flex');
+    displayCriarDiaria === 'none' ? setDisplayCriarDiaria('flex') : setDisplayCriarDiaria('none');
+  }
+
+  async function getAtrasos(id : string){
+    const resposta = await axiosInstance.get(`/atrasos/${id}`);
+    const atrasos: ListAtrasoResponseType = resposta.data;
+    // alert(JSON.stringify(diarias, null, 2));
+    atrasos.forEach(atraso => {
+      atraso.data = dayjs(atraso.data).format('DD/MMM');
+    })
+    setAtrasosAtuais(atrasos);
+  }
+
+  async function handleDeleteAtraso(id : string, alunoId : string){
+    const resposta = await axiosInstance.delete(`atrasos/${id}`);
+    getAtrasos(alunoId);
+    return resposta;
+  }
+
+  function handleAdicionarAtraso() {
+    displayCriarAtraso === 'none' ? setDisplayCriarAtraso('flex') : setDisplayCriarAtraso('none');
   }
 
   function handleFecharModal() {
@@ -132,13 +165,36 @@ useEffect(() => {
 
   const onSubmit: SubmitHandler<CreateDiariaRequestType> = async (data) => {
     try{
-      alert(JSON.stringify(data, null, 2));
+      // alert(JSON.stringify(data, null, 2));
       const resposta = await axiosInstance.post(`/diarias`, data);
       getDiarias(data.alunoId);
     } catch(error){
         console.log(error)
     } finally {
       setDisplayCriarDiaria('none');
+      reset ({
+        data : '',
+        turno: 'MANHA',
+      })
+    }
+  }
+
+  const {
+    register : registerAtraso,
+    handleSubmit : handleAtrasoSubmit,
+    reset : resetAtraso,
+    formState: { errors : errorsAtraso },
+  } = useForm<CreateAtrasoRequestType>()
+
+  const onAtrasoSubmit: SubmitHandler<CreateAtrasoRequestType> = async (data) => {
+    try{
+      // alert(JSON.stringify(data, null, 2));
+      const resposta = await axiosInstance.post(`/atrasos`, data);
+      getAtrasos(data.alunoId);
+    } catch(error){
+        console.log(error)
+    } finally {
+      setDisplayCriarAtraso('none');
     }
   }
 
@@ -211,7 +267,25 @@ useEffect(() => {
             </div>
             <div className={styles.div}>
                 {diariasAtuais.map(diaria => {
-                  return <DiariaCard turno={diaria.turno} data={diaria.data}/>
+                  return <DiariaCard turno={diaria.turno} data={diaria.data} onClick={() => handleDeleteDiaria(diaria.id, diaria.alunoId)}/>
+                })}
+            </div>
+            <div className={styles.div}>
+                <h1>Atrasos</h1>
+                <a onClick={handleAdicionarAtraso}><h1>+</h1></a>
+                <div style={{display: displayCriarAtraso}}>
+                  <form onSubmit={handleAtrasoSubmit(onAtrasoSubmit)}>
+                      <div>
+                        <label htmlFor="data">Data:</label>
+                        <input type="date" id="data" {...registerAtraso('data')}/>
+                      </div>
+                      <button type="submit">Registrar atraso</button>
+                  </form>
+                </div>
+            </div>
+            <div className={styles.div}>
+                {atrasosAtuais.map(atraso => {
+                  return <DiariaCard data={atraso.data} onClick={() => handleDeleteAtraso(atraso.id, atraso.alunoId)}/>
                 })}
             </div>
         </div>

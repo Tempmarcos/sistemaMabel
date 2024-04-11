@@ -3,6 +3,7 @@ import { z } from "zod";
 const listSchema = z.object({
   id: z.string(),
   data: z.string(),
+  alunoId: z.string(),
 }).array()
 
 export type ListAtrasoResponseType = z.infer<typeof listSchema>

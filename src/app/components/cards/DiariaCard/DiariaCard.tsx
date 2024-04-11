@@ -1,11 +1,12 @@
 import styles from './diariacard.module.css'
 
 interface IDiariaCard {
-    turno : string;
+    turno? : string;
     data : string;
+    onClick : any;
 }
 
-export default function DiariaCard({ turno, data } : IDiariaCard){
+export default function DiariaCard({ turno, data, onClick } : IDiariaCard){
 
     let cor = 'gray';
 
@@ -16,9 +17,13 @@ export default function DiariaCard({ turno, data } : IDiariaCard){
     }
 
     return (
-        <div className={styles.card} style={{border: '3px solid', borderColor: cor}}>
-            <h1 style={{color: cor}}>●</h1>
-            <h2>{data}</h2>
+        <div className={styles.container}>
+            <div className={styles.card} style={{border: '3px solid', borderColor: cor}}>
+                <h1 style={{color: cor}}>●</h1>
+                <h2>{data}</h2>
+
+            </div>
+            <a onClick={onClick} className={styles.fechar}>✖</a>
         </div>
     )
 }

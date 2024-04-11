@@ -39,4 +39,5 @@
   flex-direction: row;
   overflow-x: auto;
   align-items: center;
+  margin: 10px
 }

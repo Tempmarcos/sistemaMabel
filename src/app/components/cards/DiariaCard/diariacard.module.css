@@ -1,7 +1,6 @@
 .card{
     height: 50px;
     width: 120px;
-    margin: 5px;
 
     display: flex;
     flex-flow: row nowrap;
@@ -9,4 +8,24 @@
     justify-content: space-evenly;
 
     border-radius: 15px;
+}
+
+.fechar {
+    display: none;
+    position: relative;
+    bottom: 55px;
+    left: 108px;
+    width: min-content;
+    color: purple;
+    font-size: 18px;
+}
+
+.container {
+    height: 50px;
+    width: 120px;
+    margin: 5px;
+}
+
+.container:hover .fechar{
+    display:flex;
 }
