@@ -9,3 +9,34 @@
   justify-content: center;
   min-height: 70vh;
 }
+
+.modal {
+    width: 90vw;
+    height: 80vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal a, .modal h1{
+    height: min-content;
+}
+
+.modal .linkEditar {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+}
+
+.modal .nome {
+  position: absolute;
+  top: 5px;
+}
+
+.modal .div {
+  display: flex;
+  flex-direction: row;
+  overflow-x: auto;
+  align-items: center;
+}

@@ -12,29 +12,29 @@
     box-shadow: 6px 6px 6px 6px hsl(0deg 0% 0% / 0.31);
 }
 
-.modal h1 {
+.modal .x {
     position: absolute;
     right: 8px;
     top: 0;
     color: red;
 }
 
-.modal h2 {
+/* .modal h2 {
     position: absolute;
     right: 50px;
     top: 8px;
     color: gray;
-}
+} */
 
-.modal h1:hover {
+.modal .x:hover {
     color: rgb(213, 0, 0);
     transform: scale(1.5);
 }
 
-.modal h2:hover {
+/* .modal h2:hover {
     color: rgb(119, 119, 119);
     transform: scale(1.5);
-}
+} */
 
 .modal form {
     display: flex;

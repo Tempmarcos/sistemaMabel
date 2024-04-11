@@ -7,8 +7,14 @@ import BtnAdicionar from '../../components/botoes/BtnAdicionar/BtnAdicionar';
 import Header from "@/app/components/header/Header";
 import { errorHandler } from "@/http/errorHandler";
 import { getTurmas } from "@/http/services/turmas/functions";
+import { useForm, SubmitHandler } from "react-hook-form"
 import { ListAlunoResponseType } from "@/http/parses/aluno";
 import { getAlunos } from "@/http/services/alunos/services";
+import Modal from "@/app/components/cards/Modal/Modal";
+import { axiosInstance } from "@/http/config/axiosConfig";
+import { CreateDiariaRequestType, ListDiariaResponseType } from "@/http/parses/diaria";
+import dayjs from "dayjs";
+import DiariaCard from "@/app/components/cards/DiariaCard/DiariaCard";
 
 
 type TurmaData = {
@@ -21,7 +27,12 @@ export default function Home() {
   const [textoLegenda, setTextoLegenda] = useState('Legendas ↓');
   const [isLoading, setIsLoading] = useState(true);
 
+  const [displayModal, setDisplayModal] = useState("none");
+  const [nomeAtual, setNomeAtual] = useState('');
+  const [displayCriarDiaria, setDisplayCriarDiaria] = useState('none');
 
+
+  const [diariasAtuais, setDiariasAtuais] = useState<ListDiariaResponseType>([] as ListDiariaResponseType);
   const [alunos, setAlunos] = useState<ListAlunoResponseType>([] as ListAlunoResponseType);
   const [alunosFiltrados, setAlunosFiltrados] = useState(alunos);
   const [turmas, setTurmas] = useState<TurmaData[]>([] as TurmaData[]);
@@ -29,8 +40,6 @@ export default function Home() {
   const corElemento = 'purple';
   const corTexto = "black";
   const corFundo = "white";
-
-  //#04AA6D
 
   const fetchAlunos = useCallback(async () => {
     try {
@@ -62,8 +71,32 @@ useEffect(() => {
 
 
   //Função para pegar as informações de um aluno específico.
-  function handleGetAluno(id : string) {
-    alert(JSON.stringify(id, null, 2))
+  function handleGetAluno(id : string , nome : string) {
+    setDisplayModal('flex');
+    // alert(JSON.stringify(id, null, 2))
+    setNomeAtual(nome)
+    getDiarias(id);
+    reset ({
+      alunoId: id
+    })
+  }
+
+  async function getDiarias(id : string){
+    const resposta = await axiosInstance.get(`/diarias/${id}`);
+    const diarias: ListDiariaResponseType = resposta.data;
+    // alert(JSON.stringify(diarias, null, 2));
+    diarias.forEach(diaria => {
+      diaria.data = dayjs(diaria.data).format('DD/MMM');
+    })
+    setDiariasAtuais(diarias);
+  }
+
+  function handleAdicionarDiaria() {
+    setDisplayCriarDiaria('flex');
+  }
+
+  function handleFecharModal() {
+    setDisplayModal('none');
   }
 
   //Botão pra fazer as legendas (manhã, tarde, etc) aparecerem/sumirem
@@ -87,6 +120,26 @@ useEffect(() => {
 //Função para pesquisar o nome dos alunos
   function SearchFilter(event: { target: { value: any; }; }){
     setAlunosFiltrados(alunos.filter(aluno => aluno.nome.toLowerCase().includes(event.target.value)))
+  }
+
+  const {
+    register,
+    handleSubmit,
+    watch,
+    reset,
+    formState: { errors },
+  } = useForm<CreateDiariaRequestType>()
+
+  const onSubmit: SubmitHandler<CreateDiariaRequestType> = async (data) => {
+    try{
+      alert(JSON.stringify(data, null, 2));
+      const resposta = await axiosInstance.post(`/diarias`, data);
+      getDiarias(data.alunoId);
+    } catch(error){
+        console.log(error)
+    } finally {
+      setDisplayCriarDiaria('none');
+    }
   }
 
   return (
@@ -126,20 +179,44 @@ useEffect(() => {
         {!isLoading && alunosFiltrados.length === 0 && alunos.length !== 0 && <p>Nenhum aluno possui esse filtro :(</p>}
         {
           alunosFiltrados.map(aluno => {
-          return <a key={aluno.id} className="linkAlunos" onClick={() => handleGetAluno(aluno.id)}>
+          return <a key={aluno.id} className="linkAlunos" onClick={() => handleGetAluno(aluno.id, aluno.nome)}>
                     <AlunoCard id={aluno.id} nome={aluno.nome} turma={aluno.turma.nome} turno={aluno.turma.turno} />
                  </a>
           })
         }
      </div>
+     <Modal display={displayModal} onClick={handleFecharModal}>
+        <div className={styles.modal}>
+            <a className={styles.linkEditar}>Ver/Editar informações do aluno</a>
+            <h1 className={styles.nome} >{nomeAtual}</h1>
+            <div className={styles.div}>
+                <h1>Diárias</h1>
+                <a onClick={handleAdicionarDiaria}><h1>+</h1></a>
+                <div style={{display: displayCriarDiaria}}>
+                  <form onSubmit={handleSubmit(onSubmit)}>
+                      <div>
+                        <label htmlFor="turno">Turno:</label>
+                        <select id="turno" {...register('turno')}>
+                          <option value="MANHA">Manhã</option>
+                          <option value="TARDE">Tarde</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label htmlFor="data">Data:</label>
+                        <input type="date" id="data" {...register('data')}/>
+                      </div>
+                      <button type="submit">Registrar diária</button>
+                  </form>
+                </div>
+            </div>
+            <div className={styles.div}>
+                {diariasAtuais.map(diaria => {
+                  return <DiariaCard turno={diaria.turno} data={diaria.data}/>
+                })}
+            </div>
+        </div>
+      </Modal>
       <a href='/alunos/criar'><BtnAdicionar title='Adicionar aluno' corTexto={corTexto} corElemento={corElemento}/></a>
-      <ul>
-        {
-            alunosFiltrados.map(aluno => {
-            return <li>* {aluno.nome}</li>
-            })
-          }
-      </ul>
     </main>
   )
 }

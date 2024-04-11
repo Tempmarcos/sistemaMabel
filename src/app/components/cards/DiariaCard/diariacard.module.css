@@ -1,0 +1,12 @@
+.card{
+    height: 50px;
+    width: 120px;
+    margin: 5px;
+
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: space-evenly;
+
+    border-radius: 15px;
+}

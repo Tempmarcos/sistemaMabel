@@ -176,7 +176,7 @@ export default function Home(){
                         </a>
             })}
 
-            <Modal onClickMin={handleXDisplay} onClick={handleXDisplay} display={displayModal}>
+            <Modal onClick={handleXDisplay} display={displayModal}>
             <form onSubmit={handleSubmit(onSubmit)}>
                 {aparecerBotaoDeletar()}
                 <div>
