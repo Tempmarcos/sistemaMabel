@@ -16,11 +16,23 @@ import { CreateDiariaRequestType, ListDiariaResponseType } from "@/http/parses/d
 import dayjs from "dayjs";
 import DiariaCard from "@/app/components/cards/DiariaCard/DiariaCard";
 import { CreateAtrasoRequestType, ListAtrasoResponseType } from "@/http/parses/atraso";
+import { useRouter } from "next/navigation";
 
 
 type TurmaData = {
   id : string;
   nome : string;
+}
+
+type AlunoType = {
+  id: string;
+  nome: string;
+  turma: {
+      id: string;
+      nome: string;
+      turno: "MANHA" | "TARDE" | "NOITE";
+      faixa: "KIDS" | "TEENS";
+  };
 }
 
 export default function Home() {
@@ -29,7 +41,7 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
 
   const [displayModal, setDisplayModal] = useState("none");
-  const [nomeAtual, setNomeAtual] = useState('');
+  const [alunoAtual, setAlunoAtual] = useState({} as AlunoType);
   const [displayCriarDiaria, setDisplayCriarDiaria] = useState('none');
   const [displayCriarAtraso, setDisplayCriarAtraso] = useState('none');
 
@@ -39,8 +51,9 @@ export default function Home() {
   const [alunos, setAlunos] = useState<ListAlunoResponseType>([] as ListAlunoResponseType);
   const [alunosFiltrados, setAlunosFiltrados] = useState(alunos);
   const [turmas, setTurmas] = useState<TurmaData[]>([] as TurmaData[]);
+  const navigate = useRouter();
   
-  const corElemento = 'purple';
+  const corElemento = 'orange';
   const corTexto = "black";
   const corFundo = "white";
 
@@ -74,17 +87,17 @@ useEffect(() => {
 
 
   //Função para pegar as informações de um aluno específico.
-  function handleGetAluno(id : string , nome : string) {
+  function handleGetAluno(aluno : AlunoType) {
     setDisplayModal('flex');
     // alert(JSON.stringify(id, null, 2))
-    setNomeAtual(nome)
-    getDiarias(id);
-    getAtrasos(id);
+    setAlunoAtual(aluno);
+    getDiarias(aluno.id);
+    getAtrasos(aluno.id);
     reset ({
-      alunoId: id
+      alunoId: aluno.id
     })
     resetAtraso ({
-      alunoId: id
+      alunoId: aluno.id
     })
   }
 
@@ -96,6 +109,18 @@ useEffect(() => {
       diaria.data = dayjs(diaria.data).format('DD/MMM');
     })
     setDiariasAtuais(diarias);
+  }
+
+  function textoDiarias() {
+    if(diariasAtuais.length === 0){
+      return <h4>{alunoAtual.nome} não possui diárias</h4>
+    }
+  }
+
+  function textoAtrasos() {
+    if(atrasosAtuais.length === 0){
+      return <h4>{alunoAtual.nome} não possui atrasos</h4>
+    }
   }
 
   async function handleDeleteDiaria(id : string, alunoId : string){
@@ -130,6 +155,9 @@ useEffect(() => {
 
   function handleFecharModal() {
     setDisplayModal('none');
+    setAlunoAtual({} as AlunoType);
+    setDiariasAtuais([]);
+    setAtrasosAtuais([]);
   }
 
   //Botão pra fazer as legendas (manhã, tarde, etc) aparecerem/sumirem
@@ -235,7 +263,7 @@ useEffect(() => {
         {!isLoading && alunosFiltrados.length === 0 && alunos.length !== 0 && <p>Nenhum aluno possui esse filtro :(</p>}
         {
           alunosFiltrados.map(aluno => {
-          return <a key={aluno.id} className="linkAlunos" onClick={() => handleGetAluno(aluno.id, aluno.nome)}>
+          return <a key={aluno.id} className="linkAlunos" onClick={() => handleGetAluno(aluno)}>
                     <AlunoCard id={aluno.id} nome={aluno.nome} turma={aluno.turma.nome} turno={aluno.turma.turno} />
                  </a>
           })
@@ -243,8 +271,8 @@ useEffect(() => {
      </div>
      <Modal display={displayModal} onClick={handleFecharModal}>
         <div className={styles.modal}>
-            <a className={styles.linkEditar}>Ver/Editar informações do aluno</a>
-            <h1 className={styles.nome} >{nomeAtual}</h1>
+            <a onClick={() => navigate.push(`/alunos/editar/${alunoAtual.id}`)} className={styles.linkEditar}>Ver/Editar informações do aluno</a>
+            <h1 className={styles.nome} >{alunoAtual.nome}</h1>
             <div className={styles.div}>
                 <h1>Diárias</h1>
                 <a onClick={handleAdicionarDiaria}><h1>+</h1></a>
@@ -266,6 +294,7 @@ useEffect(() => {
                 </div>
             </div>
             <div className={styles.div}>
+                {textoDiarias()}
                 {diariasAtuais.map(diaria => {
                   return <DiariaCard turno={diaria.turno} data={diaria.data} onClick={() => handleDeleteDiaria(diaria.id, diaria.alunoId)}/>
                 })}
@@ -284,6 +313,7 @@ useEffect(() => {
                 </div>
             </div>
             <div className={styles.div}>
+                {textoAtrasos()}
                 {atrasosAtuais.map(atraso => {
                   return <DiariaCard data={atraso.data} onClick={() => handleDeleteAtraso(atraso.id, atraso.alunoId)}/>
                 })}

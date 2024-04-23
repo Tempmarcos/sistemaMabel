@@ -40,6 +40,16 @@
     transition: 0.3s ease-in-out;
 }
 
+.listaFinanceiro {
+    font-size: 16px;
+    margin-left: 3px;
+    flex-flow: column;
+}
+
+.listaFinanceiro a{
+    margin-bottom: 5px;
+}
+
 .botao:hover {
     transform: scale(1.5);
 }

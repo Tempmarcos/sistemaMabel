@@ -131,13 +131,13 @@ export default function Home(){
         handleSubmit,
         watch,
         reset,
-        formState: { errors },
+        formState: { errors, isSubmitting },
     } = useForm<FormData>()
 
     const onSubmit: SubmitHandler<FormData> = async (data) => {
         if(selectedTurma){
             const dadosAPI = ajustaTurmaAPI(data);
-            alert(JSON.stringify(dadosAPI, null, 2));
+            // alert(JSON.stringify(dadosAPI, null, 2));
             try {
                 const resposta = await axiosInstance.put(`/turmas`, dadosAPI);
                 fetchData();
@@ -207,7 +207,7 @@ export default function Home(){
                     </select>
                 </div>
                 {errors.nome && <span>This field is required</span>}
-                <input type="submit" />
+                <input type="submit" disabled={isSubmitting}/>
             </form>
             </Modal>
             <a onClick={handleOpenModal}><BtnAdicionar title="Adicionar turma" corElemento="blue" corTexto="white"/></a>

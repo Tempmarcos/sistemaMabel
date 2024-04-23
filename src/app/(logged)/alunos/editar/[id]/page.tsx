@@ -7,8 +7,7 @@ import { errorHandler } from '@/http/errorHandler'
 import { useCallback, useEffect, useState } from 'react'
 import { getTurmas } from '@/http/services/turmas/functions'
 import { getPlanos } from '@/http/services/planos/functions'
-import Alerta from '@/app/components/cards/Alerta/Alerta'
-import { useRouter } from 'next/navigation'
+import dayjs from 'dayjs'
 
 type TurmaData = {
     id : string;
@@ -21,40 +20,70 @@ type TurmaData = {
     valor : string;
   }
 
-  type PaiMaeData = {
-    id : string;
-    nome : string;
-  }
-
-  type ResponsavelData = {
-    id : string;
-    nome : string;
-  }
-
-  type AlunoType = Omit<Omit<CreateAlunoRequestType, 'turma'>, 'plano'> & {
+  type AlunoType = Omit<Omit<Omit<Omit<CreateAlunoRequestType, 'turma'>, 'plano'>, 'nascimento'>, 'dataIngresso'> & {
     turma : any;
     plano : any;
+    nascimento : any;
+    dataIngresso : any;
   }
   
 
-export default function Home(){
+  interface UserProps {
+    params: {
+        id : string;
+    }
+  }
+
+export default function Home({ params } : UserProps){
   const [turmas, setTurmas] = useState<TurmaData[]>([] as TurmaData[]);
   const [planos, setPlanos] = useState<PlanoData[]>([] as PlanoData[]);
-
-  const [pais, setPais] = useState<PaiMaeData[]>([] as PaiMaeData[]);
-  const [maes, setMaes] = useState<PaiMaeData[]>([] as PaiMaeData[]);
-  const [responsaveis, setResponsaveis] = useState<ResponsavelData[]>([] as ResponsavelData[]);
-  const [submittedData, setSubmittedData] = useState<any | null>(null);
-  const [displaySelect, setDisplaySelect] = useState('none');
-  const [displayAlerta, setDisplayAlerta] = useState('none');
-  const [displayAlunoCriado, setDisplayAlunoCriado] = useState('none');
-  const [displayErroCriar, setDisplayErroCriar] = useState('none');
-  const navigate = useRouter();
+  const [aluno, setAluno] = useState<AlunoType>({} as AlunoType);
 
 
+    async function getAluno(alunoId : string){
+        const resposta = await axiosInstance.get(`/alunos/${alunoId}`);
+        return resposta.data;
+    }
 
-
-
+    const fetchAluno = useCallback(async () => {
+        try {
+            const aluno = await getAluno(params.id);
+            // alert(aluno.nascimento);
+            setAluno(aluno);
+            reset({
+                nome: aluno.nome,
+                nascimento: dayjs(aluno.nascimento).format('YYYY-MM-DD'),
+                serie: aluno.serie,
+                escola: aluno.escola,
+                nacionalidade: aluno.nacionalidade,
+                religiao: aluno.religiao,
+                turma: aluno.turma,
+                plano: aluno.plano,
+                dataIngresso: dayjs(aluno.dataIngresso).format('YYYY-MM-DD'),
+                almoco: aluno.almoco,
+                valor: aluno.valor,
+                endereco: aluno.endereco,
+                pai: aluno.pai,
+                mae: aluno.mae,
+                responsavel: aluno.responsavel,
+                emergencia: aluno.emergencia,
+                informacoes: aluno.informacoes,
+                medicamentos: aluno.medicamentos,
+                nomeAutorizado1: aluno.nomeAutorizado1,
+                rgAutorizado1: aluno.rgAutorizado1,
+                foneAutorizado1: aluno.foneAutorizado1,
+                nomeAutorizado2: aluno.nomeAutorizado2,
+                rgAutorizado2: aluno.rgAutorizado2,
+                foneAutorizado2: aluno.foneAutorizado2,
+                
+            })
+        } catch (error) {
+            //errorHandler(error);
+        }
+    }, []);
+    useEffect(() => {
+        fetchAluno();
+    }, [fetchAluno]);
 
     const fetchTurmas = useCallback(async () => {
         try {
@@ -80,256 +109,52 @@ export default function Home(){
         fetchPlanos();
     }, [fetchPlanos]);
 
-
-    const fetchPais = useCallback(async () => {
-        try {
-            const data = await axiosInstance.get('/pais');
-            setPais(data.data);
-            // alert(JSON.stringify(data, null, 2));
-            console.log(data)
-        } catch (error) {
-            //errorHandler(error);
-        }
-    }, []);
-    useEffect(() => {
-        fetchPais();
-    }, [fetchPais]);
-
-    const fetchMaes = useCallback(async () => {
-        try {
-            const data = await axiosInstance.get('/maes');
-            setMaes(data.data);
-            // alert(JSON.stringify(data, null, 2));
-        } catch (error) {
-            //errorHandler(error);
-        }
-    }, []);
-    useEffect(() => {
-        fetchMaes();
-    }, [fetchMaes]);
-
-    const fetchResponsaveis = useCallback(async () => {
-        try {
-            const data = await axiosInstance.get('/responsaveis');
-            setResponsaveis(data.data);
-            // alert(JSON.stringify(data, null, 2));
-        } catch (error) {
-            //errorHandler(error);
-        }
-    }, []);
-    useEffect(() => {
-        fetchResponsaveis();
-    }, [fetchResponsaveis]);
-
     const {
         register,
         handleSubmit,
         watch,
         setValue,
         reset,
-        formState: { errors, isSubmitting },
+        formState: { errors },
     } = useForm<AlunoType>()
 
-    function displayPaiMaeResponsavel(){
-        if(pais.length > 0 && maes.length > 0 && responsaveis.length > 0) {
-            if(displaySelect === 'none') {
-            setDisplaySelect('flex');
-        }
-        }
-
-    }
-
-     displayPaiMaeResponsavel();
-
-
-    function hasPai(){
-            return (
-                <div style={{display: displaySelect}}>
-                    <label htmlFor="escolherPai">Importar informações do pai:</label>
-                        <select  id="escolherPai" {...register('pai.id', {
-                            onChange : e => handleEscolherPai(e)
-                        })}>
-                        <option value=""></option>
-                            {pais.map(pai => {
-                                 return <option key={pai.id} value={pai.id}>{pai.nome}</option>
-                            })}
-                        </select>
-                </div>
-            ) 
-    }
-
-    async function handleEscolherPai(event : any){
-        let id = event?.target.value;
-        if(!id){
-            reset ({
-                pai: {nome: '', fone: '', funcao: '', email: '', trabalho: ''}
-            })
-        }
-        const resposta = await axiosInstance.get(`/pais/${id}`);
-        reset ({
-            pai: resposta.data
-        })
-    }
-
-    function hasMae(){
-            return (
-                <div style={{display: displaySelect}}>
-                    <label htmlFor="escolherMae">Importar informações da Mãe:</label>
-                        <select id="escolherMae" {...register('mae.id', {
-                            onChange : e => handleEscolherMae(e)
-                        })}>
-                        <option value=""></option>
-                            {maes.map(mae => {
-                                 return <option key={mae.id} value={mae.id}>{mae.nome}</option>
-                            })}
-                        </select>
-                </div>
-            )
-        }
-
-    async function handleEscolherMae(event : any){
-        let id = event?.target.value;
-        if(!id){
-            reset ({
-                mae: {nome: '', fone: '', funcao: '', email: '', trabalho: ''}
-            })
-        }
-        const resposta = await axiosInstance.get(`/maes/${id}`);
-        reset ({
-            mae: resposta.data
-        })
-    }
-
-    function hasResponsavel(){
-        return (
-            <div style={{display: displaySelect}}>
-                <label htmlFor="escolherResponsavel">Importar info. do Responsável:</label>
-                     <select id="escolherResponsavel" {...register('responsavel.id', {
-                            onChange : e => handleEscolherResponsavel(e)
-                        })}>
-                     <option value=""></option>
-                        {responsaveis.map(responsavel => {
-                            return <option key={responsavel.id} value={responsavel.id}>{responsavel.nome}</option>
-                        })}
-                    </select>
-            </div>
-        )
-    }
-
-    async function handleEscolherResponsavel(event : any){
-        let id = event?.target.value;
-        if(!id){
-            reset ({
-                responsavel: {nome: '', rg: '', cpf: '', fone_pessoal: '', fone_trabalho: '', funcao: '', email: '', trabalho: ''}
-            })
-        }
-        const resposta = await axiosInstance.get(`/responsaveis/${id}`);
-        reset ({
-            responsavel: resposta.data
-        })
-    }
-
-    const enderecoAluno = watch("endereco");
-
-    const copiarEndereco = () => {
-        setValue("responsavel.endereco", enderecoAluno);
-      };
-
-
-    const dadosMae = watch("mae");
-    const dadosPai = watch("pai");
-    const nomeAluno = watch('nome');
-
-    const copiarDadosMae = () => {
-        setValue("responsavel.nome", dadosMae.nome);
-        setValue("responsavel.rg", '');
-        setValue("responsavel.cpf", '');
-        setValue("responsavel.fone_trabalho", '');
-        setValue("responsavel.fone_pessoal", dadosMae.fone);
-        setValue("responsavel.email", dadosMae.email);
-        setValue("responsavel.trabalho", dadosMae.trabalho);
-        setValue("responsavel.funcao", dadosMae.funcao);
-      };
-
-      const copiarDadosPai = () => {
-        setValue("responsavel.nome", dadosPai.nome);
-        setValue("responsavel.rg", '');
-        setValue("responsavel.cpf", '');
-        setValue("responsavel.fone_pessoal", dadosPai.fone);
-        setValue("responsavel.fone_trabalho", '');
-        setValue("responsavel.email", dadosPai.email);
-        setValue("responsavel.trabalho", dadosPai.trabalho);
-        setValue("responsavel.funcao", dadosPai.funcao);
-      };
-    
 
     const onSubmit: SubmitHandler<AlunoType> = async (data) => {
-        chamarModal();
-        data.dataIngresso = new Date(data.dataIngresso);
-        data.nascimento = new Date(data.nascimento);
-        data.valor = parseInt(data.valor.toString());
-        data.turma = {id : data.turma};
-        data.plano = {id : data.plano};
-        console.log(data);
-        setSubmittedData(data);
-    }
+        alert(JSON.stringify(data.nascimento, null, 2));
+         data.dataIngresso = new Date(data.dataIngresso);
+         data.nascimento = new Date(data.nascimento);
+         data.valor = parseInt(data.valor.toString());
 
-    function chamarModal(){
-        setDisplayAlerta('flex');
-    }
+         data.turma = {id : data.turma};
+         data.plano = {id : data.plano};
 
-    function botaoNao(){
-        setDisplayAlerta('none');
-    }
-
-    async function botaoSim(data : any){
-        // alert(JSON.stringify(data, null, 2));
         // alert(typeof data.dataIngresso + typeof data.nascimento);
+        
         try {
-        const dadosParseados = createAlunoRequestParse(data);
+            const dadosParseados = createAlunoRequestParse(data);
         } catch (error) {
-        console.log(error)
+            console.log(error)
         }
         try {
-        const resposta = await axiosInstance.post('/alunos', data);
-        // redirect('/alunos')
-        setDisplayAlunoCriado('flex');
-
+            const resposta = await axiosInstance.post('/alunos', data);
         } catch (error) {
-            setDisplayErroCriar('flex');
             errorHandler(error)
-        } finally {
-            setDisplayAlerta('none');
-        }
-    }
-
-    function botaoOkCriar(){
-        navigate.push('/alunos');
-    }
-
-    function botaoOkErro(){
-        setDisplayErroCriar('none');
+        } 
     }
 
     return (
         <main className={styles.main}>
-            <Alerta texto={`Tem certeza que deseja criar o aluno ${nomeAluno}?`} confirmacao={true} 
-            display={displayAlerta} botaoNao={botaoNao} botaoSim={() => botaoSim(submittedData)}></Alerta>
-            <Alerta display={displayAlunoCriado} texto='Aluno criado com sucesso!' 
-            confirmacao={false} botaoOk={botaoOkCriar}></Alerta>
-            <Alerta display={displayErroCriar} texto='Houve um erro ao criar o aluno :(' 
-            confirmacao={false} botaoOk={botaoOkErro}></Alerta>
             <a href="/alunos" className={styles.link}>Voltar aos alunos</a>
             <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
                 <section className='formSection'>
-                    <h1>Criar aluno</h1>
+                    <h1>Editar aluno</h1>
                     <div>
                         <label htmlFor="nome">Nome:</label>
                         <input id='nome' {...register("nome", {required: true})} /> 
                     </div> 
                     <div>
                         <label htmlFor="nascimento">Nascimento:</label>
-                        <input id='nascimento' type='date' {...register('nascimento', {required: true})} /> 
+                        <input defaultValue={aluno.nascimento} id='nascimento' type='date' {...register('nascimento', {required: true})} /> 
                     </div> 
                     <div>
                         <label htmlFor="serie">Série:</label>
@@ -349,8 +174,7 @@ export default function Home(){
                     </div>
                     <div>
                         <label htmlFor="turma">Turma:</label>
-                        <select id="turma" {...register('turma', {required : true})}>
-                            <option value=""></option>
+                        <select id="turma" defaultValue={aluno.turma} {...register('turma', {required : true})}>
                             {turmas.map(turma => {
                                  return <option value={turma.id}>{turma.nome}</option>
                             })}
@@ -358,20 +182,19 @@ export default function Home(){
                     </div>
                     <div>
                         <label htmlFor="plano">Plano:</label>
-                        <select id="plano" {...register('plano', {required : true})}>
-                            <option value=""></option>
+                        <select id="plano" defaultValue={aluno.plano} {...register('plano', {required : true})}>
                             {planos.map(plano => {
                                  return <option value={plano.id}> {plano.nome} </option>
                             })}
                         </select>
                     </div>
                     <div>
-                        <label htmlFor="dataIngresso">Data de ingresso:</label>
+                        <label htmlFor="dataIngresso">dataIngresso:</label>
                         <input id="dataIngresso" type='date' {...register('dataIngresso', {required : true})} />
                     </div>
-                    <div style={{display: 'none'}}>
+                    <div>
                         <label htmlFor="almoco">Almoço:</label>
-                        <input type="checkbox" id="almoco" {...register('almoco')} />
+                        <input type="checkbox" id="almoco" {...register('almoco', {required : true})} />
                     </div>
                     <div>
                         <label htmlFor="valor">Valor:</label>
@@ -406,7 +229,6 @@ export default function Home(){
                 </section>
                 <section className='formSection'>
                     <h2>Informações do pai:</h2>
-                    {hasPai()}
                     <div>
                         <label htmlFor="nomePai">Nome:</label>
                         <input id='nomePai' {...register("pai.nome", {required: true})} /> 
@@ -414,7 +236,6 @@ export default function Home(){
                     <div>
                         <label htmlFor="trabalhoPai">Trabalho:</label>
                         <input id='trabalhoPai' {...register("pai.trabalho")} /> 
-                        <h6>Local do trabalho</h6>
                     </div> 
                     <div>
                         <label htmlFor="funcaoPai">Função:</label>
@@ -431,7 +252,6 @@ export default function Home(){
                 </section>
                 <section className="formSection">
                 <h2>Informações da mãe:</h2>
-                    {hasMae()}
                     <div>
                         <label htmlFor="nomeMae">Nome:</label>
                         <input id='nomeMae' {...register("mae.nome", {required: true})} /> 
@@ -439,7 +259,6 @@ export default function Home(){
                     <div>
                         <label htmlFor="trabalhoMae">Trabalho:</label>
                         <input id='trabalhoMae' {...register("mae.trabalho")} /> 
-                        <h6>Local do trabalho</h6>
                     </div> 
                     <div>
                         <label htmlFor="funcaoMae">Função:</label>
@@ -456,16 +275,13 @@ export default function Home(){
                 </section>
                 <section className="formSection">
                     <h2>Responsável financeiro:</h2>
-                    <a className={styles.botao} onClick={copiarDadosMae}>Copiar dados da mãe</a>
-                    <a className={styles.botao} onClick={copiarDadosPai}>Copiar dados do pai</a>
-                    {hasResponsavel()}
                     <div>
                         <label htmlFor="nomeResponsavel">Nome:</label>
                         <input id='nomeResponsavel' {...register("responsavel.nome", {required: true})} /> 
                     </div>
                     <div>
                         <label htmlFor="RGresponsavel">RG:</label>
-                        <input id='RGresponsavel' {...register("responsavel.rg", {required: true})} /> 
+                        <input id='RGresponsavel'  {...register("responsavel.rg", {required: true})} /> 
                     </div>
                     <div>
                         <label htmlFor="CPFresponsavel">CPF:</label>
@@ -485,14 +301,13 @@ export default function Home(){
                     </div>
                     <div>
                         <label htmlFor="foneResponsavel">Fone pessoal:</label>
-                        <input id='foneResponsavel'  placeholder='(99) 99999-9999' {...register("responsavel.fone_pessoal")} /> 
+                        <input id='foneResponsavel' placeholder='(99) 99999-9999' {...register("responsavel.fone_pessoal")} /> 
                     </div>
                     <div>
                         <label htmlFor="emailResponsavel">E-mail:</label>
                         <input id='emailResponsavel' type='email' {...register("responsavel.email")} /> 
                     </div>
                     <h3>Endereço</h3>
-                    <a className={styles.botao} onClick={copiarEndereco}>Copiar endereço do aluno</a>
                     <div>
                         <label htmlFor="CEPenderecoResponsavel">CEP:</label>
                         <input id='CEPenderecoResponsavel' {...register("responsavel.endereco.cep", {required: true})} /> 
@@ -519,18 +334,15 @@ export default function Home(){
                     </div>
                 </section>
                 <section className="formSection">
-                    <h3>Info. Emergência</h3>
                     <div>
-                        <label htmlFor="informacoes">Informações:</label>
+                        <label htmlFor="informacoes">Informacoes:</label>
                         <input id="informacoes" {...register('informacoes')} />
-                        <h6>Informações julgadas necessárias</h6>
                     </div>
                     <div>
                         <label htmlFor="medicamentos">Medicamentos:</label>
                         <input id="medicamentos" {...register('medicamentos')} />
-                        <h6>(Acompanhados de prescrição médica)</h6>
                     </div>
-                    <h4>Contato emergência</h4>
+                    <h3>Info. Emergência</h3>
                     <div>
                         <label htmlFor="nomeEmergencia">Nome:</label>
                         <input id="nomeEmergencia" {...register('emergencia.nome', {required : true})} />
@@ -539,29 +351,26 @@ export default function Home(){
                     <div>
                         <label htmlFor="foneEmergencia">Fone:</label>
                         <input placeholder='(99) 99999-9999' id='foneEmergencia' {...register("emergencia.fone")} /> 
-                        <h6>Fone do contato de emergência</h6>
                     </div>
                     <div>
                         <label htmlFor="localEmergencia">Local:</label>
                         <input id="localEmergencia" {...register('emergencia.local')} />
-                        <h6>Em caso de emergência, levar para:</h6>
                     </div>
                     <div>
                         <label htmlFor="convenioEmergencia">Convênio:</label>
                         <input id="convenioEmergencia" {...register('emergencia.convenio')} />
                     </div>
-                    <h4>Pessoas autorizadas a retirar <br /> a criança (além dos pais)</h4>
                     <div>
                         <label htmlFor="nomeAutorizado">Nome do autorizado:</label>
                         <input id="nomeAutorizado" {...register('nomeAutorizado1')} />
                     </div>
                     <div>
                         <label htmlFor="rgAutorizado">RG do autorizado:</label>
-                        <input id="rgAutorizado" {...register('rgAutorizado1')} />
+                        <input id="rgAutorizado"  {...register('rgAutorizado1')} />
                     </div>
                     <div>
                         <label htmlFor="foneAutorizado">Fone do autorizado:</label>
-                        <input id="foneAutorizado" placeholder='(99) 99999-9999' {...register('foneAutorizado1')} />
+                        <input id="foneAutorizado"  placeholder='(99) 99999-9999' {...register('foneAutorizado1')} />
                     </div>
                     <div>
                         <label htmlFor="nomeAutorizado2">Nome do autorizado 2:</label>
@@ -569,14 +378,14 @@ export default function Home(){
                     </div>
                     <div>
                         <label htmlFor="rgAutorizado2">RG do autorizado 2:</label>
-                        <input id="rgAutorizado2" {...register('rgAutorizado2')} />
+                        <input id="rgAutorizado2"  {...register('rgAutorizado2')} />
                     </div>
                     <div>
                         <label htmlFor="foneAutorizado2">Fone do autorizado 2:</label>
-                        <input id="foneAutorizado2" placeholder='(99) 99999-9999' {...register('foneAutorizado2')} />
+                        <input id="foneAutorizado2"  placeholder='(99) 99999-9999' {...register('foneAutorizado2')} />
                     </div>
                 </section>
-                <button type="submit" disabled={isSubmitting}>Criar aluno</button>
+                <button type="submit">Editar aluno</button>
             </form>
          </main>
     )

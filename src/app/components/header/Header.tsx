@@ -1,7 +1,3 @@
-import { temas } from "@/app/(logged)/temas";
-
-
-
 interface Iheader{
     children: React.ReactNode
 }
@@ -9,7 +5,7 @@ interface Iheader{
 
 export default function Header({ children } : Iheader){
     return(
-        <header style={{backgroundColor: temas.corElemento, color: temas.corTexto}}>
+        <header style={{backgroundColor: 'orange', color: 'black'}}>
            {children}
         </header>
     );

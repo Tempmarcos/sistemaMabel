@@ -24,18 +24,6 @@
     margin: 50px;
 }
 
-.botao {
-    margin-block: 8px;
-    padding: 5px;
-    border: 1px solid gray;
-    border-radius: 10px;
-    
-}
-
-.botao:hover {
-    background-color: gray;
-}
-
 .form div {
     display: flex;
     flex-direction: column;
@@ -50,10 +38,6 @@
     align-items: center;
 }
 
-.form h2, .form h3, .form h4 {
-    margin-block: 8px;
-}
-
-.form h6 {
-    margin-bottom: 3px;
+.form h2 {
+    margin-block: 5px;
 }

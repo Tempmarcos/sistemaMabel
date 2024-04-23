@@ -36,7 +36,9 @@
   }
   
   /* Change color of dropdown links on hover */
-  .dropdownContent a:hover {filter: invert();}
+  .dropdownContent a:hover {
+    filter: grayscale(0.4);
+  }
 
   
   
@@ -44,4 +46,6 @@
   .dropdown:hover .dropdownContent {display: block;}
   
   /* Change the background color of the dropdown button when the dropdown content is shown */
-  .dropdown:hover .dropbtn {filter: invert();}
+  .dropdown:hover .dropbtn {
+    filter: grayscale(0.4);
+  }

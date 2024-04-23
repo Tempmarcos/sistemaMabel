@@ -35,6 +35,7 @@ export default function Home() {
     const [users, setUsers] = useState<APIData[]>([] as APIData[]);
     const [isLoading, setIsLoading] = useState(true);
     const [selectedUser, setSelectedUser] = useState('');
+  const [displayAlerta, setDisplayAlerta] = useState('none');
 
 
     const fetchData = useCallback(async () => {
@@ -93,7 +94,8 @@ export default function Home() {
       }
 
       const openAlerta = () => {
-        return <Alerta>Deseja excluir esse usuário?</Alerta>
+        return <Alerta confirmacao={true} texto="Deseja excluír esse usuário?" 
+        display={displayAlerta}></Alerta>
       }
 
       async function handleDeleteUser(id : string) {
@@ -113,7 +115,7 @@ export default function Home() {
         handleSubmit,
         watch,
         reset,
-        formState: { errors },
+        formState: { errors, isSubmitting },
     } = useForm<InputData>()
 
 
@@ -160,7 +162,7 @@ export default function Home() {
                     }) 
                 }
             </div>
-            <Modal onClickMin={handleMinimizarModal} onClick={handleXDisplay} display={displayModal}>
+            <Modal onClick={handleXDisplay} display={displayModal}>
             <form onSubmit={handleSubmit(onSubmit)}>
                 {aparecerBotaoDeletar()}
                 <div>
@@ -185,7 +187,7 @@ export default function Home() {
                 </div>
                 {errors.nome && <span>This field is required</span>}
 
-                <input type="submit" />
+                <input type="submit" disabled={isSubmitting}/>
             </form>
             </Modal>
             <a onClick={handleOpenModal}>

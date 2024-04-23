@@ -31,20 +31,9 @@ const getSchema = z.object({
     nome: z.string(),
     valor: z.number(),
   }),
-  diarias: z.object({
-    id: z.string(),
-    data: z.date(),
-    turno: z.string(),
-  }).array(),
-  extras: z.object({
-    id: z.string(),
-    nome: z.string(),
-    valor: z.number(),
-  }).array(),
-  atrasos: z.object({
-    id: z.string(),
-    data: z.date(),
-  }).array(),
+  diarias: z.number(),
+  extras: z.number(),
+  atrasos: z.number(),
   valor_total: z.number(),
   pago: z.boolean(),
 })
@@ -61,6 +50,9 @@ const createSchema = z.object({
   aluno: z.object({
     id: z.string(),
   }),
+  diarias: z.number(),
+  extras: z.number(),
+  atrasos: z.number(),
   valor_total: z.number(),
 })
 
@@ -73,20 +65,10 @@ export function createMensalRequestParse(data: unknown): CreateMensalRequestType
 
 const updateSchema = z.object({
   id: z.string(),
-  diarias: z.object({
-    id: z.string(),
-    data: z.date(),
-    turno: z.string(),
-  }).array().optional(),
-  extras: z.object({
-    id: z.string(),
-    nome: z.string(),
-    valor: z.number(),
-  }).array().optional(),
-  atrasos: z.object({
-    id: z.string(),
-    data: z.date(),
-  }).array().optional(),
+  diarias: z.number().optional(),
+  extras: z.number().optional(),
+  atrasos: z.number().optional(),
+  valor_total: z.number().optional(),
   pago: z.boolean().optional(),
 })
 

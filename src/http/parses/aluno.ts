@@ -1,15 +1,15 @@
 import { z } from "zod";
 
 const listSchema = z.object({
+  id: z.string(),
+  nome: z.string(),
+  turma: z.object({
     id: z.string(),
     nome: z.string(),
-    turma: z.object({
-      id: z.string(),
-      nome: z.string(),
-      turno: z.enum(['MANHA', 'TARDE', 'NOITE']),
-      faixa: z.enum(['KIDS', 'TEENS']),
-    }),
-  }).array()
+    turno: z.enum(['MANHA', 'TARDE', 'NOITE']),
+    faixa: z.enum(['KIDS', 'TEENS']),
+  }),
+}).array()
 
 export type ListAlunoResponseType = z.infer<typeof listSchema>
 
@@ -112,28 +112,31 @@ export function getAlunoResponseParse(data: unknown): GetAlunoResponseType {
 const createSchema = z.object({
   nome: z.string(),
   pai: z.object({
+    id: z.string(),
     nome: z.string(),
-    trabalho: z.string().optional(),
-    funcao: z.string().optional(),
-    fone: z.string().optional(),
-    email: z.string().optional(),
+    trabalho: z.string(),
+    funcao: z.string(),
+    fone: z.string(),
+    email: z.string(),
   }),
   mae: z.object({
+    id: z.string(),
     nome: z.string(),
-    trabalho: z.string().optional(),
-    funcao: z.string().optional(),
-    fone: z.string().optional(),
-    email: z.string().optional(),
+    trabalho: z.string(),
+    funcao: z.string(),
+    fone: z.string(),
+    email: z.string(),
   }),
   responsavel: z.object({
+    id: z.string(),
     nome: z.string(),
     rg: z.string(),
     cpf: z.string(),
-    trabalho: z.string().optional(),
-    funcao: z.string().optional(),
-    fone_trabalho: z.string().optional(),
-    fone_pessoal: z.string().optional(),
-    email: z.string().optional(),
+    trabalho: z.string(),
+    funcao: z.string(),
+    fone_trabalho: z.string(),
+    fone_pessoal: z.string(),
+    email: z.string(),
     endereco: z.object({
       logradouro: z.string(),
       numero: z.string(),
