@@ -19,13 +19,13 @@ export default function Alerta({ children, display, texto, confirmacao, botaoOk,
             return(
                 <div>
                     <button onClick={botaoNao} style={{backgroundColor: 'red'}}>Não</button>
-                    <button style={{backgroundColor: 'lime'}}>Sim</button>
+                    <button onClick={botaoSim} style={{backgroundColor: 'lime'}}>Sim</button>
                 </div>
             )
         }else {
             return (
                 <div>
-                    <button>Ok</button>
+                    <button onClick={botaoOk}>Ok</button>
                 </div>
             )
         }
@@ -35,7 +35,7 @@ export default function Alerta({ children, display, texto, confirmacao, botaoOk,
         <div>
             <div className={styles.alerta} style={{display: display}}>
                 <h2>{texto}</h2>
-                {children}
+                <div>{children}</div>
                 {tipoDeCard()}
             </div>
         </div>

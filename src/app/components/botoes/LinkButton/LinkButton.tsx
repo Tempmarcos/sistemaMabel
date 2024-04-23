@@ -9,6 +9,6 @@ interface ILinkButton {
 export default function LinkButton({ texto, link } : ILinkButton){
     return(
         <a className={styles.button} href={'/' + link} 
-        style={{color: temas.corTexto, backgroundColor: temas.corElemento}}>{texto}</a>
+        style={{color: 'black', backgroundColor: 'orange'}}>{texto}</a>
     )
 }

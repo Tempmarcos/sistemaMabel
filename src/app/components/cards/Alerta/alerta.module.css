@@ -26,6 +26,7 @@
 
 .alerta button {
     padding: 10px;
+    padding-inline: 20px;
     border: none;
     border-radius: 10px;
     transition: 0.1s ease-in-out;

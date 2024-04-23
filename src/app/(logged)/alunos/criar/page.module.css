@@ -44,6 +44,10 @@
     padding: 5px;
 }
 
+.form input:read-only {
+    background-color: gainsboro;
+}
+
 .form section {
     display: flex;
     flex-direction: column;

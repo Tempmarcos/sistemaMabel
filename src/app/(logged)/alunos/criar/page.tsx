@@ -31,9 +31,12 @@ type TurmaData = {
     nome : string;
   }
 
+  
+
   type AlunoType = Omit<Omit<CreateAlunoRequestType, 'turma'>, 'plano'> & {
     turma : any;
     plano : any;
+    valorPlano : any;
   }
   
 
@@ -72,6 +75,7 @@ export default function Home(){
         try {
             const data : PlanoData[] = await getPlanos();
             setPlanos(data);
+            console.log(data);
         } catch (error) {
             console.error(error);
         } 
@@ -229,6 +233,20 @@ export default function Home(){
         })
     }
 
+    let valorPlanoEscolhido;
+
+    function handleEscolherPlano(event : any){
+        let id = event?.target.value;
+        if(!id){
+            reset ({valorPlano: ''});
+            return
+        }
+        let planoEscolhido = planos.find(plano => plano.id === id);
+        valorPlanoEscolhido = planoEscolhido?.valor;
+        reset ({valorPlano: valorPlanoEscolhido})
+        //alert(valorPlanoEscolhido);
+    }
+
     const enderecoAluno = watch("endereco");
 
     const copiarEndereco = () => {
@@ -239,6 +257,7 @@ export default function Home(){
     const dadosMae = watch("mae");
     const dadosPai = watch("pai");
     const nomeAluno = watch('nome');
+    const valorPlano = watch('valorPlano')
 
     const copiarDadosMae = () => {
         setValue("responsavel.nome", dadosMae.nome);
@@ -357,25 +376,31 @@ export default function Home(){
                         </select>
                     </div>
                     <div>
+                        <label htmlFor="dataIngresso">Data de ingresso:</label>
+                        <input id="dataIngresso" type='date' {...register('dataIngresso', {required : true})} />
+                    </div>
+                    <div>
                         <label htmlFor="plano">Plano:</label>
-                        <select id="plano" {...register('plano', {required : true})}>
+                        <select id="plano" {...register('plano', {required : true ,
+                            onChange : e => handleEscolherPlano(e)
+                        })}>
                             <option value=""></option>
                             {planos.map(plano => {
                                  return <option value={plano.id}> {plano.nome} </option>
                             })}
                         </select>
                     </div>
-                    <div>
-                        <label htmlFor="dataIngresso">Data de ingresso:</label>
-                        <input id="dataIngresso" type='date' {...register('dataIngresso', {required : true})} />
-                    </div>
                     <div style={{display: 'none'}}>
                         <label htmlFor="almoco">Almoço:</label>
                         <input type="checkbox" id="almoco" {...register('almoco')} />
                     </div>
                     <div>
-                        <label htmlFor="valor">Valor:</label>
-                        <input id="valor" type='number' {...register('valor', {required : true})} />
+                        <label htmlFor="valor">Valor do plano:</label>
+                        <input id="valor" defaultValue={valorPlano} type='number' readOnly />
+                    </div>
+                    <div>
+                        <label htmlFor="valorFinal">Valor final:</label>
+                        <input defaultValue={valorPlano} id="valorFinal" type='number' {...register('valor', {required : true})} />
                     </div>
                     <h3>Endereço</h3>
                         <div>
