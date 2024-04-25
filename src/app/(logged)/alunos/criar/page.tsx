@@ -311,9 +311,7 @@ export default function Home(){
         }
         try {
         const resposta = await axiosInstance.post('/alunos', data);
-        // redirect('/alunos')
         setDisplayAlunoCriado('flex');
-
         } catch (error) {
             setDisplayErroCriar('flex');
             errorHandler(error)

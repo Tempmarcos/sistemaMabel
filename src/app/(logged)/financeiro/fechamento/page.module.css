@@ -1,9 +1,57 @@
-.table {
-     background-color: rgb(0, 169, 11);
-     
+.tabela {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw; min-height: 90vh;
 }
 
-.table th {
-    border: 1px solid rgb(255, 106, 0);
+.tabela input[type= number] {
+    text-align: right;
+}
+
+.tabela .table {
+    background-color: gainsboro;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.table form:hover {
+    background-color: rgb(192, 192, 192);
+}
+
+.tabela .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
     padding: 8px;
+}
+
+.tabela input[type= text] {
+    background-color: gainsboro;
+    border: none;
+    text-decoration: none;
+}
+
+.tabela th {
+    padding: 8px;
+
+}
+
+.tabela tr:hover {
+background-color: rgb(192, 192, 192);
+}
+
+.tabela button {
+    padding: 3px;
+    margin: 3px;
+}
+
+.linha {
+    display: flex;
+    flex-flow: row;
+    padding: 10px;
+}
+
+.linha h1 {
+    margin: 8px;
 }

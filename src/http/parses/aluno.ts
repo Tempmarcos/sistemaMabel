@@ -76,8 +76,15 @@ const getSchema = z.object({
     estado: z.string(),
     cep: z.string(),
   }),
-  turmaId: z.string(),
-  planoId: z.string(),
+  turma: z.object({
+    id: z.string(),
+    nome: z.string(),
+  }),
+  plano: z.object({
+    id: z.string(),
+    nome: z.string(),
+    valor: z.number(),
+  }),
   valor: z.number(),
   almoco: z.boolean(),
   informacoes: z.string().optional(),

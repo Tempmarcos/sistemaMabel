@@ -210,7 +210,7 @@ export default function Home(){
                 <input type="submit" disabled={isSubmitting}/>
             </form>
             </Modal>
-            <a onClick={handleOpenModal}><BtnAdicionar title="Adicionar turma" corElemento="blue" corTexto="white"/></a>
+            <a onClick={handleOpenModal}><BtnAdicionar title="Adicionar turma" corElemento="orange" corTexto="black"/></a>
         </main>
     )
 }

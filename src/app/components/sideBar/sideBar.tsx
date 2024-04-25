@@ -35,7 +35,7 @@ export default function SideBar({corElemento, corTexto} : ISideBar){
                     <a href="/financeiro/fechamento">-Fechamento</a>
                     <a href="/financeiro/planos">-Planos</a>
                     <a href="/financeiro/taxas">-Taxas</a>
-                    <a href="/financeiro/atividades">-Atividades</a>
+                    {/* <a href="/financeiro/atividades">-Atividades</a> */}
                 </div>
             </div>
             <a href="/admin">Administração</a>
