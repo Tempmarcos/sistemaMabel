@@ -1,7 +1,7 @@
 'use client'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import styles from './page.module.css'
-import { GetAlunoResponseType, updateAlunoRequestParse } from '@/http/parses/aluno'
+import { GetAlunoResponseType, UpdateAlunoRequestType, updateAlunoRequestParse } from '@/http/parses/aluno'
 import { axiosInstance } from '@/http/config/axiosConfig'
 import { errorHandler } from '@/http/errorHandler'
 import { useCallback, useEffect, useState } from 'react'
@@ -72,6 +72,7 @@ export default function Home({ params } : UserProps){
             console.log(aluno);
             setAluno(aluno);
             reset({
+                id: aluno.id,
                 nome: aluno.nome,
                 nascimento: dayjs(aluno.nascimento).format('YYYY-MM-DD'),
                 serie: aluno.serie,
@@ -328,13 +329,16 @@ export default function Home({ params } : UserProps){
       };
 
     const onSubmit: SubmitHandler<AlunoType> = async (data) => {
-        alert('oi');
-        // chamarModal();
-        // data.dataIngresso = new Date(data.dataIngresso);
-        // data.nascimento = new Date(data.nascimento);
-        // data.valor = parseInt(data.valor.toString());
-        // console.log(data);
-        // setSubmittedData(data);
+        chamarModal();
+        let dataAlterada : any = data;
+        dataAlterada.dataIngresso = new Date(data.dataIngresso);
+        dataAlterada.nascimento = new Date(data.nascimento);
+        dataAlterada.valor = parseInt(data.valor.toString());
+        dataAlterada.turma = {id : data.turma};
+        dataAlterada.plano = {id : data.plano};
+        console.log(dataAlterada);
+        // alert(JSON.stringify(data.turma, null, 2));
+        setSubmittedData(dataAlterada);
     }
 
     function chamarModal(){
@@ -346,7 +350,8 @@ export default function Home({ params } : UserProps){
     }
 
     async function botaoSim(data : any){
-        alert(JSON.stringify(data, null, 2));
+        // alert(JSON.stringify(data, null, 2));
+        console.log(data);
         try {
         const dadosParseados = updateAlunoRequestParse(data);
         } catch (error) {
@@ -357,7 +362,7 @@ export default function Home({ params } : UserProps){
             setDisplayAlunoCriado('flex');
         } catch (error) {
             setDisplayErroCriar('flex');
-            errorHandler(error)
+            console.log(error)
         } finally {
             setDisplayAlerta('none');
         }
@@ -381,16 +386,16 @@ export default function Home({ params } : UserProps){
             confirmacao={false} botaoOk={botaoOkErro}></Alerta>
             <a href="/alunos" className={styles.link}>Voltar aos alunos</a>
             <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
-                 {/* <section className='formSection'> */}
-                    {/* <h1>Editar aluno</h1> */}
-                    {/* <div>
+                <section className='formSection'>
+                    <h1>Editar aluno</h1>
+                    <div>
                         <label htmlFor="nome">Nome:</label>
                         <input id='nome' {...register("nome", {required: true})} /> 
-                    </div>  */}
-                    {/* <div>
+                    </div> 
+                     <div>
                         <label htmlFor="nascimento">Nascimento:</label>
                         <input defaultValue={aluno.nascimento} id='nascimento' type='date' {...register('nascimento', {required: true})} /> 
-                    </div> 
+                    </div>
                     <div>
                         <label htmlFor="serie">Série:</label>
                         <input id='serie' {...register('serie', {required: true})} /> 
@@ -431,10 +436,10 @@ export default function Home({ params } : UserProps){
                             })}
                         </select>
                     </div>
-                    <div style={{display: 'none'}}>
+                     <div style={{display: 'none'}}>
                         <label htmlFor="almoco">Almoço:</label>
-                        <input type="checkbox" id="almoco" {...register('almoco', {required : true})} />
-                    </div>
+                        <input type="checkbox" id="almoco" {...register('almoco')} />
+                    </div> 
                     <div>
                         <label htmlFor="valor">Valor do plano:</label>
                         <input id="valor" defaultValue={valorPlano} type='number' readOnly />
@@ -468,8 +473,7 @@ export default function Home({ params } : UserProps){
                             <label htmlFor="complemento">Complemento:</label>
                             <input id='complemento' {...register("endereco.complemento")} /> 
                         </div>
-                    
-                </section> */}
+                </section> 
                 <section className='formSection'>
                     <h2>Informações do pai:</h2>
                     {hasPai()}

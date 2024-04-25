@@ -61,7 +61,7 @@ export default function Home() {
         <form style={{marginLeft: '55px'}} onSubmit={handleSubmit(onSubmit)}>
             <input type="text" {...register('nome')}/>
             <input type="number" {...register('valor')} />
-            <button type="submit">Enviar</button>
+            <button type="submit" disabled={isSubmitting}>Enviar</button>
         </form>
        )
        }
@@ -69,20 +69,20 @@ export default function Home() {
 
 
     
-    function handleFormChange(index : number){
-        alert(JSON.stringify(isBotaoEditarAtivo, null, 2));
-        alert(index);
-        // let array = isBotaoEditarAtivo.splice(index, 1, false);
+    // function handleFormChange(index : number){
+    //     alert(JSON.stringify(isBotaoEditarAtivo, null, 2));
+    //     alert(index);
+    //     // let array = isBotaoEditarAtivo.splice(index, 1, false);
         
-        setIsBotaoEditarAtivo(prev => prev.splice(index, 1, false));
-    }
+    //     setIsBotaoEditarAtivo(prev => prev.splice(index, 1, false));
+    // }
 
     const {
         register,
         handleSubmit,
         watch,
         reset,
-        formState: { errors },
+        formState: { errors, isSubmitting },
     } = useForm<InputData>()
 
     async function handleDeletePlano(id: string) {
@@ -101,8 +101,9 @@ export default function Home() {
 
     const onSubmit: SubmitHandler<InputData> = async (data) => {
         if(isEditando === true){
+            alert('oi');
             try {
-                const resposta = await axiosInstance.put(`/turmas`, data);
+                const resposta = await axiosInstance.put(`/planos`, data);
                 fetchData();
             } catch (error) {
                 errorHandler(error);
@@ -148,12 +149,12 @@ export default function Home() {
                             setIsBotaoEditarAtivo(prev => [...prev, true]);
                         }
                         return (
-                            <form onChange={ () => handleFormChange(index)} key={plano.id}>
+                            <form key={plano.id} onSubmit={handleSubmit(onSubmit)}>
                                 <button disabled={isDeleting} onClick={() => handleDeletePlano(plano.id)}>Excluir</button>
                                 <input type="text" defaultValue={plano.nome} />
                                 <input type='number' defaultValue={plano.valor} />
-                                <button onClick={() => setIsEditando(true)} 
-                                disabled={isBotaoEditarAtivo[index]}>Editar</button>
+                                <button type='submit' onClick={() => setIsEditando(true)} 
+                                disabled={isSubmitting}>Editar</button>
                             </form>
                     )})}
                     {criarCampoPlano()}
