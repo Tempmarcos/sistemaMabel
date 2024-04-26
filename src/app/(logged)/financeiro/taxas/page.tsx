@@ -92,14 +92,14 @@ export default function Home() {
                     </div>
                     {isLoading && taxas.length === 0 && <p>Carregando...</p>} 
                     {!isLoading && taxas.length === 0 && <p>Adicione uma taxa</p>}
-                    {taxas.map((plano, index) => {
+                    {taxas.map((taxa, index) => {
                         
                         return (
-                            <form key={plano.id}>
-                                {/* <button disabled={isDeleting} onClick={() => handleDeletePlano(plano.id)}>Excluir</button> */}
-                                <input id={`nome${index}`} type="text" defaultValue={plano.nome} />
-                                <input id={`valor${index}`} type='number' defaultValue={plano.valor} />
-                                <button onClick={() => enviarDadosEditar(index, plano.id)} 
+                            <form key={taxa.id}>
+                                {/* <button disabled={isDeleting} onClick={() => handleDeletetaxa(taxa.id)}>Excluir</button> */}
+                                <input id={`nome${index}`} type="text" defaultValue={taxa.nome} />
+                                <input id={`valor${index}`} type='number' defaultValue={taxa.valor} />
+                                <button onClick={() => enviarDadosEditar(index, taxa.id)} 
                                 disabled={isSubmitting}>Editar</button>
                             </form>
                     )})}
