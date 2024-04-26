@@ -35,7 +35,7 @@ export default function Home() {
 
     // const [isBotaoEditarAtivo, setIsBotaoEditarAtivo] = useState<boolean[]>([]);
     // const [isBotaoEditarAtivo, setIsBotaoEditarAtivo] = useState(true);
-    const [isBotaoEditarAtivo, setIsBotaoEditarAtivo] = useState<boolean[]>([]);
+    // const [isBotaoEditarAtivo, setIsBotaoEditarAtivo] = useState<boolean[]>([]);
     const [isEditando, setIsEditando] = useState(false);
 
 
@@ -93,39 +93,51 @@ export default function Home() {
             //alert(JSON.stringify(resposta,null, 2));
             fetchData();
         }catch(error) {
-            errorHandler(error);
+            console.log(error);
         }finally {
             setIsDeleting(false);
         }
     }
 
     const onSubmit: SubmitHandler<InputData> = async (data) => {
-        if(isEditando === true){
-            alert('oi');
-            try {
-                const resposta = await axiosInstance.put(`/planos`, data);
-                fetchData();
-            } catch (error) {
-                errorHandler(error);
-            } finally {
-                setIsEditando(false);
-            }
-        } else {
-            try {
-                data.valor = parseInt(data.valor);
-                // alert(JSON.stringify(data, null, 2));
-                const resposta = await axiosInstance.post(`/planos`, data);
-                fetchData();
-                reset ({
-                    nome : '',
-                    valor : ''
-                   })
-                setCampoPlano(false);
-            } catch (error) {
+        try {
+            data.valor = parseInt(data.valor);
+            // alert(JSON.stringify(data, null, 2));
+            const resposta = await axiosInstance.post(`/planos`, data);
+            fetchData();
+            reset ({
+                nome : '',
+                 valor : ''
+                 })
+            setCampoPlano(false);
+        } catch (error) {
                 errorHandler(error)
-            }
         }
-    } 
+    }
+    
+
+
+    async function enviarDadosEditar(index : number, planoId : string) {
+
+        let inputNome = document.getElementById(`nome${index}`) as HTMLInputElement;
+        let nome = inputNome.value;
+        let inputValor = document.getElementById(`valor${index}`) as HTMLInputElement;
+        let valor = parseInt(inputValor.value);
+
+        const plano = {
+            id : planoId,
+            nome,
+            valor
+        }
+        try {
+            const resposta = await axiosInstance.put(`/planos`, plano);
+            //fetchData();
+        } catch (error) {
+            console.log(error);
+            alert('oi')
+
+        }
+    }
 
     return (
         <main>
@@ -135,7 +147,9 @@ export default function Home() {
                 <LinkButton texto="Taxas" link="financeiro/taxas" />
                 {/* <LinkButton texto="Atividades" link="financeiro/atividades" /> */}
             </Header>
+            <form style={{display: 'none'}} onSubmit={handleSubmit(onSubmit)}>
 
+            </form>
             <section className={styles.tabela}>
                 <div className={styles.table}>
                     <div className={styles.header}>
@@ -145,15 +159,13 @@ export default function Home() {
                     {isLoading && planos.length === 0 && <p>Carregando...</p>} 
                     {!isLoading && planos.length === 0 && <p>Adicione um plano</p>}
                     {planos.map((plano, index) => {
-                        if(isBotaoEditarAtivo.length <= index){
-                            setIsBotaoEditarAtivo(prev => [...prev, true]);
-                        }
+                        
                         return (
-                            <form key={plano.id} onSubmit={handleSubmit(onSubmit)}>
+                            <form key={plano.id}>
                                 <button disabled={isDeleting} onClick={() => handleDeletePlano(plano.id)}>Excluir</button>
-                                <input type="text" defaultValue={plano.nome} />
-                                <input type='number' defaultValue={plano.valor} />
-                                <button type='submit' onClick={() => setIsEditando(true)} 
+                                <input id={`nome${index}`} type="text" defaultValue={plano.nome} />
+                                <input id={`valor${index}`} type='number' defaultValue={plano.valor} />
+                                <button onClick={() => enviarDadosEditar(index, plano.id)} 
                                 disabled={isSubmitting}>Editar</button>
                             </form>
                     )})}

@@ -3,23 +3,33 @@
     justify-content: center;
     align-items: center;
     width: 100vw; min-height: 90vh;
-
-
 }
 
 .tabela input[type= number] {
     text-align: right;
 }
 
+.tabela .table {
+    background-color: gainsboro;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.table form:hover {
+    background-color: rgb(192, 192, 192);
+}
+
+.tabela .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    padding: 8px;
+}
+
 .tabela input[type= text] {
     background-color: gainsboro;
     border: none;
     text-decoration: none;
-}
-
-.tabela table {
-    background-color: gainsboro;
-    border-radius: 5px;
 }
 
 .tabela th {

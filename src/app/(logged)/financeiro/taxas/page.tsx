@@ -4,6 +4,7 @@ import LinkButton from "@/app/components/botoes/LinkButton/LinkButton";
 import Header from "@/app/components/header/Header";
 import { axiosInstance } from '@/http/config/axiosConfig';
 import { useCallback, useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
 
 
 
@@ -11,6 +12,11 @@ type TaxaData = {
     id : string;
     nome : string;
     valor : string;
+}
+
+type InputData = {
+    nome : string;
+    valor : string | number | any;
 }
 
 
@@ -38,6 +44,36 @@ export default function Home() {
         console.log(resposta.data);
         return resposta.data;
     }
+    
+    const {
+        register,
+        handleSubmit,
+        watch,
+        reset,
+        formState: { errors, isSubmitting },
+    } = useForm<InputData>()
+
+
+    async function enviarDadosEditar(index : number, taxaId : string) {
+        let inputNome = document.getElementById(`nome${index}`) as HTMLInputElement;
+        let nome = inputNome.value;
+        let inputValor = document.getElementById(`valor${index}`) as HTMLInputElement;
+        let valor = parseInt(inputValor.value);
+
+        const taxa = {
+            id : taxaId,
+            nome,
+            valor
+        }
+        try {
+            const resposta = await axiosInstance.put(`/taxas`, taxa);
+            //fetchData();
+        } catch (error) {
+            console.log(error);
+            alert('oi')
+
+        }
+    }
 
     return (
         <main>
@@ -49,17 +85,27 @@ export default function Home() {
             </Header>
 
             <section className={styles.tabela}>
-                <table>
-                    <tr>
-                        <th>Nome</th>
-                        <th>Valor</th>
-                    </tr>
-                    {taxas.map(taxa => {return <tr>
-                        <th><input type="text" defaultValue={taxa.nome} /></th>
-                        <th><input type='number' defaultValue={taxa.valor}/></th>
-                    </tr>})}
-                    <tr><button>Adicionar taxa</button></tr>
-                </table>
+            <div className={styles.table}>
+                    <div className={styles.header}>
+                        <h1>Nome</h1>
+                        <h1>Valor</h1>
+                    </div>
+                    {isLoading && taxas.length === 0 && <p>Carregando...</p>} 
+                    {!isLoading && taxas.length === 0 && <p>Adicione uma taxa</p>}
+                    {taxas.map((plano, index) => {
+                        
+                        return (
+                            <form key={plano.id}>
+                                {/* <button disabled={isDeleting} onClick={() => handleDeletePlano(plano.id)}>Excluir</button> */}
+                                <input id={`nome${index}`} type="text" defaultValue={plano.nome} />
+                                <input id={`valor${index}`} type='number' defaultValue={plano.valor} />
+                                <button onClick={() => enviarDadosEditar(index, plano.id)} 
+                                disabled={isSubmitting}>Editar</button>
+                            </form>
+                    )})}
+                    {/* {criarCampoPlano()} */}
+                    {/* <button onClick={() => setCampoPlano(true)}>Adicionar plano</button> */}
+                </div>
             </section>
         </main>
     )
