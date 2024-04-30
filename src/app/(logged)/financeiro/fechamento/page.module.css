@@ -2,17 +2,20 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-flow: column;
     width: 100vw; min-height: 90vh;
 }
 
 .tabela input[type= number] {
     text-align: right;
+    width: 75px;
 }
 
 .tabela .table {
     background-color: gainsboro;
     border-radius: 5px;
     padding: 5px;
+    overflow-x: auto;
 }
 
 .table form:hover {
@@ -59,6 +62,7 @@ background-color: rgb(192, 192, 192);
     display: flex;
     flex-flow: row;
     padding: 10px;
+    overflow-x: auto;
 }
 
 .linha h1 {

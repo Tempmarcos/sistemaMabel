@@ -70,7 +70,7 @@ export default function Home() {
             //fetchData();
         } catch (error) {
             console.log(error);
-            alert('oi')
+            // alert('oi')
 
         }
     }
