@@ -1,5 +1,5 @@
 'use client'
-import AlunoCard from "../../components/cards/AlunoCard/AlunoCard";
+import AlunoCard from '@/app/components/cards/AlunoCard/AlunoCard';
 import styles from './page.module.css'
 import {useCallback, useEffect, useState} from "react";
 import DropdownButton from "../../components/botoes/dropdownButton/dropdownButton";
@@ -243,7 +243,7 @@ useEffect(() => {
             <a onClick={() => handleFiltro('')}>Turma</a>
             {
               turmas.map(turma => {
-              return <a onClick={() => handleFiltro(turma.nome)}> {turma.nome} </a>
+              return <a key={turma.id} onClick={() => handleFiltro(turma.nome)}> {turma.nome} </a>
             })}
           </div>
         </DropdownButton> 
@@ -296,7 +296,7 @@ useEffect(() => {
             <div className={styles.div}>
                 {textoDiarias()}
                 {diariasAtuais.map(diaria => {
-                  return <DiariaCard turno={diaria.turno} data={diaria.data} onClick={() => handleDeleteDiaria(diaria.id, diaria.alunoId)}/>
+                  return <DiariaCard key={diaria.id} turno={diaria.turno} data={diaria.data} onClick={() => handleDeleteDiaria(diaria.id, diaria.alunoId)}/>
                 })}
             </div>
             <div className={styles.div}>
@@ -315,7 +315,7 @@ useEffect(() => {
             <div className={styles.div}>
                 {textoAtrasos()}
                 {atrasosAtuais.map(atraso => {
-                  return <DiariaCard data={atraso.data} onClick={() => handleDeleteAtraso(atraso.id, atraso.alunoId)}/>
+                  return <DiariaCard key={atraso.id} data={atraso.data} onClick={() => handleDeleteAtraso(atraso.id, atraso.alunoId)}/>
                 })}
             </div>
         </div>

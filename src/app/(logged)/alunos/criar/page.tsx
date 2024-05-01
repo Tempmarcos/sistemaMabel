@@ -369,7 +369,7 @@ export default function Home(){
                         <select id="turma" {...register('turma', {required : true})}>
                             <option value=""></option>
                             {turmas.map(turma => {
-                                 return <option value={turma.id}>{turma.nome}</option>
+                                 return <option key={turma.id} value={turma.id}>{turma.nome}</option>
                             })}
                         </select>
                     </div>
@@ -384,7 +384,7 @@ export default function Home(){
                         })}>
                             <option value=""></option>
                             {planos.map(plano => {
-                                 return <option value={plano.id}> {plano.nome} </option>
+                                 return <option key={plano.id} value={plano.id}> {plano.nome} </option>
                             })}
                         </select>
                     </div>

@@ -432,7 +432,7 @@ export default function Home({ params } : UserProps){
                         })}>
                             <option value=""></option>
                             {planos.map(plano => {
-                                 return <option value={plano.id}> {plano.nome} </option>
+                                 return <option key={plano.id} value={plano.id}> {plano.nome} </option>
                             })}
                         </select>
                     </div>

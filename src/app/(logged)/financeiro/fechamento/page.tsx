@@ -178,7 +178,7 @@ export default function Home(){
                     {mensais.map((mensal, index) => {
                         
                         return ( 
-                        <div id={`linha${index}`} onChange={() => recalcularMensal(index)} 
+                        <div key={mensal.id} id={`linha${index}`} onChange={() => recalcularMensal(index)} 
                         style={{backgroundColor: corLinha[index]}} className={styles.linha}>
                             <input type="text" readOnly value={mensal.aluno.nome} />
                             <input id={`plano${index}`} type="number" readOnly value={mensal.aluno.valor} />

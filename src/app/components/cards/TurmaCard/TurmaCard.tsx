@@ -27,7 +27,7 @@ export default function TurmaCard({ id, nome, prof, turno, faixa} : TurmaCardPro
         <div className={styles.card} style={{backgroundColor: background}}>
             <h1>{nome}</h1>
             {prof && prof.map(item => {
-                return <h2>{item.nome}</h2>
+                return <h2 key={item.id}>{item.nome}</h2>
             })}
             <h3>{turno}</h3>
             <h3>{faixa}</h3>
