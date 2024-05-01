@@ -1,22 +1,4 @@
 'use client'
-import { temas } from "../temas"
-
-let corElemento= temas.corElemento;
-let corTexto= temas.corTexto;
-let corFundo= temas.corFundo;
-
-
-const textoEscolher = document.querySelector('textoEscolher');
-textoEscolher?.addEventListener("input", updateTexto, false);
-textoEscolher?.addEventListener("change", updateTextoSubmit, false);
-
-function updateTexto(event : any){
-    temas.corTexto = event.target.value;
-}
-
-function updateTextoSubmit(event : any){
-    temas.corTexto = event.target.value;
-}
 
 export default function Home(){
     return (
