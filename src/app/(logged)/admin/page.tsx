@@ -191,7 +191,7 @@ export default function Home() {
             </form>
             </Modal>
             <a onClick={handleOpenModal}>
-                <BtnAdicionar title="Adicionar usuário" corElemento="blue" corTexto="white"/>
+                <BtnAdicionar title="Adicionar usuário" corElemento="orange" corTexto="black"/>
             </a>
         </main>
     )
