@@ -7,7 +7,7 @@ interface AlunoCardProps {
     turma: string;
 }
 
-export default function AlunoCard({nome, turno, turma} : AlunoCardProps){
+export default function AlunoCard({id, nome, turno, turma} : AlunoCardProps){
 
     let background;
 
