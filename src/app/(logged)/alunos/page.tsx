@@ -1,6 +1,7 @@
 'use client'
 // import AlunoCard from '@/app/components/cards/AlunoCard/AlunoCard';
 import styles from './page.module.css'
+import style from '../../components/cards/AlunoCard/alunocard.module.css'
 import {useCallback, useEffect, useState} from "react";
 import DropdownButton from "../../components/botoes/dropdownButton/dropdownButton";
 import BtnAdicionar from '../../components/botoes/BtnAdicionar/BtnAdicionar';
@@ -81,7 +82,7 @@ function AlunoCard({id, nome, turno, turma} : AlunoCardProps){
 
 
     return (
-        <div className={styles.card} style={{backgroundColor: background}}>
+        <div className={style.card} style={{backgroundColor: background}}>
            {nome}<br />
            {turma}
         </div>
