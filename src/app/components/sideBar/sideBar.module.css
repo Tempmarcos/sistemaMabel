@@ -6,6 +6,7 @@
     right: 0;
     top: 0;
     pointer-events: none;
+    z-index: 39;
 }
 
 .modalSide {
@@ -13,10 +14,10 @@
     width: 200px;
     background-color: #04AA6D;
     color: white;
-    display: flex;
-    flex-flow: column nowrap;
-    align-items: center;
-    justify-content: space-evenly;
+    display: flex; 
+    flex-flow: column nowrap !important;
+    align-items: center !important;
+    justify-content: space-evenly !important;
     pointer-events: all;
 }
 
@@ -25,10 +26,10 @@
 }
 
 .divModal {
-    display: flex;
-    flex-flow: column nowrap;
-    align-items: center;
-    justify-content: space-around;
+    display: flex !important;
+    flex-flow: column nowrap !important;
+    align-items: center !important;
+    justify-content: space-around !important;
 }
 
 .botao {
@@ -40,10 +41,15 @@
     transition: 0.3s ease-in-out;
 }
 
+.financeiro {
+    flex-flow: column !important;
+
+}
+
 .listaFinanceiro {
-    font-size: 16px;
-    margin-left: 3px;
-    flex-flow: column;
+    font-size: 16px !important;
+    margin-left: 3px !important;
+    flex-flow: column !important;
 }
 
 .listaFinanceiro a{

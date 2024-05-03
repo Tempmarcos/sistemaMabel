@@ -8,6 +8,7 @@ import Modal from "@/app/components/cards/Modal/Modal"
 import { useCallback, useEffect, useState } from "react"
 import { getProfs, deleteTurma, getTurma, getTurmas, ajustaTurmaAPI } from '@/http/services/turmas/functions'
 import { errorHandler } from '@/http/errorHandler'
+import SideBar from '@/app/components/sideBar/sideBar'
 
 
 type InputData = {
@@ -104,7 +105,7 @@ export default function Home(){
         try{
             const turmaDelete = await deleteTurma(id);
         } catch(error){
-            errorHandler(error);
+            console.log(error);
         }
         handleXDisplay();
         setSelectedTurma('');
@@ -167,6 +168,7 @@ export default function Home(){
 
     return (
         <main className={styles.main}>
+        <SideBar corElemento={'orange'} corTexto={'white'}/>
             {isLoading && turmas.length === 0 && <p>Carregando...</p>} 
             {!isLoading && turmas.length === 0 && <p>Para criar uma turma, clique no botão ali embaixo!</p>}
             {!isLoading && turmas.map(turma => {

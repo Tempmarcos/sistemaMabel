@@ -1,5 +1,5 @@
-'use client'
-import SideBar from "../components/sideBar/sideBar";
+// 'use client'
+// import SideBar from "../components/sideBar/sideBar";
 import "../globals.css";
 
 
@@ -13,7 +13,7 @@ export default function LoggedLayout({
   return (
     <html lang="pt-BR">
       <body style={{color: 'black', backgroundColor: 'white'}}>{children}</body>
-      <SideBar corElemento={'orange'} corTexto={'white'}/>
+      {/* <SideBar corElemento={'orange'} corTexto={'white'}/> */}
     </html>
   );
 }

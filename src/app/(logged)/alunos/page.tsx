@@ -1,5 +1,5 @@
 'use client'
-import AlunoCard from '../../components/cards/AlunoCard/AlunoCard';
+import AlunoCard from '@/app/components/cards/AlunoCard/AlunoCard';
 import styles from './page.module.css'
 import {useCallback, useEffect, useState} from "react";
 import DropdownButton from "../../components/botoes/dropdownButton/dropdownButton";
@@ -17,6 +17,7 @@ import dayjs from "dayjs";
 import DiariaCard from "@/app/components/cards/DiariaCard/DiariaCard";
 import { CreateAtrasoRequestType, ListAtrasoResponseType } from "@/http/parses/atraso";
 import { useRouter } from "next/navigation";
+import SideBar from '@/app/components/sideBar/sideBar';
 
 
 type TurmaData = {
@@ -106,7 +107,7 @@ useEffect(() => {
     const diarias: ListDiariaResponseType = resposta.data;
     // alert(JSON.stringify(diarias, null, 2));
     diarias.forEach(diaria => {
-      diaria.data = dayjs(diaria.data).format('DD/MMM');
+      diaria.data = dayjs(diaria.data).locale('pt-br').add(3, 'hour').format('DD/MM');
     })
     setDiariasAtuais(diarias);
   }
@@ -193,7 +194,7 @@ useEffect(() => {
 
   const onSubmit: SubmitHandler<CreateDiariaRequestType> = async (data) => {
     try{
-      // alert(JSON.stringify(data, null, 2));
+      alert(JSON.stringify(data, null, 2));
       const resposta = await axiosInstance.post(`/diarias`, data);
       getDiarias(data.alunoId);
     } catch(error){
@@ -201,7 +202,9 @@ useEffect(() => {
     } finally {
       setDisplayCriarDiaria('none');
       reset ({
+        alunoId: data.alunoId,
         data : '',
+        almoco : false,
         turno: 'MANHA',
       })
     }
@@ -228,6 +231,7 @@ useEffect(() => {
 
   return (
     <main className={styles.main} style={{backgroundColor: corFundo, color: corTexto}}>
+      <SideBar corElemento={'orange'} corTexto={'white'}/>
       <Header>
         <DropdownButton name="Turno" corElemento={corElemento} corTexto={corTexto}>
           <div>
@@ -286,6 +290,10 @@ useEffect(() => {
                         </select>
                       </div>
                       <div>
+                        <label htmlFor="almoco">Almoço:</label>
+                        <input type="checkbox" id="almoco" {...register('almoco')}/>
+                      </div>
+                      <div>
                         <label htmlFor="data">Data:</label>
                         <input type="date" id="data" {...register('data')}/>
                       </div>
@@ -296,7 +304,7 @@ useEffect(() => {
             <div className={styles.div}>
                 {textoDiarias()}
                 {diariasAtuais.map(diaria => {
-                  return <DiariaCard key={diaria.id} turno={diaria.turno} data={diaria.data} onClick={() => handleDeleteDiaria(diaria.id, diaria.alunoId)}/>
+                  return <DiariaCard key={diaria.id} almoco={diaria.almoco} turno={diaria.turno} data={diaria.data} onClick={() => handleDeleteDiaria(diaria.id, diaria.alunoId)}/>
                 })}
             </div>
             <div className={styles.div}>

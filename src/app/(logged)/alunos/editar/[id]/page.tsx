@@ -336,6 +336,9 @@ export default function Home({ params } : UserProps){
         dataAlterada.valor = parseInt(data.valor.toString());
         dataAlterada.turma = {id : data.turma};
         dataAlterada.plano = {id : data.plano};
+        dataAlterada.id = aluno.id;
+        // alert(JSON.stringify(dataAlterada.plano, null, 2));
+        delete dataAlterada.valorPlano;
         console.log(dataAlterada);
         // alert(JSON.stringify(data.turma, null, 2));
         setSubmittedData(dataAlterada);
@@ -353,11 +356,12 @@ export default function Home({ params } : UserProps){
         // alert(JSON.stringify(data, null, 2));
         console.log(data);
         try {
-        const dadosParseados = updateAlunoRequestParse(data);
+        //const dadosParseados = updateAlunoRequestParse(data);
         } catch (error) {
             console.log(error)
         }
         try {
+            // alert(JSON.stringify(data.plano, null, 2));
             const resposta = await axiosInstance.put('/alunos', data);
             setDisplayAlunoCriado('flex');
         } catch (error) {

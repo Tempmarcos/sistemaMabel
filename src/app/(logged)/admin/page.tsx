@@ -10,6 +10,7 @@ import { AxiosError } from "axios";
 import { getUsers, getUser, deleteUser } from '@/http/services/users/functions';
 import { errorHandler } from "@/http/errorHandler";
 import Alerta from "@/app/components/cards/Alerta/Alerta";
+import SideBar from "@/app/components/sideBar/sideBar";
 
 
 type InputData = {
@@ -147,6 +148,7 @@ export default function Home() {
 
     return (
         <main className={styles.main}>
+            <SideBar corElemento={'orange'} corTexto={'white'}/>
             <div className={styles.title}>
                 <h1>Usuários:</h1>
             </div>

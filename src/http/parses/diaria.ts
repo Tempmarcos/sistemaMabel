@@ -4,6 +4,7 @@ const listSchema = z.object({
   id: z.string(),
   data: z.string(),
   turno: z.enum(['MANHA', 'TARDE', 'NOITE']),
+  almoco: z.boolean(),
   alunoId: z.string(),
 }).array()
 
@@ -17,6 +18,7 @@ export function listDiariaResponseParse(data: unknown): ListDiariaResponseType {
 const createSchema = z.object({
   alunoId: z.string(),
   data: z.string(),
+  almoco: z.boolean(),
   turno: z.enum(['MANHA', 'TARDE', 'NOITE']),
 })
 

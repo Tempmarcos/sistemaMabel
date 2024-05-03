@@ -7,6 +7,7 @@ import { getPlanos, deletePlano, createPlano, editPlano } from '@/http/services/
 import { useCallback, useEffect, useState } from 'react';
 import { errorHandler } from '@/http/errorHandler';
 import { axiosInstance } from '@/http/config/axiosConfig';
+import SideBar from '@/app/components/sideBar/sideBar';
 
 
 
@@ -141,6 +142,7 @@ export default function Home() {
 
     return (
         <main>
+            <SideBar corElemento={'orange'} corTexto={'white'}/>
             <Header>
                 <LinkButton texto="Fechamento" link="financeiro/fechamento" />
                 <LinkButton texto="Planos" link="financeiro/planos" />

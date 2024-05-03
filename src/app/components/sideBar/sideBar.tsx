@@ -29,7 +29,7 @@ export default function SideBar({corElemento, corTexto} : ISideBar){
            style={{display: displaySidebar, backgroundColor: corElemento, color: corTexto}}>
             <a href="/alunos">Alunos</a>
             <a href="/turmas">Turmas</a>
-            <div>
+            <div className={styles.financeiro}>
             <a onClick={handleSwitchFinanceiro}>{posicaoSeta}</a>
                 <div style={{display: displayFinanceiro}} className={styles.listaFinanceiro}>
                     <a href="/financeiro/fechamento">-Fechamento</a>

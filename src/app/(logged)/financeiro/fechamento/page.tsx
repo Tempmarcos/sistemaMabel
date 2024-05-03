@@ -9,6 +9,7 @@ import { axiosInstance } from "@/http/config/axiosConfig";
 import dayjs from "dayjs";
 import 'dayjs/locale/pt-br';
 import { useForm } from "react-hook-form";
+import SideBar from "@/app/components/sideBar/sideBar";
 // import { mensais } from "@/mocks/mensais";
 
 
@@ -152,6 +153,7 @@ export default function Home(){
 
     return(
         <main>
+            <SideBar corElemento={'orange'} corTexto={'white'}/>
             <Header>
                 <LinkButton texto="Fechamento" link="financeiro/fechamento" />
                 <LinkButton texto="Planos" link="financeiro/planos" />
