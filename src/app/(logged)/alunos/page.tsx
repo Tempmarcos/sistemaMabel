@@ -1,7 +1,7 @@
 'use client'
-// import AlunoCard from '@/app/components/cards/AlunoCard/AlunoCard';
+import AlunoCard from '@/app/components/cards/cardAluno/AlunoCard';
 import styles from './page.module.css'
-import style from '../../components/cards/cardAluno/alunocard.module.css'
+// import style from '../../components/cards/cardAluno/alunocard.module.css'
 import {useCallback, useEffect, useState} from "react";
 import DropdownButton from "../../components/botoes/dropdownButton/dropdownButton";
 import BtnAdicionar from '../../components/botoes/BtnAdicionar/BtnAdicionar';
@@ -61,33 +61,33 @@ export default function Home() {
 
 //ALUNOCARD
 
-  interface AlunoCardProps {
-    id: string;
-    nome: string;
-    turno: string;
-    turma: string;
-}
+//   interface AlunoCardProps {
+//     id: string;
+//     nome: string;
+//     turno: string;
+//     turma: string;
+// }
 
-function AlunoCard({id, nome, turno, turma} : AlunoCardProps){
+// function AlunoCard({id, nome, turno, turma} : AlunoCardProps){
 
-    let background;
+//     let background;
 
-    if(turno === "MANHA") { 
-        background = '#00ffff';
-    } else if(turno === 'TARDE') {
-        background = '#ffa500';
-    } else {
-        background = 'gray';
-    }
+//     if(turno === "MANHA") { 
+//         background = '#00ffff';
+//     } else if(turno === 'TARDE') {
+//         background = '#ffa500';
+//     } else {
+//         background = 'gray';
+//     }
 
 
-    return (
-        <div className={style.card} style={{backgroundColor: background}}>
-           {nome}<br />
-           {turma}
-        </div>
-    );
-}
+//     return (
+//         <div className={style.card} style={{backgroundColor: background}}>
+//            {nome}<br />
+//            {turma}
+//         </div>
+//     );
+// }
 
 
 //FIM ALUNO CARD
