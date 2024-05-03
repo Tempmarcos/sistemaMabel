@@ -1,7 +1,7 @@
 'use client'
 // import AlunoCard from '@/app/components/cards/AlunoCard/AlunoCard';
 import styles from './page.module.css'
-import style from '../../components/cards/AlunoCard/alunocard.module.css'
+import style from '../../components/cards/cardAluno/alunocard.module.css'
 import {useCallback, useEffect, useState} from "react";
 import DropdownButton from "../../components/botoes/dropdownButton/dropdownButton";
 import BtnAdicionar from '../../components/botoes/BtnAdicionar/BtnAdicionar';
