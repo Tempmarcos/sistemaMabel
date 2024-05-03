@@ -1,4 +1,4 @@
-import styles from './styles.module.css'
+import styles from './alunocard.module.css'
 
 interface AlunoCardProps {
     id: string;

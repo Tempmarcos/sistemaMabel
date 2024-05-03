@@ -1,11 +1,10 @@
 'use client'
-import AlunoCard from '@/app/components/cards/AlunoCard/AlunoCard';
+// import AlunoCard from '@/app/components/cards/AlunoCard/AlunoCard';
 import styles from './page.module.css'
 import {useCallback, useEffect, useState} from "react";
 import DropdownButton from "../../components/botoes/dropdownButton/dropdownButton";
 import BtnAdicionar from '../../components/botoes/BtnAdicionar/BtnAdicionar';
 import Header from "@/app/components/header/Header";
-import { errorHandler } from "@/http/errorHandler";
 import { getTurmas } from "@/http/services/turmas/functions";
 import { useForm, SubmitHandler } from "react-hook-form"
 import { ListAlunoResponseType } from "@/http/parses/aluno";
@@ -57,6 +56,41 @@ export default function Home() {
   const corElemento = 'orange';
   const corTexto = "black";
   const corFundo = "white";
+
+
+//ALUNOCARD
+
+  interface AlunoCardProps {
+    id: string;
+    nome: string;
+    turno: string;
+    turma: string;
+}
+
+function AlunoCard({id, nome, turno, turma} : AlunoCardProps){
+
+    let background;
+
+    if(turno === "MANHA") { 
+        background = '#00ffff';
+    } else if(turno === 'TARDE') {
+        background = '#ffa500';
+    } else {
+        background = 'gray';
+    }
+
+
+    return (
+        <div className={styles.card} style={{backgroundColor: background}}>
+           {nome}<br />
+           {turma}
+        </div>
+    );
+}
+
+
+//FIM ALUNO CARD
+
 
   const fetchAlunos = useCallback(async () => {
     try {
