@@ -58,41 +58,6 @@ export default function Home() {
   const corTexto = "black";
   const corFundo = "white";
 
-
-//ALUNOCARD
-
-//   interface AlunoCardProps {
-//     id: string;
-//     nome: string;
-//     turno: string;
-//     turma: string;
-// }
-
-// function AlunoCard({id, nome, turno, turma} : AlunoCardProps){
-
-//     let background;
-
-//     if(turno === "MANHA") { 
-//         background = '#00ffff';
-//     } else if(turno === 'TARDE') {
-//         background = '#ffa500';
-//     } else {
-//         background = 'gray';
-//     }
-
-
-//     return (
-//         <div className={style.card} style={{backgroundColor: background}}>
-//            {nome}<br />
-//            {turma}
-//         </div>
-//     );
-// }
-
-
-//FIM ALUNO CARD
-
-
   const fetchAlunos = useCallback(async () => {
     try {
         setIsLoading(true);
@@ -174,7 +139,7 @@ useEffect(() => {
     const atrasos: ListAtrasoResponseType = resposta.data;
     // alert(JSON.stringify(diarias, null, 2));
     atrasos.forEach(atraso => {
-      atraso.data = dayjs(atraso.data).format('DD/MMM');
+      atraso.data = dayjs(atraso.data).format('DD/MM');
     })
     setAtrasosAtuais(atrasos);
   }
@@ -229,7 +194,7 @@ useEffect(() => {
 
   const onSubmit: SubmitHandler<CreateDiariaRequestType> = async (data) => {
     try{
-      alert(JSON.stringify(data, null, 2));
+      // alert(JSON.stringify(data, null, 2));
       const resposta = await axiosInstance.post(`/diarias`, data);
       getDiarias(data.alunoId);
     } catch(error){
