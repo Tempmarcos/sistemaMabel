@@ -65,6 +65,46 @@ export default function Home({ params } : UserProps){
         return resposta.data;
     }
 
+    const fetchPais = useCallback(async () => {
+        try {
+            const data = await axiosInstance.get('/pais');
+            setPais(data.data);
+            // alert(JSON.stringify(data, null, 2));
+            console.log(data)
+        } catch (error) {
+            console.log(error);
+        }
+    }, []);
+    useEffect(() => {
+        fetchPais();
+    }, [fetchPais]);
+
+    const fetchMaes = useCallback(async () => {
+        try {
+            const data = await axiosInstance.get('/maes');
+            setMaes(data.data);
+            // alert(JSON.stringify(data, null, 2));
+        } catch (error) {
+            console.log(error);
+        }
+    }, []);
+    useEffect(() => {
+        fetchMaes();
+    }, [fetchMaes]);
+
+    const fetchResponsaveis = useCallback(async () => {
+        try {
+            const data = await axiosInstance.get('/responsaveis');
+            setResponsaveis(data.data);
+            // alert(JSON.stringify(data, null, 2));
+        } catch (error) {
+            console.log(error);
+        }
+    }, []);
+    useEffect(() => {
+        fetchResponsaveis();
+    }, [fetchResponsaveis]);
+
     const fetchTurmas = useCallback(async () => {
         try {
             const data : TurmaData[] = await getTurmas();
@@ -124,48 +164,13 @@ export default function Home({ params } : UserProps){
     useEffect(() => {
         fetchPlanos();
         fetchTurmas();
-        fetchAluno();
-    }, [fetchAluno, fetchPlanos, fetchTurmas]);
-
-    const fetchPais = useCallback(async () => {
-        try {
-            const data = await axiosInstance.get('/pais');
-            setPais(data.data);
-            // alert(JSON.stringify(data, null, 2));
-            console.log(data)
-        } catch (error) {
-            console.log(error);
-        }
-    }, []);
-    useEffect(() => {
-        fetchPais();
-    }, [fetchPais]);
-
-    const fetchMaes = useCallback(async () => {
-        try {
-            const data = await axiosInstance.get('/maes');
-            setMaes(data.data);
-            // alert(JSON.stringify(data, null, 2));
-        } catch (error) {
-            console.log(error);
-        }
-    }, []);
-    useEffect(() => {
         fetchMaes();
-    }, [fetchMaes]);
-
-    const fetchResponsaveis = useCallback(async () => {
-        try {
-            const data = await axiosInstance.get('/responsaveis');
-            setResponsaveis(data.data);
-            // alert(JSON.stringify(data, null, 2));
-        } catch (error) {
-            console.log(error);
-        }
-    }, []);
-    useEffect(() => {
+        fetchPais();
         fetchResponsaveis();
-    }, [fetchResponsaveis]);
+        fetchAluno();
+    }, [fetchPlanos, fetchTurmas, fetchMaes, fetchPais, fetchResponsaveis, fetchAluno]);
+
+    
 
     const {
         register,
