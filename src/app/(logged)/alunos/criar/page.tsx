@@ -58,21 +58,14 @@ export default function Home(){
   const navigate = useRouter();
 
 
-
-
-
-
     const fetchTurmas = useCallback(async () => {
         try {
             const data : TurmaData[] = await getTurmas();
             setTurmas(data);
         } catch (error) {
-            //errorHandler(error);
+            console.log(error);
         }
     }, []);
-    useEffect(() => {
-        fetchTurmas();
-    }, [fetchTurmas]);
 
     const fetchPlanos = useCallback(async () => {
         try {
@@ -83,9 +76,6 @@ export default function Home(){
             console.error(error);
         } 
     }, []);
-    useEffect(() => {
-        fetchPlanos();
-    }, [fetchPlanos]);
 
 
     const fetchPais = useCallback(async () => {
@@ -96,12 +86,9 @@ export default function Home(){
             // alert(JSON.stringify(data, null, 2));
             console.log(data)
         } catch (error) {
-            //errorHandler(error);
+            console.log(error);
         }
     }, []);
-    useEffect(() => {
-        fetchPais();
-    }, [fetchPais]);
 
     const fetchMaes = useCallback(async () => {
         try {
@@ -110,26 +97,27 @@ export default function Home(){
             setmaesFiltradas(maes);
             // alert(JSON.stringify(data, null, 2));
         } catch (error) {
-            //errorHandler(error);
+            console.log(error);
         }
     }, []);
-    useEffect(() => {
-        fetchMaes();
-    }, [fetchMaes]);
 
     const fetchResponsaveis = useCallback(async () => {
         try {
             const data = await axiosInstance.get('/responsaveis');
             setResponsaveis(data.data);
-            setresponsaveisFiltrados(responsaveis);
+            // setresponsaveisFiltrados(responsaveis);
             // alert(JSON.stringify(data, null, 2));
         } catch (error) {
-            //errorHandler(error);
+            console.log(error);
         }
     }, []);
     useEffect(() => {
+        fetchTurmas();
+        fetchPlanos();
         fetchResponsaveis();
-    }, [fetchResponsaveis]);
+        fetchMaes();
+        fetchPais();
+    }, [fetchResponsaveis, fetchMaes, fetchPais, fetchTurmas, fetchPlanos]);
 
     const {
         register,
@@ -161,7 +149,7 @@ export default function Home(){
                         })}>
                         {/* <input type="text" placeholder="Pesquisar..." id="searchBar" onChange={filtrarPais} /> */}
                         <option value=""></option>
-                            {paisFiltrados.map(pai => {
+                            {pais.map(pai => {
                                  return <option key={pai.id} value={pai.id}>{pai.nome}</option>
                             })}
                         </select>
@@ -169,9 +157,9 @@ export default function Home(){
             ) 
     }
 
-    function filtrarPais(event: { target: { value: any; }; }){
-        setPaisFiltrados(pais.filter(pai => pai.nome.toLowerCase().includes(event.target.value)))
-      }
+    // function filtrarPais(event: { target: { value: any; }; }){
+    //     setPaisFiltrados(pais.filter(pai => pai.nome.toLowerCase().includes(event.target.value)))
+    //   }
 
     async function handleEscolherPai(event : any){
         let id = event?.target.value;
@@ -179,11 +167,12 @@ export default function Home(){
             reset ({
                 pai: {nome: '', fone: '', funcao: '', email: '', trabalho: ''}
             })
+        } else {
+            const resposta = await axiosInstance.get(`/pais/${id}`);
+            reset ({
+                pai: resposta.data
+            })
         }
-        const resposta = await axiosInstance.get(`/pais/${id}`);
-        reset ({
-            pai: resposta.data
-        })
     }
 
     function hasMae(){
@@ -194,7 +183,7 @@ export default function Home(){
                             onChange : e => handleEscolherMae(e)
                         })}>
                         <option value=""></option>
-                            {maesFiltradas.map(mae => {
+                            {maes.map(mae => {
                                  return <option key={mae.id} value={mae.id}>{mae.nome}</option>
                             })}
                         </select>
@@ -208,11 +197,12 @@ export default function Home(){
             reset ({
                 mae: {nome: '', fone: '', funcao: '', email: '', trabalho: ''}
             })
+        } else {
+            const resposta = await axiosInstance.get(`/maes/${id}`);
+            reset ({
+                mae: resposta.data
+            })
         }
-        const resposta = await axiosInstance.get(`/maes/${id}`);
-        reset ({
-            mae: resposta.data
-        })
     }
 
     function hasResponsavel(){
@@ -223,7 +213,7 @@ export default function Home(){
                             onChange : e => handleEscolherResponsavel(e)
                         })}>
                      <option value=""></option>
-                        {responsaveisFiltrados.map(responsavel => {
+                        {responsaveis.map(responsavel => {
                             return <option key={responsavel.id} value={responsavel.id}>{responsavel.nome}</option>
                         })}
                     </select>
@@ -234,14 +224,17 @@ export default function Home(){
     async function handleEscolherResponsavel(event : any){
         let id = event?.target.value;
         if(!id){
+            // alert('oi')
             reset ({
                 responsavel: {nome: '', rg: '', cpf: '', fone_pessoal: '', fone_trabalho: '', funcao: '', email: '', trabalho: ''}
             })
+        } else{
+            const resposta = await axiosInstance.get(`/responsaveis/${id}`);
+            reset ({
+                responsavel: resposta.data
+            })
+            // alert(JSON.stringify(resposta.data, null, 2))
         }
-        const resposta = await axiosInstance.get(`/responsaveis/${id}`);
-        reset ({
-            responsavel: resposta.data
-        })
     }
 
     let valorPlanoEscolhido;

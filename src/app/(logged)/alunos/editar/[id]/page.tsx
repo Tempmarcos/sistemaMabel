@@ -134,7 +134,7 @@ export default function Home({ params } : UserProps){
             // alert(JSON.stringify(data, null, 2));
             console.log(data)
         } catch (error) {
-            //errorHandler(error);
+            console.log(error);
         }
     }, []);
     useEffect(() => {
@@ -147,7 +147,7 @@ export default function Home({ params } : UserProps){
             setMaes(data.data);
             // alert(JSON.stringify(data, null, 2));
         } catch (error) {
-            //errorHandler(error);
+            console.log(error);
         }
     }, []);
     useEffect(() => {
@@ -160,7 +160,7 @@ export default function Home({ params } : UserProps){
             setResponsaveis(data.data);
             // alert(JSON.stringify(data, null, 2));
         } catch (error) {
-            //errorHandler(error);
+            console.log(error);
         }
     }, []);
     useEffect(() => {
@@ -210,11 +210,12 @@ export default function Home({ params } : UserProps){
             reset ({
                 pai: {nome: '', fone: '', funcao: '', email: '', trabalho: ''}
             })
+        } else {
+            const resposta = await axiosInstance.get(`/pais/${id}`);
+            reset ({
+                pai: resposta.data
+            })
         }
-        const resposta = await axiosInstance.get(`/pais/${id}`);
-        reset ({
-            pai: resposta.data
-        })
     }
 
     function hasMae(){
@@ -239,11 +240,12 @@ export default function Home({ params } : UserProps){
             reset ({
                 mae: {nome: '', fone: '', funcao: '', email: '', trabalho: ''}
             })
+        } else {
+            const resposta = await axiosInstance.get(`/maes/${id}`);
+            reset ({
+                mae: resposta.data
+            })
         }
-        const resposta = await axiosInstance.get(`/maes/${id}`);
-        reset ({
-            mae: resposta.data
-        })
     }
 
     function hasResponsavel(){
@@ -268,11 +270,12 @@ export default function Home({ params } : UserProps){
             reset ({
                 responsavel: {nome: '', rg: '', cpf: '', fone_pessoal: '', fone_trabalho: '', funcao: '', email: '', trabalho: ''}
             })
+        } else {
+            const resposta = await axiosInstance.get(`/responsaveis/${id}`);
+            reset ({
+                responsavel: resposta.data
+            })
         }
-        const resposta = await axiosInstance.get(`/responsaveis/${id}`);
-        reset ({
-            responsavel: resposta.data
-        })
     }
 
     let valorPlanoEscolhido;
