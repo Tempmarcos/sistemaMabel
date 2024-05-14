@@ -91,6 +91,9 @@ export default function Home({ params } : UserProps){
 
     const fetchAluno = useCallback(async () => {
         try {
+            setTimeout(() => {
+                console.log("esperou meio segundo.");
+              }, 500);
             const aluno = await getAluno(params.id);
             // alert(aluno.nascimento);
             console.log(aluno);
