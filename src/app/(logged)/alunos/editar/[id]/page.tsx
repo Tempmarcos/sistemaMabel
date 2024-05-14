@@ -70,12 +70,9 @@ export default function Home({ params } : UserProps){
             const data : TurmaData[] = await getTurmas();
             setTurmas(data);
         } catch (error) {
-            //errorHandler(error);
+            console.log(error);
         }
     }, []);
-    useEffect(() => {
-        fetchTurmas();
-    }, [fetchTurmas]);
 
     const fetchPlanos = useCallback(async () => {
         try {
@@ -85,17 +82,10 @@ export default function Home({ params } : UserProps){
             console.error(error);
         } 
     }, []);
-    useEffect(() => {
-        fetchPlanos();
-    }, [fetchPlanos]);
 
     const fetchAluno = useCallback(async () => {
         try {
-            setTimeout(() => {
-                console.log("esperou meio segundo.");
-              }, 500);
             const aluno = await getAluno(params.id);
-            // alert(aluno.nascimento);
             console.log(aluno);
             setAluno(aluno);
             reset({
@@ -132,8 +122,10 @@ export default function Home({ params } : UserProps){
         }
     }, []);
     useEffect(() => {
+        fetchPlanos();
+        fetchTurmas();
         fetchAluno();
-    }, [fetchAluno]);
+    }, [fetchAluno, fetchPlanos, fetchTurmas]);
 
     const fetchPais = useCallback(async () => {
         try {
