@@ -65,6 +65,30 @@ export default function Home({ params } : UserProps){
         return resposta.data;
     }
 
+    const fetchTurmas = useCallback(async () => {
+        try {
+            const data : TurmaData[] = await getTurmas();
+            setTurmas(data);
+        } catch (error) {
+            //errorHandler(error);
+        }
+    }, []);
+    useEffect(() => {
+        fetchTurmas();
+    }, [fetchTurmas]);
+
+    const fetchPlanos = useCallback(async () => {
+        try {
+            const data : PlanoData[] = await getPlanos();
+            setPlanos(data);
+        } catch (error) {
+            console.error(error);
+        } 
+    }, []);
+    useEffect(() => {
+        fetchPlanos();
+    }, [fetchPlanos]);
+
     const fetchAluno = useCallback(async () => {
         try {
             const aluno = await getAluno(params.id);
@@ -101,36 +125,12 @@ export default function Home({ params } : UserProps){
                 
             })
         } catch (error) {
-            //errorHandler(error);
+            console.log(error);
         }
     }, []);
     useEffect(() => {
         fetchAluno();
     }, [fetchAluno]);
-
-    const fetchTurmas = useCallback(async () => {
-        try {
-            const data : TurmaData[] = await getTurmas();
-            setTurmas(data);
-        } catch (error) {
-            //errorHandler(error);
-        }
-    }, []);
-    useEffect(() => {
-        fetchTurmas();
-    }, [fetchTurmas]);
-
-    const fetchPlanos = useCallback(async () => {
-        try {
-            const data : PlanoData[] = await getPlanos();
-            setPlanos(data);
-        } catch (error) {
-            console.error(error);
-        } 
-    }, []);
-    useEffect(() => {
-        fetchPlanos();
-    }, [fetchPlanos]);
 
     const fetchPais = useCallback(async () => {
         try {
@@ -402,11 +402,11 @@ export default function Home({ params } : UserProps){
                     </div>
                     <div>
                         <label htmlFor="serie">Série:</label>
-                        <input id='serie' {...register('serie', {required: true})} /> 
+                        <input id='serie' {...register('serie')} /> 
                     </div>
                     <div>
                         <label htmlFor="escola">Escola:</label>
-                        <input id='escola' {...register('escola', {required: true})} /> 
+                        <input id='escola' {...register('escola')} /> 
                     </div>
                     <div>
                         <label htmlFor="nacionalidade">Nacionalidade:</label>

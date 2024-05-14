@@ -45,8 +45,11 @@ export default function Home(){
   const [planos, setPlanos] = useState<PlanoData[]>([] as PlanoData[]);
 
   const [pais, setPais] = useState<PaiMaeData[]>([] as PaiMaeData[]);
+  const [paisFiltrados, setPaisFiltrados] = useState(pais);
   const [maes, setMaes] = useState<PaiMaeData[]>([] as PaiMaeData[]);
+  const [maesFiltradas, setmaesFiltradas] = useState(maes);
   const [responsaveis, setResponsaveis] = useState<ResponsavelData[]>([] as ResponsavelData[]);
+  const [responsaveisFiltrados, setresponsaveisFiltrados] = useState(responsaveis);
   const [submittedData, setSubmittedData] = useState<any | null>(null);
   const [displaySelect, setDisplaySelect] = useState('none');
   const [displayAlerta, setDisplayAlerta] = useState('none');
@@ -89,6 +92,7 @@ export default function Home(){
         try {
             const data = await axiosInstance.get('/pais');
             setPais(data.data);
+            setPaisFiltrados(pais);
             // alert(JSON.stringify(data, null, 2));
             console.log(data)
         } catch (error) {
@@ -103,6 +107,7 @@ export default function Home(){
         try {
             const data = await axiosInstance.get('/maes');
             setMaes(data.data);
+            setmaesFiltradas(maes);
             // alert(JSON.stringify(data, null, 2));
         } catch (error) {
             //errorHandler(error);
@@ -116,6 +121,7 @@ export default function Home(){
         try {
             const data = await axiosInstance.get('/responsaveis');
             setResponsaveis(data.data);
+            setresponsaveisFiltrados(responsaveis);
             // alert(JSON.stringify(data, null, 2));
         } catch (error) {
             //errorHandler(error);
@@ -153,14 +159,19 @@ export default function Home(){
                         <select  id="escolherPai" {...register('pai.id', {
                             onChange : e => handleEscolherPai(e)
                         })}>
+                        {/* <input type="text" placeholder="Pesquisar..." id="searchBar" onChange={filtrarPais} /> */}
                         <option value=""></option>
-                            {pais.map(pai => {
+                            {paisFiltrados.map(pai => {
                                  return <option key={pai.id} value={pai.id}>{pai.nome}</option>
                             })}
                         </select>
                 </div>
             ) 
     }
+
+    function filtrarPais(event: { target: { value: any; }; }){
+        setPaisFiltrados(pais.filter(pai => pai.nome.toLowerCase().includes(event.target.value)))
+      }
 
     async function handleEscolherPai(event : any){
         let id = event?.target.value;
@@ -183,7 +194,7 @@ export default function Home(){
                             onChange : e => handleEscolherMae(e)
                         })}>
                         <option value=""></option>
-                            {maes.map(mae => {
+                            {maesFiltradas.map(mae => {
                                  return <option key={mae.id} value={mae.id}>{mae.nome}</option>
                             })}
                         </select>
@@ -212,7 +223,7 @@ export default function Home(){
                             onChange : e => handleEscolherResponsavel(e)
                         })}>
                      <option value=""></option>
-                        {responsaveis.map(responsavel => {
+                        {responsaveisFiltrados.map(responsavel => {
                             return <option key={responsavel.id} value={responsavel.id}>{responsavel.nome}</option>
                         })}
                     </select>
@@ -350,11 +361,11 @@ export default function Home(){
                     </div> 
                     <div>
                         <label htmlFor="serie">Série:</label>
-                        <input id='serie' {...register('serie', {required: true})} /> 
+                        <input id='serie' {...register('serie')} /> 
                     </div>
                     <div>
                         <label htmlFor="escola">Escola:</label>
-                        <input id='escola' {...register('escola', {required: true})} /> 
+                        <input id='escola' {...register('escola')} /> 
                     </div>
                     <div>
                         <label htmlFor="nacionalidade">Nacionalidade:</label>
