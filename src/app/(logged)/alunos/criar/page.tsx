@@ -289,6 +289,7 @@ export default function Home(){
     const onSubmit: SubmitHandler<AlunoType> = async (data) => {
         chamarModal();
         data.dataIngresso = new Date(data.dataIngresso);
+        alert(data.dataIngresso);
         data.nascimento = new Date(data.nascimento);
         data.valor = parseInt(data.valor.toString());
         data.turma = {id : data.turma};

@@ -8,6 +8,7 @@ import { ListMensalResponseType } from "@/http/parses/mensal";
 import { axiosInstance } from "@/http/config/axiosConfig";
 import dayjs from "dayjs";
 import 'dayjs/locale/pt-br';
+import utc from 'dayjs/plugin/utc';
 import { useForm } from "react-hook-form";
 import SideBar from "@/app/components/sideBar/sideBar";
 // import { mensais } from "@/mocks/mensais";
@@ -22,13 +23,9 @@ export default function Home(){
     const [isLoading, setIsLoading] = useState(true);
     const [mesString, setMesString] = useState('');
 
-    
-    
-
-
-
     const fetchMensais = useCallback(async (mesEscolhido : string) => {
         try {
+            // alert(mesEscolhido)
             setIsLoading(true);
             // alert(dayjs(mesString).locale('pt-br').format('MMMM-YY'))
             const data = await axiosInstance.get(`/mensais/${mesEscolhido}`);
@@ -40,19 +37,18 @@ export default function Home(){
             setIsLoading(false);
         }
     }, []);
-
-
-
     useEffect(() => {
         let mesInicial;
         if(!mesString){
             const DATA_CORTE = 20;
+            dayjs.extend(utc);
             let mesDayjs = dayjs().startOf("month")
-            let mes = mesDayjs.toDate()
+            let mes = mesDayjs.format('YYYY-MM-DDTHH:mm:ss[Z]')
+            // alert(mes)
             const isAfterDay20 = dayjs().date() > DATA_CORTE
             if (!isAfterDay20) {
                 mesDayjs = mesDayjs.add(-1, 'month')
-                mes = mesDayjs.toDate()
+                mes = mesDayjs.format('YYYY-MM-DDTHH:mm:ss[Z]')
             }
             mesInicial = mes.toString();
             setMesString(mesInicial);
@@ -63,20 +59,15 @@ export default function Home(){
         //  alert(JSON.stringify(mensais))
     }, [fetchMensais, mesString]);
 
-
-    // useEffect(() => {
-    //     //  alert(JSON.stringify(mensais))
-    //     fetchMensais(mesString);
-    // }, [fetchMensais]);
     
     function fetchMesAnterior(){
-        setMesString((prev) => dayjs(prev).add(-1, 'month').toDate().toString());
+        setMesString((prev) => dayjs(prev).add(-1, 'month').format('YYYY-MM-DDTHH:mm:ss[Z]'));
         const arrayCores = new Array(mensais.length).fill('');
         setCorLinha(arrayCores);
     }
 
     function fetchProximoMes(){
-        setMesString(dayjs(mesString).add(1, 'month').toDate().toString());
+        setMesString(dayjs(mesString).add(1, 'month').format('YYYY-MM-DDTHH:mm:ss[Z]'));
         const arrayCores = new Array(mensais.length).fill('');
         setCorLinha(arrayCores);
     }

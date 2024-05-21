@@ -8,6 +8,8 @@
   align-items: center;
   justify-content: center;
   min-height: 70vh;
+  padding-block: 30px;
+  overflow-x: hidden;
 }
 
 .modal {
