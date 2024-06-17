@@ -105,7 +105,7 @@ export default function Home(){
             valor_total,
             pago
         }
-        alert(JSON.stringify(mensal, null, 2));
+        //alert(JSON.stringify(mensal, null, 2));
         try {
             const resposta = await axiosInstance.put(`/mensais`, mensal);
             //fetchData();
@@ -114,7 +114,7 @@ export default function Home(){
             setCorLinha(novaCor);
         } catch (error) {
             console.log(error);
-            alert('oi')
+            //alert('oi')
 
         }
     }
