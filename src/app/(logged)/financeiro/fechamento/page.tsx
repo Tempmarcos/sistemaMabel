@@ -156,9 +156,9 @@ export default function Home(){
                 style={{position: 'absolute', top: '75px', left: '20px'}}>Mês anterior</a>
                 <a onClick={fetchProximoMes} 
                 style={{position: 'absolute', top: '75px', right: '20px'}}>Próximo mês</a>
-                <h1>{dayjs(mesString).locale('pt-br').format('MMMM-YY')}</h1>
+                <h1>21 {dayjs(mesString).locale('pt-br').format('MMMM')} - 20 {dayjs(mesString).add(1, "month").locale('pt-br').format('MMMM-YY')}</h1>
                 <div className={styles.table}>
-                <div className={styles.header}>
+                    <div className={styles.header}>
                         <h4 style={{marginRight: '80px'}}>Nome</h4>
                         <h4>Plano</h4>
                         <h4>Diárias</h4>
@@ -174,6 +174,7 @@ export default function Home(){
                         <div key={mensal.id} id={`linha${index}`} onChange={() => recalcularMensal(index)} 
                         style={{backgroundColor: corLinha[index]}} className={styles.linha}>
                             <input type="text" readOnly value={mensal.aluno.nome} />
+                            {/* COLOCAR INFORMAÇÕES DO RESPONSÁVEL FINANCEIRO */}
                             <input id={`plano${index}`} type="number" readOnly value={mensal.aluno.valor} />
                             <input id={`diarias${index}`} type="number" defaultValue={mensal.diarias} />
                             <input id={`atrasos${index}`} type="number" defaultValue={mensal.atrasos} />

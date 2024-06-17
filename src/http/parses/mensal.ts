@@ -8,6 +8,13 @@ const listSchema = z.object({
     id: z.string(),
     nome: z.string(),
     valor: z.number(),
+    responsavel: z.object({
+      nome: z.string(),
+      cpf: z.string(),
+      email: z.string(),
+      fone_pessoal: z.string(),
+      nf: z.boolean().nullable(),
+    })
   }),
   diarias: z.number(),
   extras: z.number(),
