@@ -5,9 +5,11 @@ interface AlunoCardProps {
     nome: string;
     turno: string;
     turma: string;
+    dias?: boolean[] | null;
+    ativo: boolean;
 }
 
-export default function AlunoCard({id, nome, turno, turma} : AlunoCardProps){
+export default function AlunoCard({id, nome, turno, turma, dias, ativo} : AlunoCardProps){
 
     let background;
 
@@ -19,11 +21,25 @@ export default function AlunoCard({id, nome, turno, turma} : AlunoCardProps){
         background = 'gray';
     }
 
+    if(ativo === false){
+        background = 'gray'
+    }
 
     return (
         <div className={styles.card} style={{backgroundColor: background}}>
-           {nome}<br />
-           {turma}
+                <div className={styles.container}>
+                    <span>
+                        <em className={dias![0] ? styles.ativo : styles.inativo}>S</em> 
+                        <em className={dias![1] ? styles.ativo : styles.inativo}>T</em> 
+                        <em className={dias![2] ? styles.ativo : styles.inativo}>Q</em> 
+                        <em className={dias![3] ? styles.ativo : styles.inativo}>Q</em> 
+                        <em className={dias![4] ? styles.ativo : styles.inativo}>S</em>
+                    </span>
+                    <div className={styles.content}>
+                        {nome}<br />
+                        {turma}
+                    </div>
+                </div>
         </div>
     );
 }

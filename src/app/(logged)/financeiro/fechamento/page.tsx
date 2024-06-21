@@ -61,13 +61,13 @@ export default function Home(){
 
     
     function fetchMesAnterior(){
-        setMesString((prev) => dayjs(prev).add(-1, 'month').format('YYYY-MM-DDTHH:mm:ss[Z]'));
+        setMesString((prev) => dayjs(prev).add(-1, 'week').startOf('month').format('YYYY-MM-DDTHH:mm:ss[Z]'));
         const arrayCores = new Array(mensais.length).fill('');
         setCorLinha(arrayCores);
     }
 
     function fetchProximoMes(){
-        setMesString(dayjs(mesString).add(1, 'month').format('YYYY-MM-DDTHH:mm:ss[Z]'));
+        setMesString(dayjs(mesString).add(32, 'day').startOf('month').format('YYYY-MM-DDTHH:mm:ss[Z]'));
         const arrayCores = new Array(mensais.length).fill('');
         setCorLinha(arrayCores);
     }
@@ -160,11 +160,13 @@ export default function Home(){
                 <div className={styles.table}>
                     <div className={styles.header}>
                         <h4 style={{marginRight: '80px'}}>Nome</h4>
-                        <h4>Plano</h4>
-                        <h4>Diárias</h4>
-                        <h4>Atrasos</h4>
-                        <h4>Ajuste</h4>
-                        <h4 style={{marginRight: '100px'}}>Total</h4>
+                        <h4>Responsável</h4>
+                        <h4 style={{marginRight: '-20px'}}>Plano</h4>
+                        <h4 style={{marginRight: '-20px'}}>Diárias</h4>
+                        <h4 style={{marginRight: '-20px'}}>Atrasos</h4>
+                        <h4 style={{marginRight: '-20px'}}>Ajuste</h4>
+                        <h4 >Total</h4>
+                        <h4>Vencimento</h4>
                     </div>
                     {isLoading && mensais.length === 0 && <p>Carregando...</p>} 
                     {!isLoading && mensais.length === 0 && <p>O fechamento não aconteceu ainda, aguarde até o dia 20.</p>}
@@ -175,11 +177,31 @@ export default function Home(){
                         style={{backgroundColor: corLinha[index]}} className={styles.linha}>
                             <input type="text" readOnly value={mensal.aluno.nome} />
                             {/* COLOCAR INFORMAÇÕES DO RESPONSÁVEL FINANCEIRO */}
+                            <div className={styles.responsavel}>
+                                <span>
+                                    <input style={{
+                                        color: mensal.aluno.responsavel.nf === true ? 'red' : 'black'
+                                    }} type="text" readOnly value={mensal.aluno.responsavel.nome} />
+                                    {/* <em>{mensal.aluno.responsavel.nf === true && 'NF'}</em> */}
+                                </span>
+                                <div className={styles.responsavelInfo}>
+                                    <label> CPF:
+                                    <input type="text" value={mensal.aluno.responsavel.cpf}/>
+                                    </label>
+                                    <label> E-mail:
+                                    <input type="text" value={mensal.aluno.responsavel.email}/>
+                                    </label>
+                                    <label> Celular:
+                                    <input type="text" value={mensal.aluno.responsavel.fone_pessoal}/>
+                                    </label>
+                                </div>
+                            </div>
                             <input id={`plano${index}`} type="number" readOnly value={mensal.aluno.valor} />
                             <input id={`diarias${index}`} type="number" defaultValue={mensal.diarias} />
                             <input id={`atrasos${index}`} type="number" defaultValue={mensal.atrasos} />
                             <input id={`ajuste${index}`} type="number" defaultValue={mensal.extras} />
                             <input id={`valor${index}`} readOnly type="number" defaultValue={mensal.valor_total} />
+                            <input className={styles.vencimento} readOnly type="text" defaultValue={mensal.aluno.diaDoPagamento ? mensal.aluno.diaDoPagamento : ''} />
                             <h6>Pago?</h6><input type="checkbox" id={`pago${index}`} onChange={() => alunoPago(index)} defaultChecked={mensal.pago} />
                             <button onClick={() => enviarDadosEditar(index, mensal.id)} 
                                 disabled={isSubmitting}>Editar</button>

@@ -9,6 +9,44 @@
     transition: 0.2s ease-in-out;
 }
 
+.container {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    height: 120px;
+    width: 120px
+}
+
+.content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 120px;
+    width: 120px
+}
+
+.card span {
+    position: absolute;
+    font-size: 12px;
+    top: 5px;
+    right: 5px;
+}
+
+.card em {
+    padding-inline: 4px;
+    border-radius: 2px;
+}
+
+.card .ativo {
+    color: white;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.card .inativo {
+    color: gray;
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
 .card:hover {
     transform: scale(1.25);
     box-shadow: 6px 6px 6px 6px hsl(0deg 0% 0% / 0.31);

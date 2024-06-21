@@ -68,3 +68,39 @@ background-color: rgb(192, 192, 192);
 .linha h1 {
     margin: 8px;
 }
+
+.responsavelInfo {
+    display: none;
+    position: absolute;
+    
+    flex-direction: column;
+    background-color: rgb(120, 120, 120);
+    z-index: 3;
+}
+
+.responsavelInfo input {
+    margin: 0;
+    background-color: rgb(120, 120, 120) !important;
+}
+
+.responsavelInfo label {
+    background-color: rgb(120, 120, 120)
+}
+
+.responsavel:hover .responsavelInfo {
+    display: flex; 
+}
+
+.responsavel em {
+    color: red;
+    position: absolute;
+   
+}
+
+
+.vencimento {
+    width: 30px;
+    background-color: white !important;
+    border: 1px solid rgb(118, 118, 118) !important;
+    text-align: center;
+}

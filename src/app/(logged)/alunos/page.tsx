@@ -40,6 +40,7 @@ export default function Home() {
   const [displayLegenda, setDisplayLegenda] = useState("none")
   const [textoLegenda, setTextoLegenda] = useState('Legendas ↓');
   const [isLoading, setIsLoading] = useState(true);
+  const [mostrarAtivo, setMostrarAtivo] = useState(true);
 
   const [displayModal, setDisplayModal] = useState("none");
   const [alunoAtual, setAlunoAtual] = useState({} as AlunoType);
@@ -74,6 +75,20 @@ useEffect(() => {
     fetchAlunos();
 }, [fetchAlunos]);
 
+  const fetchDesativados = useCallback(async() => {
+    try {
+      setIsLoading(true)
+      const response : any = await axiosInstance.get('/alunos/desativados');
+      // alert(JSON.stringify(response.data, null, 2));
+      setAlunos(response.data);
+      setAlunosFiltrados(response.data);
+    } catch(error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
   const fetchTurmas = useCallback(async () => {
     try {
         const data : TurmaData[] = await getTurmas();
@@ -100,6 +115,16 @@ useEffect(() => {
     resetAtraso ({
       alunoId: aluno.id
     })
+  }
+
+  function handleDesativados(){
+    fetchDesativados();
+    setMostrarAtivo(false);
+  }
+
+  function handleAtivos(){
+    fetchAlunos();
+    setMostrarAtivo(true);
   }
 
   async function getDiarias(id : string){
@@ -250,7 +275,11 @@ useEffect(() => {
               return <a key={turma.id} onClick={() => handleFiltro(turma.nome)}> {turma.nome} </a>
             })}
           </div>
-        </DropdownButton> 
+        </DropdownButton>
+        <DropdownButton name="⮟" corElemento={corElemento} corTexto={corTexto}>
+            {mostrarAtivo === true && <a onClick={handleDesativados}>Desativados</a>}
+            {mostrarAtivo === false && <a onClick={handleAtivos}>Ativos</a>}
+        </DropdownButton>
         <input type="text" placeholder="Pesquisar..." id="searchBar" onChange={SearchFilter} />
         </Header>
       <div className="legendas">
@@ -268,7 +297,7 @@ useEffect(() => {
         {
           alunosFiltrados.map(aluno => {
           return <a key={aluno.id} className="linkAlunos" onClick={() => handleGetAluno(aluno)}>
-                    <AlunoCard id={aluno.id} nome={aluno.nome} turma={aluno.turma.nome} turno={aluno.turma.turno} />
+                    <AlunoCard id={aluno.id} nome={aluno.nome} turma={aluno.turma.nome} turno={aluno.turma.turno} dias={aluno.diasDaSemana} ativo={mostrarAtivo}/>
                  </a>
           })
         }

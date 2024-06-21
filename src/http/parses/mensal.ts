@@ -8,6 +8,7 @@ const listSchema = z.object({
     id: z.string(),
     nome: z.string(),
     valor: z.number(),
+    diaDoPagamento: z.string().optional().nullable(),
     responsavel: z.object({
       nome: z.string(),
       cpf: z.string(),

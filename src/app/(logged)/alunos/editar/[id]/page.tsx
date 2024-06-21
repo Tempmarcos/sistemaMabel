@@ -36,6 +36,13 @@ type TurmaData = {
     nascimento : any;
     dataIngresso : any;
     valorPlano : any;
+    dias: {
+        segunda : boolean,
+        terca : boolean,
+        quarta : boolean,
+        quinta : boolean,
+        sexta : boolean,
+    }
   }
 
 
@@ -128,17 +135,20 @@ export default function Home({ params } : UserProps){
             const aluno = await getAluno(params.id);
             console.log(aluno);
             setAluno(aluno);
+            // alert(aluno.diasDaSemana);
             reset({
                 id: aluno.id,
+                ativo: aluno.ativo,
+                diasDaSemana: aluno.diasDaSemana,
                 nome: aluno.nome,
-                nascimento: dayjs(aluno.nascimento).format('YYYY-MM-DD'),
+                nascimento: dayjs(aluno.nascimento).locale('pt-br').format('YYYY-MM-DD'),
                 serie: aluno.serie,
                 escola: aluno.escola,
                 nacionalidade: aluno.nacionalidade,
                 religiao: aluno.religiao,
                 turma: aluno.turma.id,
                 plano: aluno.plano.id,
-                dataIngresso: dayjs(aluno.dataIngresso).format('YYYY-MM-DD'),
+                dataIngresso: dayjs(aluno.dataIngresso).locale('pt-br').format('YYYY-MM-DD'),
                 almoco: aluno.almoco,
                 valor: aluno.valor,
                 endereco: aluno.endereco,
@@ -155,6 +165,9 @@ export default function Home({ params } : UserProps){
                 rgAutorizado2: aluno.rgAutorizado2,
                 foneAutorizado2: aluno.foneAutorizado2,
                 valorPlano: aluno.plano.valor,
+                comoConheceu: aluno.comoConheceu,
+                diaDoPagamento: aluno.diaDoPagamento,
+                
                 
             })
         } catch (error) {
@@ -340,6 +353,14 @@ export default function Home({ params } : UserProps){
         dataAlterada.turma = {id : data.turma};
         dataAlterada.plano = {id : data.plano};
         dataAlterada.id = aluno.id;
+        dataAlterada.diasDaSemana = [
+            data.dias.segunda,
+            data.dias.terca,
+            data.dias.quarta,
+            data.dias.quinta,
+            data.dias.sexta,
+        ];
+        data.responsavel.nf === null ? dataAlterada.responsavel.nf = false : data.responsavel.nf
         // alert(JSON.stringify(dataAlterada.plano, null, 2));
         delete dataAlterada.valorPlano;
         console.log(dataAlterada);
@@ -393,6 +414,12 @@ export default function Home({ params } : UserProps){
             confirmacao={false} botaoOk={botaoOkErro}></Alerta>
             <a href="/alunos" className={styles.link}>Voltar aos alunos</a>
             <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+                {aluno.ativo !== undefined &&
+                <span className={styles.ativo}>
+                    <label htmlFor="ativo">Ativo</label>
+                    <input type="checkbox" id="ativo" {...register('ativo')} />
+                </span>
+                }
                 <section className='formSection'>
                     <h1>Editar aluno</h1>
                     <div>
@@ -443,6 +470,21 @@ export default function Home({ params } : UserProps){
                             })}
                         </select>
                     </div>
+                    {aluno.diasDaSemana && 
+                    <div>
+                        <label htmlFor="diasDaSemana">Dias da semana:</label>
+                        <div>
+                            <span>S T Q Q S</span>
+                            <span>
+                                <input type="checkbox" defaultChecked={aluno.diasDaSemana ? aluno.diasDaSemana[0] : false} {...register('dias.segunda')} style={{margin: '1px'}}/>
+                                <input type="checkbox" defaultChecked={aluno.diasDaSemana ? aluno.diasDaSemana[1] : false} {...register('dias.terca')} style={{margin: '1px'}}/>
+                                <input type="checkbox" defaultChecked={aluno.diasDaSemana ? aluno.diasDaSemana[2] : false} {...register('dias.quarta')} style={{margin: '1px'}}/>
+                                <input type="checkbox" defaultChecked={aluno.diasDaSemana ? aluno.diasDaSemana[3] : false} {...register('dias.quinta')} style={{margin: '1px'}}/>
+                                <input type="checkbox" defaultChecked={aluno.diasDaSemana ? aluno.diasDaSemana[4] : false} {...register('dias.sexta')} style={{margin: '1px'}}/>
+                            </span>
+                        </div>
+                    </div>
+                    }
                      <div style={{display: 'none'}}>
                         <label htmlFor="almoco">Almoço:</label>
                         <input type="checkbox" id="almoco" {...register('almoco')} />
@@ -454,6 +496,10 @@ export default function Home({ params } : UserProps){
                     <div>
                         <label htmlFor="valorFinal">Valor final:</label>
                         <input id="valorFinal" type='number' {...register('valor', {required : true})} />
+                    </div>
+                    <div>
+                        <label htmlFor="diaPagamento">Dia para pagar:</label>
+                        <input id='diaPagamento' type="number" min={1} max={31} {...register("diaDoPagamento")}/>
                     </div>
                     <h3>Endereço</h3>
                         <div>
@@ -568,6 +614,12 @@ export default function Home({ params } : UserProps){
                         <label htmlFor="emailResponsavel">E-mail:</label>
                         <input id='emailResponsavel' type='email' {...register("responsavel.email")} /> 
                     </div>
+                    {aluno.responsavel &&
+                    <span>
+                        <label htmlFor="notaFiscal">Nota Fiscal?</label>
+                        <input type="checkbox" defaultChecked={aluno.responsavel.nf == null ? false : aluno.responsavel.nf} id="notaFiscal" {...register("responsavel.nf")} />
+                    </span>
+                    }  
                     <h3>Endereço</h3>
                     <a className={styles.botao} onClick={copiarEndereco}>Copiar endereço do aluno</a>
                     <div>
@@ -651,6 +703,10 @@ export default function Home({ params } : UserProps){
                     <div>
                         <label htmlFor="foneAutorizado2">Fone do autorizado 2:</label>
                         <input id="foneAutorizado2" placeholder='(99) 99999-9999' {...register('foneAutorizado2')} />
+                    </div>
+                    <div>
+                        <label htmlFor="comoConheceu">Como conheceu a Mabel:</label>
+                        <input id="comoConheceu" {...register('comoConheceu')} />
                     </div>
                 </section>
                 <button type="submit" disabled={isSubmitting}>Editar aluno</button>

@@ -3,6 +3,7 @@ import { z } from "zod";
 const listSchema = z.object({
   id: z.string(),
   nome: z.string(),
+  diasDaSemana: z.boolean().array().optional().nullable(),
   turma: z.object({
     id: z.string(),
     nome: z.string(),
@@ -21,6 +22,7 @@ export function listAlunoResponseParse(data: unknown): ListAlunoResponseType {
 const getSchema = z.object({
   id: z.string(),
   nome: z.string(),
+  ativo: z.boolean(),
   paiId: z.string(),
   maeId: z.string(),
   responsavelId: z.string(),
@@ -51,6 +53,7 @@ const getSchema = z.object({
     fone_trabalho: z.string(),
     fone_pessoal: z.string(),
     email: z.string(),
+    nf: z.boolean().optional(),
     enderecoId: z.string(),
     endereco: z.object({
       id: z.string(),
@@ -104,6 +107,10 @@ const getSchema = z.object({
   rgAutorizado2: z.string().optional(),
   foneAutorizado2: z.string().optional(),
 
+  comoConheceu: z.string().optional(),
+  diasDaSemana: z.boolean().array().optional(),
+  diaDoPagamento: z.string().optional(),
+
   dataIngresso: z.date(),
 
   created_at: z.date(),
@@ -144,6 +151,7 @@ const createSchema = z.object({
     fone_trabalho: z.string(),
     fone_pessoal: z.string(),
     email: z.string(),
+    nf: z.boolean().optional(),
     endereco: z.object({
       logradouro: z.string(),
       numero: z.string(),
@@ -189,6 +197,10 @@ const createSchema = z.object({
   rgAutorizado2: z.string().optional(),
   foneAutorizado2: z.string().optional(),
 
+  comoConheceu: z.string().optional(),
+  diasDaSemana: z.boolean().array().optional(),
+  diaDoPagamento: z.string().optional(),
+
   dataIngresso: z.date(),
 })
 
@@ -213,7 +225,9 @@ export function createAlunoDBParse(data: unknown): CreateAlunoDBType {
 const updateSchema = z.object({
   id: z.string(),
   nome: z.string(),
+  ativo: z.boolean(),
   pai: z.object({
+    id: z.string(),
     nome: z.string(),
     trabalho: z.string().optional(),
     funcao: z.string().optional(),
@@ -221,6 +235,7 @@ const updateSchema = z.object({
     email: z.string().optional(),
   }),
   mae: z.object({
+    id: z.string(),
     nome: z.string(),
     trabalho: z.string().optional(),
     funcao: z.string().optional(),
@@ -228,14 +243,16 @@ const updateSchema = z.object({
     email: z.string().optional(),
   }),
   responsavel: z.object({
+    id: z.string(),
     nome: z.string(),
     rg: z.string(),
     cpf: z.string(),
-    trabalho: z.string().optional(),
-    funcao: z.string().optional(),
-    fone_trabalho: z.string().optional(),
-    fone_pessoal: z.string().optional(),
-    email: z.string().optional(),
+    nf: z.boolean().optional(),
+    trabalho: z.string(),
+    funcao: z.string(),
+    fone_trabalho: z.string(),
+    fone_pessoal: z.string(),
+    email: z.string(),
     endereco: z.object({
       logradouro: z.string(),
       numero: z.string(),
@@ -280,6 +297,10 @@ const updateSchema = z.object({
   nomeAutorizado2: z.string().optional(),
   rgAutorizado2: z.string().optional(),
   foneAutorizado2: z.string().optional(),
+
+  comoConheceu: z.string().optional(),
+  diasDaSemana: z.boolean().array().optional(),
+  diaDoPagamento: z.string().optional(),
 
   dataIngresso: z.date(),
 })

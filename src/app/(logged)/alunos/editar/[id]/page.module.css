@@ -32,6 +32,26 @@
     
 }
 
+.ativo {
+    background-color: whitesmoke;
+    transform: translateX(130px);
+    font-size: 14px;
+    border-radius: 10px;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.ativo label {
+    margin: 3px
+}
+
+.ativo input {
+    accent-color: #10ff03 !important;
+    margin: 3px;
+}
+
 .botao:hover {
     background-color: gray;
 }
