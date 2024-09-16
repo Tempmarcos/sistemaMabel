@@ -195,7 +195,7 @@ useEffect(() => {
   async function getAjustes(id : string){
     const resposta = await axiosInstance.get(`/extras/${id}`);
     const ajustes: ListExtraResponseType = resposta.data;
-    alert(JSON.stringify(ajustes, null, 2));
+    // alert(JSON.stringify(ajustes, null, 2));
     ajustes.forEach(ajuste => {
       // let data= ajuste.data.toString();s
       ajuste.data = dayjs(ajuste.data).add(3, 'hours').format('DD/MM');
