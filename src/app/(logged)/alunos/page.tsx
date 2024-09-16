@@ -18,6 +18,7 @@ import DiariaCard from "@/app/components/cards/DiariaCard/DiariaCard";
 import { CreateAtrasoRequestType, ListAtrasoResponseType } from "@/http/parses/atraso";
 import { useRouter } from "next/navigation";
 import SideBar from '@/app/components/sideBar/sideBar';
+import { CreateExtraRequestType, ListExtraResponseType } from '@/http/parses/extra';
 
 
 type TurmaData = {
@@ -46,8 +47,10 @@ export default function Home() {
   const [alunoAtual, setAlunoAtual] = useState({} as AlunoType);
   const [displayCriarDiaria, setDisplayCriarDiaria] = useState('none');
   const [displayCriarAtraso, setDisplayCriarAtraso] = useState('none');
+  const [displayCriarAjuste, setDisplayCriarAjuste] = useState('none');
 
 
+  const [ajustesAtuais, setAjustesAtuais] = useState<ListExtraResponseType>([] as ListExtraResponseType);
   const [atrasosAtuais, setAtrasosAtuais] = useState<ListAtrasoResponseType>([] as ListAtrasoResponseType);
   const [diariasAtuais, setDiariasAtuais] = useState<ListDiariaResponseType>([] as ListDiariaResponseType);
   const [alunos, setAlunos] = useState<ListAlunoResponseType>([] as ListAlunoResponseType);
@@ -109,10 +112,14 @@ useEffect(() => {
     setAlunoAtual(aluno);
     getDiarias(aluno.id);
     getAtrasos(aluno.id);
+    getAjustes(aluno.id);
     reset ({
       alunoId: aluno.id
     })
     resetAtraso ({
+      alunoId: aluno.id
+    })
+    resetAjuste ({
       alunoId: aluno.id
     })
   }
@@ -149,6 +156,12 @@ useEffect(() => {
     }
   }
 
+  function textoAjuste() {
+    if(ajustesAtuais.length === 0){
+      return <h4>{alunoAtual.nome} não possui nenhum ajuste de preço</h4>
+    }
+  }
+
   async function handleDeleteDiaria(id : string, alunoId : string){
     const resposta = await axiosInstance.delete(`diarias/${id}`);
     getDiarias(alunoId);
@@ -179,11 +192,36 @@ useEffect(() => {
     displayCriarAtraso === 'none' ? setDisplayCriarAtraso('flex') : setDisplayCriarAtraso('none');
   }
 
+  async function getAjustes(id : string){
+    const resposta = await axiosInstance.get(`/extras/${id}`);
+    const ajustes: ListExtraResponseType = resposta.data;
+    alert(JSON.stringify(ajustes, null, 2));
+    ajustes.forEach(ajuste => {
+      // let data= ajuste.data.toString();s
+      ajuste.data = dayjs(ajuste.data).add(3, 'hours').format('DD/MM');
+    })
+    setAjustesAtuais(ajustes);
+  }
+
+  async function handleDeleteAjuste(id : string, alunoId : string){
+    const resposta = await axiosInstance.delete(`extras/${id}`);
+    getAjustes(alunoId);
+    return resposta;
+  }
+
+  function handleAdicionarAjuste() {
+    displayCriarAjuste === 'none' ? setDisplayCriarAjuste('flex') : setDisplayCriarAjuste('none');
+  }
+
   function handleFecharModal() {
     setDisplayModal('none');
+    setDisplayCriarDiaria('none');
+    setDisplayCriarAtraso('none');
+    setDisplayCriarAjuste('none');
     setAlunoAtual({} as AlunoType);
     setDiariasAtuais([]);
     setAtrasosAtuais([]);
+    setAjustesAtuais([]);
   }
 
   //Botão pra fazer as legendas (manhã, tarde, etc) aparecerem/sumirem
@@ -251,6 +289,36 @@ useEffect(() => {
         console.log(error)
     } finally {
       setDisplayCriarAtraso('none');
+      resetAtraso ({
+        alunoId: data.alunoId,
+        data : '',
+      })
+    }
+  }
+
+  const {
+    register : registerAjuste,
+    handleSubmit : handleAjusteSubmit,
+    reset : resetAjuste,
+    formState: { errors : errorsAjuste },
+  } = useForm<CreateExtraRequestType>()
+
+  const onAjusteSubmit: SubmitHandler<CreateExtraRequestType> = async (data) => {
+    data.valor = parseInt(data.valor.toString());
+    try{
+      // alert(JSON.stringify(data, null, 2));
+      const resposta = await axiosInstance.post(`/extras`, data);
+      getAjustes(data.alunoId);
+    } catch(error){
+        console.log(error)
+    } finally {
+      setDisplayCriarAjuste('none');
+      resetAjuste ({
+        alunoId: data.alunoId,
+        data : '',
+        descricao : '',
+        valor: 0,
+      })
     }
   }
 
@@ -353,6 +421,33 @@ useEffect(() => {
                 {textoAtrasos()}
                 {atrasosAtuais.map(atraso => {
                   return <DiariaCard key={atraso.id} data={atraso.data} onClick={() => handleDeleteAtraso(atraso.id, atraso.alunoId)}/>
+                })}
+            </div>
+            <div className={styles.div}>
+                <h1>Ajuste</h1>
+                <a onClick={handleAdicionarAjuste}><h1>+</h1></a>
+                <div style={{display: displayCriarAjuste}}>
+                  <form onSubmit={handleAjusteSubmit(onAjusteSubmit)}>
+                      <div>
+                        <label htmlFor="valor">Valor:</label>
+                        <input type="number" id="valor" {...registerAjuste('valor')}/>
+                      </div>
+                      <div>
+                        <label htmlFor="descricao">Descrição:</label>
+                        <input type="text" id="descricao" {...registerAjuste('descricao')}/>
+                      </div>
+                      <div>
+                        <label htmlFor="data">Data:</label>
+                        <input type="date" id="data" {...registerAjuste('data')}/>
+                      </div>
+                      <button type="submit">Registrar ajuste</button>
+                  </form>
+                </div>
+            </div>
+            <div className={styles.div}>
+                {textoAjuste()}
+                {ajustesAtuais.map(ajuste => {
+                  return <DiariaCard key={ajuste.id} valor={ajuste.valor} descricao={ajuste.descricao} data={ajuste.data} onClick={() => handleDeleteAjuste(ajuste.id, ajuste.alunoId)}/>
                 })}
             </div>
         </div>

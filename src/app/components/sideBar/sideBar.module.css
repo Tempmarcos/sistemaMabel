@@ -7,6 +7,7 @@
     top: 0;
     pointer-events: none;
     z-index: 39;
+    
 }
 
 .modalSide {
@@ -19,6 +20,7 @@
     align-items: center !important;
     justify-content: space-evenly !important;
     pointer-events: all;
+    box-shadow: -5px 0px 30px black;
 }
 
 .modalSide a:hover {
