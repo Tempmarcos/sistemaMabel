@@ -1,16 +1,13 @@
 import { z } from "zod";
 
-const listSchema = z.object({
+const planoSchema = z.object({
   id: z.string(),
   nome: z.string(),
-  valor: z.number(),
-}).array()
+  valor: z.string(),
+})
 
-export type ListPlanoResponseType = z.infer<typeof listSchema>
-
-export function listPlanoResponseParse(data: unknown): ListPlanoResponseType {
-  return listSchema.parse(data)
-}
+export type PlanoType = z.infer<typeof planoSchema>;
+export type ListPlanoType = PlanoType[]; 
 
 
 const getSchema = z.object({

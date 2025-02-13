@@ -4,7 +4,7 @@ import styles from './page.module.css'
 import Header from "@/app/components/header/Header";
 import LinkButton from "@/app/components/botoes/LinkButton/LinkButton";
 import { useCallback, useEffect, useState } from "react";
-import { ListMensalResponseType } from "@/http/parses/mensal";
+import { ListMensalResponseType } from "@/http/types/mensal";
 import { axiosInstance } from "@/http/config/axiosConfig";
 import dayjs from "dayjs";
 import 'dayjs/locale/pt-br';

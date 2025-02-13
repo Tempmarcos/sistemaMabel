@@ -1,5 +1,5 @@
 import { axiosInstance } from "@/http/config/axiosConfig";
-import { CreateAlunoRequestType } from "@/http/parses/aluno";
+import { CreateAlunoRequestType } from "@/http/types/aluno";
 
 export async function getAlunos(){
     const resposta = await axiosInstance.get('/alunos');

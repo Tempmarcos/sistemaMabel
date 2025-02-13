@@ -17,6 +17,13 @@ export function listTurmaResponseParse(data: unknown): ListTurmaResponseType {
   return listSchema.parse(data)
 }
 
+const turmaSchema = z.object({
+  id: z.string(),
+  nome: z.string(),
+})
+
+export type TurmaType = z.infer<typeof turmaSchema>;
+export type ListTurmaType = TurmaType[]; 
 
 const getSchema = z.object({
   id: z.string(),

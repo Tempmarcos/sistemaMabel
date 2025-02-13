@@ -8,17 +8,17 @@ import BtnAdicionar from '../../components/botoes/BtnAdicionar/BtnAdicionar';
 import Header from "@/app/components/header/Header";
 import { getTurmas } from "@/http/services/turmas/functions";
 import { useForm, SubmitHandler } from "react-hook-form"
-import { ListAlunoResponseType } from "@/http/parses/aluno";
+import { ListAlunoResponseType } from "@/http/types/aluno";
 import { getAlunos } from "@/http/services/alunos/services";
 import Modal from "@/app/components/cards/Modal/Modal";
 import { axiosInstance } from "@/http/config/axiosConfig";
-import { CreateDiariaRequestType, ListDiariaResponseType } from "@/http/parses/diaria";
+import { CreateDiariaRequestType, ListDiariaResponseType } from "@/http/types/diaria";
 import dayjs from "dayjs";
 import DiariaCard from "@/app/components/cards/DiariaCard/DiariaCard";
-import { CreateAtrasoRequestType, ListAtrasoResponseType } from "@/http/parses/atraso";
+import { CreateAtrasoRequestType, ListAtrasoResponseType } from "@/http/types/atraso";
 import { useRouter } from "next/navigation";
 import SideBar from '@/app/components/sideBar/sideBar';
-import { CreateExtraRequestType, ListExtraResponseType } from '@/http/parses/extra';
+import { CreateExtraRequestType, ListExtraResponseType } from '@/http/types/extra';
 
 
 type TurmaData = {

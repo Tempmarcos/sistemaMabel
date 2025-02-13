@@ -1,7 +1,7 @@
 'use client'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import styles from './page.module.css'
-import { GetAlunoResponseType, UpdateAlunoRequestType, updateAlunoRequestParse } from '@/http/parses/aluno'
+import { GetAlunoResponseType, UpdateAlunoRequestType, updateAlunoRequestParse } from '@/http/types/aluno'
 import { axiosInstance } from '@/http/config/axiosConfig'
 import { errorHandler } from '@/http/errorHandler'
 import { useCallback, useEffect, useState } from 'react'
@@ -10,17 +10,8 @@ import { getPlanos } from '@/http/services/planos/functions'
 import dayjs from 'dayjs'
 import Alerta from '@/app/components/cards/Alerta/Alerta'
 import { useRouter } from 'next/navigation'
-
-type TurmaData = {
-    id : string;
-    nome : string;
-  }
-
-  type PlanoData = {
-    id : string;
-    nome : string;
-    valor : string;
-  }
+import { ListPlanoType } from '@/http/types/plano'
+import { ListTurmaType } from '@/http/types/turma'
 
   type PaiMaeData = {
     id : string;
@@ -45,7 +36,6 @@ type TurmaData = {
     }
   }
 
-
   interface UserProps {
     params: {
         id : string;
@@ -53,8 +43,8 @@ type TurmaData = {
   }
 
 export default function Home({ params } : UserProps){
-  const [turmas, setTurmas] = useState<TurmaData[]>([] as TurmaData[]);
-  const [planos, setPlanos] = useState<PlanoData[]>([] as PlanoData[]);
+  const [turmas, setTurmas] = useState<ListTurmaType>([]);
+  const [planos, setPlanos] = useState<ListPlanoType>([]);
   const [aluno, setAluno] = useState<AlunoType>({} as AlunoType);
   const [pais, setPais] = useState<PaiMaeData[]>([] as PaiMaeData[]);
   const [maes, setMaes] = useState<PaiMaeData[]>([] as PaiMaeData[]);
@@ -114,7 +104,7 @@ export default function Home({ params } : UserProps){
 
     const fetchTurmas = useCallback(async () => {
         try {
-            const data : TurmaData[] = await getTurmas();
+            const data : ListTurmaType = await getTurmas();
             setTurmas(data);
         } catch (error) {
             console.log(error);
@@ -123,7 +113,8 @@ export default function Home({ params } : UserProps){
 
     const fetchPlanos = useCallback(async () => {
         try {
-            const data : PlanoData[] = await getPlanos();
+            const data : ListPlanoType = await getPlanos();
+            // alert(data)
             setPlanos(data);
         } catch (error) {
             console.error(error);
@@ -141,14 +132,14 @@ export default function Home({ params } : UserProps){
                 ativo: aluno.ativo,
                 diasDaSemana: aluno.diasDaSemana,
                 nome: aluno.nome,
-                nascimento: dayjs(aluno.nascimento).locale('pt-br').format('YYYY-MM-DD'),
+                nascimento: dayjs(aluno.nascimento).add(3, 'hours').locale('pt-br').format('YYYY-MM-DD'),
                 serie: aluno.serie,
                 escola: aluno.escola,
                 nacionalidade: aluno.nacionalidade,
                 religiao: aluno.religiao,
                 turma: aluno.turma.id,
                 plano: aluno.plano.id,
-                dataIngresso: dayjs(aluno.dataIngresso).locale('pt-br').format('YYYY-MM-DD'),
+                dataIngresso: dayjs(aluno.dataIngresso).add(3, 'hours').locale('pt-br').format('YYYY-MM-DD'),
                 almoco: aluno.almoco,
                 valor: aluno.valor,
                 endereco: aluno.endereco,
@@ -304,7 +295,7 @@ export default function Home({ params } : UserProps){
             reset ({valorPlano: ''});
             return
         }
-        let planoEscolhido = planos.find(plano => plano.id === id);
+        let planoEscolhido = planos!.find(plano => plano.id === id);
         valorPlanoEscolhido = planoEscolhido?.valor;
         reset ({valorPlano: valorPlanoEscolhido})
         //alert(valorPlanoEscolhido);
@@ -379,11 +370,6 @@ export default function Home({ params } : UserProps){
     async function botaoSim(data : any){
         // alert(JSON.stringify(data, null, 2));
         console.log(data);
-        try {
-        //const dadosParseados = updateAlunoRequestParse(data);
-        } catch (error) {
-            console.log(error)
-        }
         try {
             // alert(JSON.stringify(data.plano, null, 2));
             const resposta = await axiosInstance.put('/alunos', data);

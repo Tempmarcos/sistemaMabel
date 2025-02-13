@@ -37,7 +37,7 @@ export default function AlunoCard({id, nome, turno, turma, dias, ativo} : AlunoC
                     </span>
                     <div className={styles.content}>
                         {nome}<br />
-                        {turma}
+                        <strong>{turma}</strong>
                     </div>
                 </div>
         </div>

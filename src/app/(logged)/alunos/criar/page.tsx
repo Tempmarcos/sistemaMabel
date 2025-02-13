@@ -1,7 +1,7 @@
 'use client'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import styles from './page.module.css'
-import { CreateAlunoRequestType, createAlunoRequestParse } from '@/http/parses/aluno'
+import { CreateAlunoRequestType, createAlunoRequestParse } from '@/http/types/aluno'
 import { axiosInstance } from '@/http/config/axiosConfig'
 import { errorHandler } from '@/http/errorHandler'
 import { useCallback, useEffect, useState } from 'react'
