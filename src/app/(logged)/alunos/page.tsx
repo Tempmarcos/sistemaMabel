@@ -242,6 +242,11 @@ useEffect(() => {
     else setAlunosFiltrados(alunos.filter(aluno => aluno.turma.turno === atributo || aluno.turma.nome === atributo))
   }
 
+  function filtroDiaDaSemana(index : number | string){
+    if(typeof index === "string") setAlunosFiltrados(alunos);
+    else setAlunosFiltrados(alunos.filter(aluno => aluno.diasDaSemana![index] == true))
+  }
+
 //Função para pesquisar o nome dos alunos
   function SearchFilter(event: { target: { value: any; }; }){
     setAlunosFiltrados(alunos.filter(aluno => aluno.nome.toLowerCase().includes(event.target.value)))
@@ -342,6 +347,16 @@ useEffect(() => {
               turmas.map(turma => {
               return <a key={turma.id} onClick={() => handleFiltro(turma.nome)}> {turma.nome} </a>
             })}
+          </div>
+        </DropdownButton>
+        <DropdownButton name="Dia" corElemento={corElemento} corTexto={corTexto}>
+        <div>
+            <a onClick={() => filtroDiaDaSemana('')}>Dia</a>
+            <a onClick={() => filtroDiaDaSemana(0)}>Segunda</a>
+            <a onClick={() => filtroDiaDaSemana(1)}>Terça</a>
+            <a onClick={() => filtroDiaDaSemana(2)}>Quarta</a>
+            <a onClick={() => filtroDiaDaSemana(3)}>Quinta</a>
+            <a onClick={() => filtroDiaDaSemana(4)}>Sexta</a>
           </div>
         </DropdownButton>
         <DropdownButton name="⮟" corElemento={corElemento} corTexto={corTexto}>
