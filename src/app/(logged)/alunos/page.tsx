@@ -177,7 +177,7 @@ useEffect(() => {
     const atrasos: ListAtrasoResponseType = resposta.data;
     // alert(JSON.stringify(diarias, null, 2));
     atrasos.forEach(atraso => {
-      atraso.data = dayjs(atraso.data).format('DD/MM');
+      atraso.data = dayjs(atraso.data).add(3, 'hours').format('DD/MM');
     })
     setAtrasosAtuais(atrasos);
   }
