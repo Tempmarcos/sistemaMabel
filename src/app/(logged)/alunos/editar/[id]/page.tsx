@@ -13,51 +13,51 @@ import { useRouter } from 'next/navigation'
 import { ListPlanoType } from '@/http/types/plano'
 import { ListTurmaType } from '@/http/types/turma'
 
-  type PaiMaeData = {
-    id : string;
-    nome : string;
-  }
+type PaiMaeData = {
+    id: string;
+    nome: string;
+}
 
-  type ResponsavelData = {
-    id : string;
-    nome : string;
-  }
+type ResponsavelData = {
+    id: string;
+    nome: string;
+}
 
-  type AlunoType = Omit<Omit<GetAlunoResponseType, 'nascimento'>, 'dataIngresso'> & {
-    nascimento : any;
-    dataIngresso : any;
-    valorPlano : any;
+type AlunoType = Omit<Omit<GetAlunoResponseType, 'nascimento'>, 'dataIngresso'> & {
+    nascimento: any;
+    dataIngresso: any;
+    valorPlano: any;
     dias: {
-        segunda : boolean,
-        terca : boolean,
-        quarta : boolean,
-        quinta : boolean,
-        sexta : boolean,
+        segunda: boolean,
+        terca: boolean,
+        quarta: boolean,
+        quinta: boolean,
+        sexta: boolean,
     }
-  }
+}
 
-  interface UserProps {
+interface UserProps {
     params: {
-        id : string;
+        id: string;
     }
-  }
+}
 
-export default function Home({ params } : UserProps){
-  const [turmas, setTurmas] = useState<ListTurmaType>([]);
-  const [planos, setPlanos] = useState<ListPlanoType>([]);
-  const [aluno, setAluno] = useState<AlunoType>({} as AlunoType);
-  const [pais, setPais] = useState<PaiMaeData[]>([] as PaiMaeData[]);
-  const [maes, setMaes] = useState<PaiMaeData[]>([] as PaiMaeData[]);
-  const [responsaveis, setResponsaveis] = useState<ResponsavelData[]>([] as ResponsavelData[]);
-  const [submittedData, setSubmittedData] = useState<any | null>(null);
-  const [displaySelect, setDisplaySelect] = useState('none');
-  const [displayAlerta, setDisplayAlerta] = useState('none');
-  const [displayAlunoCriado, setDisplayAlunoCriado] = useState('none');
-  const [displayErroCriar, setDisplayErroCriar] = useState('none');
-  const navigate = useRouter();
+export default function Home({ params }: UserProps) {
+    const [turmas, setTurmas] = useState<ListTurmaType>([]);
+    const [planos, setPlanos] = useState<ListPlanoType>([]);
+    const [aluno, setAluno] = useState<AlunoType>({} as AlunoType);
+    const [pais, setPais] = useState<PaiMaeData[]>([] as PaiMaeData[]);
+    const [maes, setMaes] = useState<PaiMaeData[]>([] as PaiMaeData[]);
+    const [responsaveis, setResponsaveis] = useState<ResponsavelData[]>([] as ResponsavelData[]);
+    const [submittedData, setSubmittedData] = useState<any | null>(null);
+    const [displaySelect, setDisplaySelect] = useState('none');
+    const [displayAlerta, setDisplayAlerta] = useState('none');
+    const [displayAlunoCriado, setDisplayAlunoCriado] = useState('none');
+    const [displayErroCriar, setDisplayErroCriar] = useState('none');
+    const navigate = useRouter();
 
 
-    async function getAluno(alunoId : string){
+    async function getAluno(alunoId: string) {
         const resposta = await axiosInstance.get(`/alunos/${alunoId}`);
         return resposta.data;
     }
@@ -104,7 +104,7 @@ export default function Home({ params } : UserProps){
 
     const fetchTurmas = useCallback(async () => {
         try {
-            const data : ListTurmaType = await getTurmas();
+            const data: ListTurmaType = await getTurmas();
             setTurmas(data);
         } catch (error) {
             console.log(error);
@@ -113,12 +113,12 @@ export default function Home({ params } : UserProps){
 
     const fetchPlanos = useCallback(async () => {
         try {
-            const data : ListPlanoType = await getPlanos();
+            const data: ListPlanoType = await getPlanos();
             // alert(data)
             setPlanos(data);
         } catch (error) {
             console.error(error);
-        } 
+        }
     }, []);
 
     const fetchAluno = useCallback(async () => {
@@ -126,7 +126,7 @@ export default function Home({ params } : UserProps){
             const aluno = await getAluno(params.id);
             console.log(aluno);
             setAluno(aluno);
-            // alert(aluno.diasDaSemana);
+            // alert(JSON.stringify(aluno.emergencia, null, 2));
             reset({
                 id: aluno.id,
                 ativo: aluno.ativo,
@@ -158,8 +158,8 @@ export default function Home({ params } : UserProps){
                 valorPlano: aluno.plano.valor,
                 comoConheceu: aluno.comoConheceu,
                 diaDoPagamento: aluno.diaDoPagamento,
-                
-                
+
+
             })
         } catch (error) {
             console.log(error);
@@ -174,7 +174,7 @@ export default function Home({ params } : UserProps){
         fetchAluno();
     }, [fetchPlanos, fetchTurmas, fetchMaes, fetchPais, fetchResponsaveis, fetchAluno]);
 
-    
+
 
     const {
         register,
@@ -185,103 +185,103 @@ export default function Home({ params } : UserProps){
         formState: { errors, isSubmitting },
     } = useForm<AlunoType>()
 
-    function displayPaiMaeResponsavel(){
-        if(pais.length > 0 && maes.length > 0 && responsaveis.length > 0) {
-            if(displaySelect === 'none') {
-            setDisplaySelect('flex');
-        }
+    function displayPaiMaeResponsavel() {
+        if (pais.length > 0 && maes.length > 0 && responsaveis.length > 0) {
+            if (displaySelect === 'none') {
+                setDisplaySelect('flex');
+            }
         }
 
     }
 
-     displayPaiMaeResponsavel();
+    displayPaiMaeResponsavel();
 
 
-    function hasPai(){
-            return (
-                <div style={{display: displaySelect}}>
-                    <label htmlFor="escolherPai">Importar informações do pai:</label>
-                        <select  id="escolherPai" {...register('pai.id', {
-                            onChange : e => handleEscolherPai(e)
-                        })}>
-                        <option value=""></option>
-                            {pais.map(pai => {
-                                 return <option key={pai.id} value={pai.id}>{pai.nome}</option>
-                            })}
-                        </select>
-                </div>
-            ) 
+    function hasPai() {
+        return (
+            <div style={{ display: displaySelect }}>
+                <label htmlFor="escolherPai">Importar informações do pai:</label>
+                <select id="escolherPai" {...register('pai.id', {
+                    onChange: e => handleEscolherPai(e)
+                })}>
+                    <option value=""></option>
+                    {pais.map(pai => {
+                        return <option key={pai.id} value={pai.id}>{pai.nome}</option>
+                    })}
+                </select>
+            </div>
+        )
     }
 
-    async function handleEscolherPai(event : any){
+    async function handleEscolherPai(event: any) {
         let id = event?.target.value;
-        if(!id){
-            reset ({
-                pai: {nome: '', fone: '', funcao: '', email: '', trabalho: ''}
+        if (!id) {
+            reset({
+                pai: { nome: '', fone: '', funcao: '', email: '', trabalho: '' }
             })
         } else {
             const resposta = await axiosInstance.get(`/pais/${id}`);
-            reset ({
+            reset({
                 pai: resposta.data
             })
         }
     }
 
-    function hasMae(){
-            return (
-                <div style={{display: displaySelect}}>
-                    <label htmlFor="escolherMae">Importar informações da Mãe:</label>
-                        <select id="escolherMae" {...register('mae.id', {
-                            onChange : e => handleEscolherMae(e)
-                        })}>
-                        <option value=""></option>
-                            {maes.map(mae => {
-                                 return <option key={mae.id} value={mae.id}>{mae.nome}</option>
-                            })}
-                        </select>
-                </div>
-            )
-        }
+    function hasMae() {
+        return (
+            <div style={{ display: displaySelect }}>
+                <label htmlFor="escolherMae">Importar informações da Mãe:</label>
+                <select id="escolherMae" {...register('mae.id', {
+                    onChange: e => handleEscolherMae(e)
+                })}>
+                    <option value=""></option>
+                    {maes.map(mae => {
+                        return <option key={mae.id} value={mae.id}>{mae.nome}</option>
+                    })}
+                </select>
+            </div>
+        )
+    }
 
-    async function handleEscolherMae(event : any){
+    async function handleEscolherMae(event: any) {
         let id = event?.target.value;
-        if(!id){
-            reset ({
-                mae: {nome: '', fone: '', funcao: '', email: '', trabalho: ''}
+        if (!id) {
+            reset({
+                mae: { nome: '', fone: '', funcao: '', email: '', trabalho: '' }
             })
         } else {
             const resposta = await axiosInstance.get(`/maes/${id}`);
-            reset ({
+            reset({
                 mae: resposta.data
             })
         }
     }
 
-    function hasResponsavel(){
+    function hasResponsavel() {
         return (
-            <div style={{display: displaySelect}}>
+            <div style={{ display: displaySelect }}>
                 <label htmlFor="escolherResponsavel">Importar info. do Responsável:</label>
-                     <select id="escolherResponsavel" {...register('responsavel.id', {
-                            onChange : e => handleEscolherResponsavel(e)
-                        })}>
-                     <option value=""></option>
-                        {responsaveis.map(responsavel => {
-                            return <option key={responsavel.id} value={responsavel.id}>{responsavel.nome}</option>
-                        })}
-                    </select>
+                <select id="escolherResponsavel" {...register('responsavel.id', {
+                    onChange: e => handleEscolherResponsavel(e)
+                })}>
+                    <option value=""></option>
+                    {responsaveis.map(responsavel => {
+                        return <option key={responsavel.id} value={responsavel.id}>{responsavel.nome}</option>
+                    })}
+                </select>
             </div>
         )
     }
 
-    async function handleEscolherResponsavel(event : any){
+    async function handleEscolherResponsavel(event: any) {
         let id = event?.target.value;
-        if(!id){
-            reset ({
-                responsavel: {nome: '', rg: '', cpf: '', fone_pessoal: '', fone_trabalho: '', funcao: '', email: '', trabalho: ''}
+        if (!id) {
+            reset({
+                responsavel: { nome: '', rg: '', cpf: '', fone_pessoal: '', fone_trabalho: '', funcao: '', email: '', trabalho: '' }
             })
         } else {
             const resposta = await axiosInstance.get(`/responsaveis/${id}`);
-            reset ({
+            reset({
                 responsavel: resposta.data
             })
         }
@@ -289,23 +289,24 @@ export default function Home({ params } : UserProps){
 
     let valorPlanoEscolhido;
 
-    function handleEscolherPlano(event : any){
+    function handleEscolherPlano(event: any) {
         let id = event?.target.value;
-        if(!id){
-            reset ({valorPlano: ''});
+        if (!id) {
+            reset({ valorPlano: '' });
             return
         }
         let planoEscolhido = planos!.find(plano => plano.id === id);
         valorPlanoEscolhido = planoEscolhido?.valor;
-        reset ({valorPlano: valorPlanoEscolhido})
+        reset({ valorPlano: valorPlanoEscolhido })
         //alert(valorPlanoEscolhido);
+        // alert(JSON.stringify(aluno.emergencia, null, 2));
     }
 
     const enderecoAluno = watch("endereco");
 
     const copiarEndereco = () => {
         setValue("responsavel.endereco", enderecoAluno);
-      };
+    };
 
     const dadosMae = watch("mae");
     const dadosPai = watch("pai");
@@ -322,9 +323,9 @@ export default function Home({ params } : UserProps){
         setValue("responsavel.email", dadosMae.email);
         setValue("responsavel.trabalho", dadosMae.trabalho);
         setValue("responsavel.funcao", dadosMae.funcao);
-      };
+    };
 
-      const copiarDadosPai = () => {
+    const copiarDadosPai = () => {
         setValue("responsavel.nome", dadosPai.nome);
         setValue("responsavel.rg", '');
         setValue("responsavel.cpf", '');
@@ -333,16 +334,17 @@ export default function Home({ params } : UserProps){
         setValue("responsavel.email", dadosPai.email);
         setValue("responsavel.trabalho", dadosPai.trabalho);
         setValue("responsavel.funcao", dadosPai.funcao);
-      };
+    };
 
     const onSubmit: SubmitHandler<AlunoType> = async (data) => {
         chamarModal();
-        let dataAlterada : any = data;
+        let dataAlterada: any = data;
+        // alert(JSON.stringify(dataAlterada.emergencia, null, 2));
         dataAlterada.dataIngresso = new Date(data.dataIngresso);
         dataAlterada.nascimento = new Date(data.nascimento);
         dataAlterada.valor = parseInt(data.valor.toString());
-        dataAlterada.turma = {id : data.turma};
-        dataAlterada.plano = {id : data.plano};
+        dataAlterada.turma = { id: data.turma };
+        dataAlterada.plano = { id: data.plano };
         dataAlterada.id = aluno.id;
         dataAlterada.diasDaSemana = [
             data.dias.segunda,
@@ -353,22 +355,27 @@ export default function Home({ params } : UserProps){
         ];
         data.responsavel.nf === null ? dataAlterada.responsavel.nf = false : data.responsavel.nf
         // alert(JSON.stringify(dataAlterada.plano, null, 2));
+
         delete dataAlterada.valorPlano;
+        dataAlterada.emergencia.id = aluno.emergencia.id
+        dataAlterada.endereco.id = aluno.endereco.id
+        dataAlterada.responsavel.enderecoId = aluno.responsavel.enderecoId
+        dataAlterada.responsavel.endereco.id = aluno.responsavel.endereco.id
         console.log(dataAlterada);
         // alert(JSON.stringify(data.turma, null, 2));
         setSubmittedData(dataAlterada);
     }
 
-    function chamarModal(){
+    function chamarModal() {
         setDisplayAlerta('flex');
     }
 
-    function botaoNao(){
+    function botaoNao() {
         setDisplayAlerta('none');
     }
 
-    async function botaoSim(data : any){
-        // alert(JSON.stringify(data, null, 2));
+    async function botaoSim(data: any) {
+        // alert(JSON.stringify(data.valor, null, 2));
         console.log(data);
         try {
             // alert(JSON.stringify(data.plano, null, 2));
@@ -382,186 +389,187 @@ export default function Home({ params } : UserProps){
         }
     }
 
-    function botaoOkCriar(){
+    function botaoOkCriar() {
         navigate.push('/alunos');
     }
 
-    function botaoOkErro(){
+    function botaoOkErro() {
         setDisplayErroCriar('none');
     }
 
     return (
         <main className={styles.main}>
-            <Alerta texto={`Tem certeza que deseja editar o aluno ${nomeAluno}?`} confirmacao={true} 
-            display={displayAlerta} botaoNao={botaoNao} botaoSim={() => botaoSim(submittedData)}></Alerta>
-            <Alerta display={displayAlunoCriado} texto='Aluno editado com sucesso!' 
-            confirmacao={false} botaoOk={botaoOkCriar}></Alerta>
-            <Alerta display={displayErroCriar} texto='Houve um erro ao editar o aluno :(' 
-            confirmacao={false} botaoOk={botaoOkErro}></Alerta>
+            <Alerta texto={`Tem certeza que deseja editar o aluno ${nomeAluno}?`} confirmacao={true}
+                display={displayAlerta} botaoNao={botaoNao} botaoSim={() => botaoSim(submittedData)}></Alerta>
+            <Alerta display={displayAlunoCriado} texto='Aluno editado com sucesso!'
+                confirmacao={false} botaoOk={botaoOkCriar}></Alerta>
+            <Alerta display={displayErroCriar} texto='Houve um erro ao editar o aluno :('
+                confirmacao={false} botaoOk={botaoOkErro}></Alerta>
             <a href="/alunos" className={styles.link}>Voltar aos alunos</a>
             <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
                 {aluno.ativo !== undefined &&
-                <span className={styles.ativo}>
-                    <label htmlFor="ativo">Ativo</label>
-                    <input type="checkbox" id="ativo" {...register('ativo')} />
-                </span>
+                    <span className={styles.ativo}>
+                        <label htmlFor="ativo">Ativo</label>
+                        <input type="checkbox" id="ativo" {...register('ativo')} />
+                    </span>
                 }
                 <section className='formSection'>
                     <h1>Editar aluno</h1>
                     <div>
                         <label htmlFor="nome">Nome:</label>
-                        <input id='nome' {...register("nome", {required: true})} /> 
-                    </div> 
-                     <div>
+                        <input id='nome' {...register("nome", { required: true })} />
+                    </div>
+                    <div>
                         <label htmlFor="nascimento">Nascimento:</label>
-                        <input defaultValue={aluno.nascimento} id='nascimento' type='date' {...register('nascimento', {required: true})} /> 
+                        <input defaultValue={aluno.nascimento} id='nascimento' type='date' {...register('nascimento', { required: true })} />
                     </div>
                     <div>
                         <label htmlFor="serie">Série:</label>
-                        <input id='serie' {...register('serie')} /> 
+                        <input id='serie' {...register('serie')} />
                     </div>
                     <div>
                         <label htmlFor="escola">Escola:</label>
-                        <input id='escola' {...register('escola')} /> 
+                        <input id='escola' {...register('escola')} />
                     </div>
                     <div>
                         <label htmlFor="nacionalidade">Nacionalidade:</label>
-                        <input id='nacionalidade' {...register('nacionalidade')} /> 
+                        <input id='nacionalidade' {...register('nacionalidade')} />
                     </div>
                     <div>
                         <label htmlFor="religiao">Religião:</label>
-                        <input id='religiao' {...register('religiao')} /> 
+                        <input id='religiao' {...register('religiao')} />
                     </div>
                     <div>
                         <label htmlFor="turma">Turma:</label>
-                        <select id="turma" {...register('turma', {required : true})}>
+                        <select id="turma" {...register('turma', { required: true })}>
                             <option value=""></option>
                             {turmas.map(turma => {
-                                 return <option key={turma.id} value={turma.id}>{turma.nome}</option>
+                                return <option key={turma.id} value={turma.id}>{turma.nome}</option>
                             })}
                         </select>
                     </div>
                     <div>
                         <label htmlFor="dataIngresso">Data de ingresso:</label>
-                        <input id="dataIngresso" type='date' {...register('dataIngresso', {required : true})} />
+                        <input id="dataIngresso" type='date' {...register('dataIngresso', { required: true })} />
                     </div>
                     <div>
                         <label htmlFor="plano">Plano:</label>
-                        <select id="plano"  {...register('plano', {required : true, 
-                            onChange : e => handleEscolherPlano(e)
+                        <select id="plano"  {...register('plano', {
+                            required: true,
+                            onChange: e => handleEscolherPlano(e)
                         })}>
                             <option value=""></option>
                             {planos.map(plano => {
-                                 return <option key={plano.id} value={plano.id}> {plano.nome} </option>
+                                return <option key={plano.id} value={plano.id}> {plano.nome} </option>
                             })}
                         </select>
                     </div>
-                    {aluno.diasDaSemana && 
-                    <div>
-                        <label htmlFor="diasDaSemana">Dias da semana:</label>
+                    {aluno.diasDaSemana &&
                         <div>
-                            <span>S T Q Q S</span>
-                            <span>
-                                <input type="checkbox" defaultChecked={aluno.diasDaSemana ? aluno.diasDaSemana[0] : false} {...register('dias.segunda')} style={{margin: '1px'}}/>
-                                <input type="checkbox" defaultChecked={aluno.diasDaSemana ? aluno.diasDaSemana[1] : false} {...register('dias.terca')} style={{margin: '1px'}}/>
-                                <input type="checkbox" defaultChecked={aluno.diasDaSemana ? aluno.diasDaSemana[2] : false} {...register('dias.quarta')} style={{margin: '1px'}}/>
-                                <input type="checkbox" defaultChecked={aluno.diasDaSemana ? aluno.diasDaSemana[3] : false} {...register('dias.quinta')} style={{margin: '1px'}}/>
-                                <input type="checkbox" defaultChecked={aluno.diasDaSemana ? aluno.diasDaSemana[4] : false} {...register('dias.sexta')} style={{margin: '1px'}}/>
-                            </span>
+                            <label htmlFor="diasDaSemana">Dias da semana:</label>
+                            <div>
+                                <span>S T Q Q S</span>
+                                <span>
+                                    <input type="checkbox" defaultChecked={aluno.diasDaSemana ? aluno.diasDaSemana[0] : false} {...register('dias.segunda')} style={{ margin: '1px' }} />
+                                    <input type="checkbox" defaultChecked={aluno.diasDaSemana ? aluno.diasDaSemana[1] : false} {...register('dias.terca')} style={{ margin: '1px' }} />
+                                    <input type="checkbox" defaultChecked={aluno.diasDaSemana ? aluno.diasDaSemana[2] : false} {...register('dias.quarta')} style={{ margin: '1px' }} />
+                                    <input type="checkbox" defaultChecked={aluno.diasDaSemana ? aluno.diasDaSemana[3] : false} {...register('dias.quinta')} style={{ margin: '1px' }} />
+                                    <input type="checkbox" defaultChecked={aluno.diasDaSemana ? aluno.diasDaSemana[4] : false} {...register('dias.sexta')} style={{ margin: '1px' }} />
+                                </span>
+                            </div>
                         </div>
-                    </div>
                     }
-                     <div style={{display: 'none'}}>
+                    <div style={{ display: 'none' }}>
                         <label htmlFor="almoco">Almoço:</label>
                         <input type="checkbox" id="almoco" {...register('almoco')} />
-                    </div> 
+                    </div>
                     <div>
                         <label htmlFor="valor">Valor do plano:</label>
                         <input id="valor" defaultValue={valorPlano} type='number' readOnly />
                     </div>
                     <div>
                         <label htmlFor="valorFinal">Valor final:</label>
-                        <input id="valorFinal" type='number' {...register('valor', {required : true})} />
+                        <input id="valorFinal" type='number' {...register('valor', { required: true })} />
                     </div>
                     <div>
                         <label htmlFor="diaPagamento">Dia para pagar:</label>
-                        <input id='diaPagamento' type="number" min={1} max={31} {...register("diaDoPagamento")}/>
+                        <input id='diaPagamento' type="number" min={1} max={31} {...register("diaDoPagamento")} />
                     </div>
                     <h3>Endereço</h3>
-                        <div>
-                            <label htmlFor="CEP">CEP:</label>
-                            <input id='CEP' {...register("endereco.cep", {required: true})} /> 
-                        </div>
-                        <div>
-                            <label htmlFor="estado">Estado:</label>
-                            <input id='estado' {...register("endereco.estado", {required: true})} /> 
-                        </div>
-                        <div>
-                            <label htmlFor="cidade">Cidade:</label>
-                            <input id='cidade' {...register("endereco.cidade", {required: true})} /> 
-                        </div>
-                        <div>
-                            <label htmlFor="logradouro">Logradouro:</label>
-                            <input id='logradouro' {...register("endereco.logradouro", {required: true})} /> 
-                        </div>
-                        <div>
-                            <label htmlFor="numero">Número:</label>
-                            <input id='numero' {...register("endereco.numero", {required: true})} /> 
-                        </div>
-                        <div>
-                            <label htmlFor="complemento">Complemento:</label>
-                            <input id='complemento' {...register("endereco.complemento")} /> 
-                        </div>
-                </section> 
+                    <div>
+                        <label htmlFor="CEP">CEP:</label>
+                        <input id='CEP' {...register("endereco.cep", { required: true })} />
+                    </div>
+                    <div>
+                        <label htmlFor="estado">Estado:</label>
+                        <input id='estado' {...register("endereco.estado", { required: true })} />
+                    </div>
+                    <div>
+                        <label htmlFor="cidade">Cidade:</label>
+                        <input id='cidade' {...register("endereco.cidade", { required: true })} />
+                    </div>
+                    <div>
+                        <label htmlFor="logradouro">Logradouro:</label>
+                        <input id='logradouro' {...register("endereco.logradouro", { required: true })} />
+                    </div>
+                    <div>
+                        <label htmlFor="numero">Número:</label>
+                        <input id='numero' {...register("endereco.numero", { required: true })} />
+                    </div>
+                    <div>
+                        <label htmlFor="complemento">Complemento:</label>
+                        <input id='complemento' {...register("endereco.complemento")} />
+                    </div>
+                </section>
                 <section className='formSection'>
                     <h2>Informações do pai:</h2>
                     {hasPai()}
                     <div>
                         <label htmlFor="nomePai">Nome:</label>
-                        <input id='nomePai' {...register("pai.nome", {required: true})} /> 
-                    </div> 
+                        <input id='nomePai' {...register("pai.nome", { required: true })} />
+                    </div>
                     <div>
                         <label htmlFor="trabalhoPai">Trabalho:</label>
-                        <input id='trabalhoPai' {...register("pai.trabalho")} /> 
+                        <input id='trabalhoPai' {...register("pai.trabalho")} />
                         <h6>Local do trabalho</h6>
-                    </div> 
+                    </div>
                     <div>
                         <label htmlFor="funcaoPai">Função:</label>
-                        <input id='funcaoPai' {...register("pai.funcao")} /> 
+                        <input id='funcaoPai' {...register("pai.funcao")} />
                     </div>
                     <div>
                         <label htmlFor="fonePai">Fone:</label>
-                        <input placeholder='(99) 99999-9999' id='fonePai' {...register("pai.fone")} /> 
+                        <input placeholder='(99) 99999-9999' id='fonePai' {...register("pai.fone")} />
                     </div>
                     <div>
                         <label htmlFor="emailPai">E-mail:</label>
-                        <input type='email' id='emailPai' {...register("pai.email")} /> 
+                        <input type='email' id='emailPai' {...register("pai.email")} />
                     </div>
                 </section>
                 <section className="formSection">
-                <h2>Informações da mãe:</h2>
+                    <h2>Informações da mãe:</h2>
                     {hasMae()}
                     <div>
                         <label htmlFor="nomeMae">Nome:</label>
-                        <input id='nomeMae' {...register("mae.nome", {required: true})} /> 
-                    </div> 
+                        <input id='nomeMae' {...register("mae.nome", { required: true })} />
+                    </div>
                     <div>
                         <label htmlFor="trabalhoMae">Trabalho:</label>
-                        <input id='trabalhoMae' {...register("mae.trabalho")} /> 
+                        <input id='trabalhoMae' {...register("mae.trabalho")} />
                         <h6>Local do trabalho</h6>
-                    </div> 
+                    </div>
                     <div>
                         <label htmlFor="funcaoMae">Função:</label>
-                        <input id='funcaoMae' {...register("mae.funcao")} /> 
+                        <input id='funcaoMae' {...register("mae.funcao")} />
                     </div>
                     <div>
                         <label htmlFor="foneMae">Fone:</label>
-                        <input placeholder='(99) 99999-9999' id='foneMae' {...register("mae.fone")} /> 
+                        <input placeholder='(99) 99999-9999' id='foneMae' {...register("mae.fone")} />
                     </div>
                     <div>
                         <label htmlFor="emailMae">E-mail:</label>
-                        <input type='email' id='emailMae' {...register("mae.email")} /> 
-                    </div>  
+                        <input type='email' id='emailMae' {...register("mae.email")} />
+                    </div>
                 </section>
                 <section className="formSection">
                     <h2>Responsável financeiro:</h2>
@@ -570,67 +578,67 @@ export default function Home({ params } : UserProps){
                     {hasResponsavel()}
                     <div>
                         <label htmlFor="nomeResponsavel">Nome:</label>
-                        <input id='nomeResponsavel' {...register("responsavel.nome", {required: true})} /> 
+                        <input id='nomeResponsavel' {...register("responsavel.nome", { required: true })} />
                     </div>
                     <div>
                         <label htmlFor="RGresponsavel">RG:</label>
-                        <input id='RGresponsavel' {...register("responsavel.rg", {required: true})} /> 
+                        <input id='RGresponsavel' {...register("responsavel.rg", { required: true })} />
                     </div>
                     <div>
                         <label htmlFor="CPFresponsavel">CPF:</label>
-                        <input id='CPFresponsavel' {...register("responsavel.cpf", {required: true})} /> 
+                        <input id='CPFresponsavel' {...register("responsavel.cpf", { required: true })} />
                     </div>
                     <div>
                         <label htmlFor="trabalhoResponsavel">Trabalho:</label>
-                        <input id='trabalhoResponsavel' {...register("responsavel.trabalho")} /> 
+                        <input id='trabalhoResponsavel' {...register("responsavel.trabalho")} />
                     </div>
                     <div>
                         <label htmlFor="funcaoResponsavel">Função:</label>
-                        <input id='funcaoResponsavel' {...register("responsavel.funcao")} /> 
+                        <input id='funcaoResponsavel' {...register("responsavel.funcao")} />
                     </div>
                     <div>
                         <label htmlFor="foneTrabalhoResponsavel">Fone trabalho:</label>
-                        <input id='foneTrabalhoResponsavel' placeholder='(99) 99999-9999' {...register("responsavel.fone_trabalho")} /> 
+                        <input id='foneTrabalhoResponsavel' placeholder='(99) 99999-9999' {...register("responsavel.fone_trabalho")} />
                     </div>
                     <div>
                         <label htmlFor="foneResponsavel">Fone pessoal:</label>
-                        <input id='foneResponsavel'  placeholder='(99) 99999-9999' {...register("responsavel.fone_pessoal")} /> 
+                        <input id='foneResponsavel' placeholder='(99) 99999-9999' {...register("responsavel.fone_pessoal")} />
                     </div>
                     <div>
                         <label htmlFor="emailResponsavel">E-mail:</label>
-                        <input id='emailResponsavel' type='email' {...register("responsavel.email")} /> 
+                        <input id='emailResponsavel' type='email' {...register("responsavel.email")} />
                     </div>
                     {aluno.responsavel &&
-                    <span>
-                        <label htmlFor="notaFiscal">Nota Fiscal?</label>
-                        <input type="checkbox" defaultChecked={aluno.responsavel.nf == null ? false : aluno.responsavel.nf} id="notaFiscal" {...register("responsavel.nf")} />
-                    </span>
-                    }  
+                        <span>
+                            <label htmlFor="notaFiscal">Nota Fiscal?</label>
+                            <input type="checkbox" defaultChecked={aluno.responsavel.nf == null ? false : aluno.responsavel.nf} id="notaFiscal" {...register("responsavel.nf")} />
+                        </span>
+                    }
                     <h3>Endereço</h3>
                     <a className={styles.botao} onClick={copiarEndereco}>Copiar endereço do aluno</a>
                     <div>
                         <label htmlFor="CEPenderecoResponsavel">CEP:</label>
-                        <input id='CEPenderecoResponsavel' {...register("responsavel.endereco.cep", {required: true})} /> 
+                        <input id='CEPenderecoResponsavel' {...register("responsavel.endereco.cep", { required: true })} />
                     </div>
                     <div>
                         <label htmlFor="estadoEnderecoResponsavel">Estado:</label>
-                        <input id='estadoEnderecoResponsavel' {...register("responsavel.endereco.estado", {required: true})} /> 
+                        <input id='estadoEnderecoResponsavel' {...register("responsavel.endereco.estado", { required: true })} />
                     </div>
                     <div>
                         <label htmlFor="cidadeEnderecoResponsavel">Cidade:</label>
-                        <input id='cidadeEnderecoResponsavel' {...register("responsavel.endereco.cidade", {required: true})} /> 
+                        <input id='cidadeEnderecoResponsavel' {...register("responsavel.endereco.cidade", { required: true })} />
                     </div>
                     <div>
                         <label htmlFor="logradouroEnderecoResponsavel">Logradouro:</label>
-                        <input id='logradouroEnderecoResponsavel' {...register("responsavel.endereco.logradouro", {required: true})} /> 
+                        <input id='logradouroEnderecoResponsavel' {...register("responsavel.endereco.logradouro", { required: true })} />
                     </div>
                     <div>
                         <label htmlFor="numeroEnderecoResponsavel">Número:</label>
-                        <input id='numeroEnderecoResponsavel' {...register("responsavel.endereco.numero", {required: true})} /> 
+                        <input id='numeroEnderecoResponsavel' {...register("responsavel.endereco.numero", { required: true })} />
                     </div>
                     <div>
                         <label htmlFor="complementoEnderecoResponsavel">Complemento:</label>
-                        <input id='complementoEnderecoResponsavel' {...register("responsavel.endereco.complemento")} /> 
+                        <input id='complementoEnderecoResponsavel' {...register("responsavel.endereco.complemento")} />
                     </div>
                 </section>
                 <section className="formSection">
@@ -648,12 +656,12 @@ export default function Home({ params } : UserProps){
                     <h4>Contato emergência</h4>
                     <div>
                         <label htmlFor="nomeEmergencia">Nome:</label>
-                        <input id="nomeEmergencia" {...register('emergencia.nome', {required : true})} />
+                        <input id="nomeEmergencia" {...register('emergencia.nome', { required: true })} />
                         <h6>Nome do contato de emergência</h6>
                     </div>
                     <div>
                         <label htmlFor="foneEmergencia">Fone:</label>
-                        <input placeholder='(99) 99999-9999' id='foneEmergencia' {...register("emergencia.fone")} /> 
+                        <input placeholder='(99) 99999-9999' id='foneEmergencia' {...register("emergencia.fone")} />
                         <h6>Fone do contato de emergência</h6>
                     </div>
                     <div>
@@ -697,6 +705,6 @@ export default function Home({ params } : UserProps){
                 </section>
                 <button type="submit" disabled={isSubmitting}>Editar aluno</button>
             </form>
-         </main>
+        </main>
     )
 }
