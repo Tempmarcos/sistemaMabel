@@ -209,6 +209,33 @@ export default function Home(){
                         )
                     })}
                 </div>
+                {/* Resumo Financeiro */}
+                {!isLoading && mensais.length > 0 && (
+                    <div className={styles.resumoFinanceiro}>
+                        <h2>Resumo Financeiro</h2>
+                        <div className={styles.resumoCards}>
+                            <div className={styles.card}>
+                                <h3>Valor Total</h3>
+                                <p className={styles.valorTotal}>
+                                    R$ {mensais.reduce((acc, mensal) => acc + mensal.valor_total, 0).toFixed(2)}
+                                </p>
+                            </div>
+                            <div className={styles.card}>
+                                <h3>Valor Pago</h3>
+                                <p className={styles.valorPago}>
+                                    R$ {mensais.filter(mensal => mensal.pago).reduce((acc, mensal) => acc + mensal.valor_total, 0).toFixed(2)}
+                                </p>
+                            </div>
+                            <div className={styles.card}>
+                                <h3>Valor Pendente</h3>
+                                <p className={styles.valorPendente}>
+                                    R$ {mensais.filter(mensal => !mensal.pago).reduce((acc, mensal) => acc + mensal.valor_total, 0).toFixed(2)}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
             </section>
         </main>
     )
