@@ -23,6 +23,7 @@ type InputData = {
 
 export default function Home() {
     const [taxas, setTaxas] = useState<TaxaData[]>([] as TaxaData[]);
+    const [corLinha, setCorLinha] = useState<string[]>(new Array(taxas.length).fill(''));
     const [isLoading, setIsLoading] = useState(false);
 
     const fetchData = useCallback(async () => {
@@ -68,12 +69,20 @@ export default function Home() {
         }
         try {
             const resposta = await axiosInstance.put(`/taxas`, taxa);
-            //fetchData();
+            const novaCor = [...corLinha];
+            novaCor[index] = '#a3d9b3';
+            setCorLinha(novaCor);
         } catch (error) {
             console.log(error);
             // alert('oi')
 
         }
+    }
+
+    function handleChange(index: number){
+        const novaCor = [...corLinha];
+        novaCor[index] = '#d9a3a3';
+        setCorLinha(novaCor);
     }
 
     return (
@@ -95,13 +104,12 @@ export default function Home() {
                     {isLoading && taxas.length === 0 && <p>Carregando...</p>} 
                     {!isLoading && taxas.length === 0 && <p>Adicione uma taxa</p>}
                     {taxas.map((taxa, index) => {
-                        
                         return (
-                            <form key={taxa.id}>
+                            <form key={taxa.id} onChange={() => handleChange(index)} style={{ backgroundColor: corLinha[index]}}>
                                 {/* <button disabled={isDeleting} onClick={() => handleDeletetaxa(taxa.id)}>Excluir</button> */}
                                 <input id={`nome${index}`} type="text" defaultValue={taxa.nome} />
                                 <input id={`valor${index}`} type='number' defaultValue={taxa.valor} />
-                                <button onClick={() => enviarDadosEditar(index, taxa.id)} 
+                                <button type='button' onClick={() => enviarDadosEditar(index, taxa.id)} 
                                 disabled={isSubmitting}>Editar</button>
                             </form>
                     )})}

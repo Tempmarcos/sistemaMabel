@@ -30,6 +30,7 @@ type InputData = {
 
 export default function Home() {
     const [planos, setPlanos] = useState<PlanoData[]>([] as PlanoData[]);
+    const [corLinha, setCorLinha] = useState<string[]>(new Array(planos.length).fill(''));
     const [isLoading, setIsLoading] = useState(true);
     const [isDeleting, setIsDeleting] = useState(false);
     const [campoPlano, setCampoPlano] = useState(false);
@@ -68,7 +69,11 @@ export default function Home() {
        }
     }
 
-
+    function handleChange(index: number){
+        const novaCor = [...corLinha];
+        novaCor[index] = '#d9a3a3';
+        setCorLinha(novaCor);
+    }
     
     // function handleFormChange(index : number){
     //     alert(JSON.stringify(isBotaoEditarAtivo, null, 2));
@@ -116,10 +121,7 @@ export default function Home() {
         }
     }
     
-
-
     async function enviarDadosEditar(index : number, planoId : string) {
-
         let inputNome = document.getElementById(`nome${index}`) as HTMLInputElement;
         let nome = inputNome.value;
         let inputValor = document.getElementById(`valor${index}`) as HTMLInputElement;
@@ -132,7 +134,9 @@ export default function Home() {
         }
         try {
             const resposta = await axiosInstance.put(`/planos`, plano);
-            //fetchData();
+            const novaCor = [...corLinha];
+            novaCor[index] = '#a3d9b3';
+            setCorLinha(novaCor);
         } catch (error) {
             console.log(error);
             alert('oi')
@@ -163,11 +167,11 @@ export default function Home() {
                     {planos.map((plano, index) => {
                         
                         return (
-                            <form key={plano.id}>
-                                <button disabled={isDeleting} onClick={() => handleDeletePlano(plano.id)}>Excluir</button>
+                            <form key={plano.id} onChange={() => handleChange(index)} style={{ backgroundColor: corLinha[index] }}>
+                                <button type='button' disabled={isDeleting} onClick={() => handleDeletePlano(plano.id)}>Excluir</button>
                                 <input id={`nome${index}`} type="text" defaultValue={plano.nome} />
                                 <input id={`valor${index}`} type='number' defaultValue={plano.valor} />
-                                <button onClick={() => enviarDadosEditar(index, plano.id)} 
+                                <button type='button' onClick={() => enviarDadosEditar(index, plano.id)} 
                                 disabled={isSubmitting}>Editar</button>
                             </form>
                     )})}
